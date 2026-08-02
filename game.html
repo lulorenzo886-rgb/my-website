@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="{{ current_lang }}">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ game.title }} - {{ t.site_title }}</title>
+    <title>Boss Puncher - Free Classic Games</title>
     <style>
         * {
             box-sizing: border-box;
@@ -81,34 +81,21 @@
 <body>
 
     <div class="header-bar">
-        <h1>{{ game.title }}</h1>
-        <a href="/{{ current_lang }}/" class="back-btn">{{ t.back_home }}</a>
+        <h1>Boss Puncher</h1>
+        <a href="index.html" class="back-btn">🏠 Home</a>
     </div>
 
     <div class="game-wrapper">
-        <!-- 如果是 GD 平台的嵌入游戏 (数据库存了 game_id) -->
-        {% if game.game_id %}
-            <iframe id="gd-frame" allowfullscreen></iframe>
-            <script>
-                (function() {
-                    const gameId = "{{ game.game_id }}";
-                    const currentUrl = encodeURIComponent(window.location.href);
-                    const finalUrl = `https://html5.gamedistribution.com/${gameId}/?gd_sdk_referrer_url=${currentUrl}`;
-                    document.getElementById('gd-frame').src = finalUrl;
-                })();
-            </script>
-        {% else %}
-            <!-- 如果是本地项目静态文件夹里的游戏 -->
-            <iframe src="{{ url_for('static', filename='games/' + game.slug + '/index.html') }}" allowfullscreen></iframe>
-        {% endif %}
+        <!-- 指向本地静态游戏文件夹目录 -->
+        <iframe src="static/games/boss-punch/index.html" allowfullscreen></iframe>
     </div>
 
     <div class="details-card">
-        <h2>{{ t.game_intro }}</h2>
-        <p>{{ game.description }}</p>
+        <h2>Game Description</h2>
+        <p>Fight against powerful bosses in this quick-paced arcade action game!</p>
         
-        <h2>{{ t.game_controls }}</h2>
-        <p>{{ game.controls }}</p>
+        <h2>Controls</h2>
+        <p>Use Arrow Keys to Move, A to Punch, S to Dodge, Spacebar to Super Attack.</p>
     </div>
 
 </body>
