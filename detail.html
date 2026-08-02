@@ -3,32 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ game.title }} - 1000 Classic Free Games</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Boss Puncher - 1000 Classic Free Games</title>
+    <!-- 引入静态 CSS 样式 -->
+    <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
     <header class="glass-navbar">
-        <a href="/" class="nav-brand" style="text-decoration:none;">
+        <a href="index.html" class="nav-brand" style="text-decoration:none;">
             <div class="brand-logo">1K</div>
             <span class="brand-name">1000 Classic <span class="highlight">Free Games</span></span>
         </a>
-        <a href="/" class="pill-tag">🏠 返回首页大厅</a>
+        <a href="index.html" class="pill-tag">🏠 返回首页大厅</a>
     </header>
 
     <main class="detail-container">
         <div class="game-frame-wrapper">
-            <iframe src="/static/games/{{ game.slug }}/index.html" frameborder="0" allowfullscreen></iframe>
+            <!-- 指向你的具体游戏文件路径 -->
+            <iframe src="static/games/boss-punch/index.html" frameborder="0" allowfullscreen></iframe>
         </div>
 
         <div class="game-info-panel">
             <div class="info-header">
                 <div>
-                    <span class="cat-label">{{ game.category }}</span>
-                    <h1 class="detail-title">{{ game.title }}</h1>
-                    <p class="detail-author">开发者: <strong>{{ game.author }}</strong></p>
+                    <span class="cat-label">🥊 动作游戏</span>
+                    <h1 class="detail-title">Boss Puncher</h1>
+                    <p class="detail-author">开发者: <strong>Indie Studio</strong></p>
                 </div>
                 <div class="license-tag-large">
-                    📜 授权: <span>{{ game.license_type if game.license_type else '官方授权' }}</span>
+                    📜 授权: <span>官方授权</span>
                 </div>
             </div>
 
@@ -36,14 +38,14 @@
 
             <div class="info-body">
                 <h3>🎮 游戏介绍</h3>
-                <p>{{ game.description }}</p>
+                <p>在这款经典快节奏的街机动作游戏中，击败层层强大的 Boss 敌人，挑战你的最高分！</p>
 
                 <h3 style="margin-top: 15px;">⌨️ 操作说明</h3>
-                <p>{{ game.controls }}</p>
+                <p>使用键盘方向键移动，按 A 键攻击，按 S 键闪避，SPACE 键释放大招。</p>
             </div>
 
             <div class="copyright-notice">
-                <p>🛡️ <strong>版权保护声明：</strong> 本游戏由 <i>{{ game.author }}</i> 提供/授权。 1000 Classic Free Games 严格遵守国际版权法律。</p>
+                <p>🛡️ <strong>版权保护声明：</strong> 本游戏由 <i>Indie Studio</i> 提供/授权。 1000 Classic Free Games 严格遵守国际版权法律。</p>
             </div>
         </div>
     </main>
