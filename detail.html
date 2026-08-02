@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ game.title }} - 1000 Classic Free Games</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="glass-navbar">
+        <a href="/" class="nav-brand" style="text-decoration:none;">
+            <div class="brand-logo">1K</div>
+            <span class="brand-name">1000 Classic <span class="highlight">Free Games</span></span>
+        </a>
+        <a href="/" class="pill-tag">🏠 返回首页大厅</a>
+    </header>
+
+    <main class="detail-container">
+        <div class="game-frame-wrapper">
+            <iframe src="/static/games/{{ game.slug }}/index.html" frameborder="0" allowfullscreen></iframe>
+        </div>
+
+        <div class="game-info-panel">
+            <div class="info-header">
+                <div>
+                    <span class="cat-label">{{ game.category }}</span>
+                    <h1 class="detail-title">{{ game.title }}</h1>
+                    <p class="detail-author">开发者: <strong>{{ game.author }}</strong></p>
+                </div>
+                <div class="license-tag-large">
+                    📜 授权: <span>{{ game.license_type if game.license_type else '官方授权' }}</span>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <div class="info-body">
+                <h3>🎮 游戏介绍</h3>
+                <p>{{ game.description }}</p>
+
+                <h3 style="margin-top: 15px;">⌨️ 操作说明</h3>
+                <p>{{ game.controls }}</p>
+            </div>
+
+            <div class="copyright-notice">
+                <p>🛡️ <strong>版权保护声明：</strong> 本游戏由 <i>{{ game.author }}</i> 提供/授权。 1000 Classic Free Games 严格遵守国际版权法律。</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="arcade-footer">
+        <p>© 2026 1000 Classic Free Games. 版权所有。</p>
+    </footer>
+</body>
+</html>
