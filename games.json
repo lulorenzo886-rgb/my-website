@@ -1,29 +1,11 @@
 [
   {
-    "title": "Annoying Boss Punch Game",
-    "slug": "boss-punch",
-    "category": "action",
-    "description": "The ultimate office stress buster! Punch, kick, and throw eggs or water balloons at your annoying boss!",
-    "controls": "Left Click to punch/combo. Arrow Keys to move.",
-    "cover": "https://img.gamedistribution.com/bd9cc9da45b04ee293306209653d8cfb-512x384.jpg",
-    "url": "https://html5.gamedistribution.com/rvvASv48/bd9cc9da45b04ee293306209653d8cfb/index.html"
-  },
-  {
-    "title": "Nitro Speed 2 Underground",
-    "slug": "nitro-speed-2-underground",
-    "category": "racing",
-    "description": "Get ready for intense underground street racing! Drive fast cars and beat your rivals.",
-    "controls": "Use Arrow Keys or WASD to drive. Press Space for Handbrake.",
-    "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdzRL96JZx6fM3VxJ6VXI47ze6rTcU4cWGdm50UcBewg&s",
-    "url": "https://games.yandex.com/app/188880"
-  },
-  {
-    "title": "Archer: Dungeon Hero",
-    "slug": "archer-dungeon-hero",
-    "category": "action",
-    "description": "Embark on an epic adventure as a master archer! Fight through dangerous dungeons.",
-    "controls": "Use WASD or Arrow keys to move. Aim and shoot automatically.",
-    "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjIi1GjAbq-bVmEncHG44m3RxW4VcSmpK1lFEiEofPFAZGEXQtS7_6qVI&s=10",
-    "url": "https://html5.gamedistribution.com/rvvASv48/62c7dc7ddf3f4c05877f98e6c750b322/index.html"
+    "title": "Pool Duel",
+    "slug": "pool-duel",
+    "category": "sports",
+    "description": "Test your billiards skills in Pool Duel! Aim your cue, adjust your power, and pocket all the balls to defeat your opponent in this realistic 8-ball pool challenge.",
+    "controls": "Mouse / Touch to aim the cue, drag and release to adjust power and shot.",
+    "cover": "https://img.gamedistribution.com/db26a7860d1540089be6bb8f6bca230a-512x384.jpg",
+    "url": "https://html5.gamedistribution.com/db26a7860d1540089be6bb8f6bca230a/"
   }
 ]
