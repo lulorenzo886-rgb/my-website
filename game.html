@@ -51,9 +51,14 @@
                         document.getElementById('game-desc').innerText = game.description || 'Enjoy playing directly in your browser!';
                         document.getElementById('game-controls').innerText = game.controls || 'Use Keyboard Arrows/WASD to move, Space/Mouse to interact.';
 
-                        // 核心判断：如果 games.json 里有 GameDistribution 官方 URL，直接加载官方 URL；否则尝试加载本地路径
                         if (game.url && game.url.startsWith('http')) {
-                            document.getElementById('game-frame').src = game.url;
+                            let targetUrl = game.url;
+                            // 自动防跳转补丁：向 GameDistribution 传递当前域名，防止弹窗强行跳转外站
+                            if (targetUrl.includes('gamedistribution.com')) {
+                                const currentDomain = encodeURIComponent(window.location.origin);
+                                targetUrl += (targetUrl.includes('?') ? '&' : '?') + `gd_sdk_referrer_url=${currentDomain}`;
+                            }
+                            document.getElementById('game-frame').src = targetUrl;
                         } else {
                             document.getElementById('game-frame').src = `static/games/${slug}/index.html`;
                         }
