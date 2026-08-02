@@ -20,12 +20,12 @@
 <body>
 
     <div class="header-bar">
-        <h1 id="game-title">Loading Game...</h1>
+        <h1 id="game-title">Loading...</h1>
         <a href="index.html" class="back-btn">🏠 Home</a>
     </div>
 
     <div class="game-wrapper">
-        <iframe id="game-frame" src="" allow="autoplay; payment; microphone; camera; focus-without-user-activation *; screen-wake-lock; gamepad; clipboard-read; clipboard-write;" allowfullscreen="true" sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation"></iframe>
+        <iframe id="game-frame" src="" allow="autoplay; payment; microphone; camera; focus-without-user-activation *; screen-wake-lock; gamepad; clipboard-read; clipboard-write;" allowfullscreen="true"></iframe>
     </div>
 
     <div class="details-card">
@@ -41,9 +41,6 @@
         const slug = urlParams.get('slug');
 
         if (slug) {
-            // 加载 static/games/目录下的游戏
-            document.getElementById('game-frame').src = `static/games/${slug}/index.html`;
-
             fetch('games.json')
                 .then(res => res.json())
                 .then(games => {
@@ -53,6 +50,13 @@
                         document.getElementById('game-title').innerText = game.title;
                         document.getElementById('game-desc').innerText = game.description || 'Enjoy playing directly in your browser!';
                         document.getElementById('game-controls').innerText = game.controls || 'Use Keyboard Arrows/WASD to move, Space/Mouse to interact.';
+
+                        // 核心判断：如果 games.json 里有 GameDistribution 官方 URL，直接加载官方 URL；否则尝试加载本地路径
+                        if (game.url && game.url.startsWith('http')) {
+                            document.getElementById('game-frame').src = game.url;
+                        } else {
+                            document.getElementById('game-frame').src = `static/games/${slug}/index.html`;
+                        }
                     }
                 });
         }
