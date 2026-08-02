@@ -1,102 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boss Puncher - Free Classic Games</title>
+    <title>Playing Game - Free Classic Games</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #12131C;
-            color: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-        .header-bar {
-            width: 100%;
-            max-width: 1100px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .back-btn {
-            background-color: #252836;
-            color: #fff;
-            text-decoration: none;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: 14px;
-            border: 1px solid #3B3E52;
-            transition: 0.2s;
-        }
-        .back-btn:hover {
-            background-color: #5A49E3;
-        }
-        .game-wrapper {
-            width: 100%;
-            max-width: 1100px;
-            height: 650px;
-            background-color: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid #2B2D3E;
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .details-card {
-            width: 100%;
-            max-width: 1100px;
-            background-color: #1A1C29;
-            border-radius: 12px;
-            padding: 25px;
-            margin-top: 20px;
-            border: 1px solid #2B2D3E;
-        }
-        .details-card h2 {
-            color: #6C5CE7;
-            font-size: 18px;
-            margin-bottom: 8px;
-        }
-        .details-card p {
-            color: #A0A5BA;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #12131C; color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .header-bar { width: 100%; max-width: 1100px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-btn { background-color: #252836; color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; border: 1px solid #3B3E52; transition: 0.2s; }
+        .back-btn:hover { background-color: #5A49E3; }
+        .game-wrapper { width: 100%; max-width: 1100px; height: 650px; background-color: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); border: 1px solid #2B2D3E; }
+        iframe { width: 100%; height: 100%; border: none; }
+        .details-card { width: 100%; max-width: 1100px; background-color: #1A1C29; border-radius: 12px; padding: 25px; margin-top: 20px; border: 1px solid #2B2D3E; }
+        .details-card h2 { color: #6C5CE7; font-size: 18px; margin-bottom: 8px; }
+        .details-card p { color: #A0A5BA; font-size: 14px; line-height: 1.6; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
     <div class="header-bar">
-        <h1>Boss Puncher</h1>
+        <h1 id="game-title">Loading...</h1>
         <a href="index.html" class="back-btn">🏠 Home</a>
     </div>
 
     <div class="game-wrapper">
-        <!-- 指向本地静态游戏文件夹目录 -->
-        <iframe src="static/games/boss-punch/index.html" allowfullscreen></iframe>
+        <iframe id="game-frame" src="" allowfullscreen></iframe>
     </div>
 
     <div class="details-card">
         <h2>Game Description</h2>
-        <p>Fight against powerful bosses in this quick-paced arcade action game!</p>
+        <p id="game-desc">Loading details...</p>
         
         <h2>Controls</h2>
-        <p>Use Arrow Keys to Move, A to Punch, S to Dodge, Spacebar to Super Attack.</p>
+        <p id="game-controls">Loading controls...</p>
     </div>
 
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const slug = urlParams.get('slug');
+
+        if (slug) {
+            // 加载游戏内嵌页面
+            document.getElementById('game-frame').src = `static/games/${slug}/index.html`;
+
+            // 读取游戏对应的信息
+            fetch('games.json')
+                .then(res => res.json())
+                .then(games => {
+                    const game = games.find(g => g.slug === slug);
+                    if (game) {
+                        document.title = `${game.title} - Free Classic Games`;
+                        document.getElementById('game-title').innerText = game.title;
+                        document.getElementById('game-desc').innerText = game.description || 'Enjoy this classic retro game right in your browser!';
+                        document.getElementById('game-controls').innerText = game.controls || 'Use Keyboard Arrows/WASD to move, Space/Mouse to interact.';
+                    } else {
+                        document.getElementById('game-title').innerText = slug.toUpperCase();
+                    }
+                });
+        }
+    </script>
 </body>
 </html>
