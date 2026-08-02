@@ -20,12 +20,12 @@
 <body>
 
     <div class="header-bar">
-        <h1 id="game-title">Loading...</h1>
+        <h1 id="game-title">Loading Game...</h1>
         <a href="index.html" class="back-btn">🏠 Home</a>
     </div>
 
     <div class="game-wrapper">
-        <iframe id="game-frame" src="" allowfullscreen></iframe>
+        <iframe id="game-frame" src="" allow="autoplay; payment; microphone; camera; focus-without-user-activation *; screen-wake-lock; gamepad; clipboard-read; clipboard-write;" allowfullscreen="true" sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation"></iframe>
     </div>
 
     <div class="details-card">
@@ -41,10 +41,9 @@
         const slug = urlParams.get('slug');
 
         if (slug) {
-            // 加载游戏内嵌页面
+            // 加载 static/games/目录下的游戏
             document.getElementById('game-frame').src = `static/games/${slug}/index.html`;
 
-            // 读取游戏对应的信息
             fetch('games.json')
                 .then(res => res.json())
                 .then(games => {
@@ -52,10 +51,8 @@
                     if (game) {
                         document.title = `${game.title} - Free Classic Games`;
                         document.getElementById('game-title').innerText = game.title;
-                        document.getElementById('game-desc').innerText = game.description || 'Enjoy this classic retro game right in your browser!';
+                        document.getElementById('game-desc').innerText = game.description || 'Enjoy playing directly in your browser!';
                         document.getElementById('game-controls').innerText = game.controls || 'Use Keyboard Arrows/WASD to move, Space/Mouse to interact.';
-                    } else {
-                        document.getElementById('game-title').innerText = slug.toUpperCase();
                     }
                 });
         }
