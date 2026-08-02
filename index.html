@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ current_lang }}">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -150,62 +150,72 @@
         .play-btn:hover {
             background-color: #6C5CE7;
         }
-        .no-results {
-            text-align: center;
-            padding: 50px;
-            color: #8E94A9;
-            font-size: 18px;
-        }
     </style>
 </head>
 <body>
 
     <header>
-        <a href="/{{ current_lang }}/" class="logo">🎮 Free Classic Games</a>
-        <select class="lang-select" onchange="location = this.value;">
-            <option value="/zh/" {% if current_lang == 'zh' %}selected{% endif %}>中文</option>
-            <option value="/en/" {% if current_lang == 'en' %}selected{% endif %}>English</option>
-            <option value="/it/" {% if current_lang == 'it' %}selected{% endif %}>Italiano</option>
+        <a href="index.html" class="logo">🎮 Free Classic Games</a>
+        <select class="lang-select">
+            <option value="zh">中文</option>
+            <option value="en" selected>English</option>
+            <option value="it">Italiano</option>
         </select>
     </header>
 
     <div class="hero">
         <h1>Free Classic Games</h1>
-        <p>{{ t.welcome }}</p>
+        <p>Play the best retro arcade games right in your browser!</p>
 
         <!-- 🏷️ 游戏分类标签栏 -->
         <div class="categories-bar">
-            <a href="/{{ current_lang }}/" class="cat-btn {% if not selected_category %}active{% endif %}">🔥 All</a>
-            <a href="/{{ current_lang }}/?category=multiplayer" class="cat-btn {% if selected_category == 'multiplayer' %}active{% endif %}">👥 Multiplayer</a>
-            <a href="/{{ current_lang }}/?category=action" class="cat-btn {% if selected_category == 'action' %}active{% endif %}">🥊 Action</a>
-            <a href="/{{ current_lang }}/?category=racing" class="cat-btn {% if selected_category == 'racing' %}active{% endif %}">🏎️ Racing</a>
-            <a href="/{{ current_lang }}/?category=puzzle" class="cat-btn {% if selected_category == 'puzzle' %}active{% endif %}">🧩 Puzzle</a>
-            <a href="/{{ current_lang }}/?category=arcade" class="cat-btn {% if selected_category == 'arcade' %}active{% endif %}">👾 Arcade</a>
-            <a href="/{{ current_lang }}/?category=sports" class="cat-btn {% if selected_category == 'sports' %}active{% endif %}">⚽ Sports</a>
+            <a href="index.html" class="cat-btn active">🔥 All</a>
+            <a href="#" class="cat-btn">👥 Multiplayer</a>
+            <a href="#" class="cat-btn">🥊 Action</a>
+            <a href="#" class="cat-btn">🏎️ Racing</a>
+            <a href="#" class="cat-btn">🧩 Puzzle</a>
+            <a href="#" class="cat-btn">👾 Arcade</a>
+            <a href="#" class="cat-btn">⚽ Sports</a>
         </div>
     </div>
 
     <div class="container">
-        {% if games %}
         <div class="game-grid">
-            {% for game in games %}
+            
+            <!-- 游戏卡片 1 -->
             <div class="game-card">
-                <img src="{{ game.cover if game.cover else 'https://via.placeholder.com/300x200/1A1C29/FFFFFF?text=' + game.title }}" class="game-thumb" alt="{{ game.title }}" referrerpolicy="no-referrer">
+                <img src="https://via.placeholder.com/300x200/1A1C29/FFFFFF?text=Retro+Arcade" class="game-thumb" alt="Retro Arcade" referrerpolicy="no-referrer">
                 <div class="game-info">
-                    <div class="game-title">{{ game.title }}</div>
-                    <div class="game-desc">{{ game.description }}</div>
-                    <a href="/{{ current_lang }}/game/{{ game.slug }}" class="play-btn">{{ t.play_now }}</a>
+                    <div class="game-title">Retro Arcade Battle</div>
+                    <div class="game-desc">Experience classic retro action directly in your browser without any installation!</div>
+                    <a href="game.html" class="play-btn">Play Now</a>
                 </div>
             </div>
-            {% endfor %}
+
+            <!-- 游戏卡片 2 -->
+            <div class="game-card">
+                <img src="https://via.placeholder.com/300x200/1A1C29/FFFFFF?text=Boss+Punch" class="game-thumb" alt="Boss Punch" referrerpolicy="no-referrer">
+                <div class="game-info">
+                    <div class="game-title">Boss Puncher</div>
+                    <div class="game-desc">Fight against powerful bosses in this quick-paced arcade game.</div>
+                    <a href="game.html" class="play-btn">Play Now</a>
+                </div>
+            </div>
+
+            <!-- 游戏卡片 3 -->
+            <div class="game-card">
+                <img src="https://via.placeholder.com/300x200/1A1C29/FFFFFF?text=Pool+Duel" class="game-thumb" alt="Pool Duel" referrerpolicy="no-referrer">
+                <div class="game-info">
+                    <div class="game-title">Pool Duel 8-Ball</div>
+                    <div class="game-desc">Test your billiards skills in this exciting 2D classic pool simulator.</div>
+                    <a href="game.html" class="play-btn">Play Now</a>
+                </div>
+            </div>
+
         </div>
-        {% else %}
-        <div class="no-results">
-            😢 No games found in this category yet!
-        </div>
-        {% endif %}
     </div>
-<!-- 📌 网页底部页脚栏 -->
+
+    <!-- 📌 网页底部页脚栏 -->
     <footer style="background-color: #1A1C29; border-top: 1px solid #2B2D3E; margin-top: auto; padding: 40px 20px 20px; text-align: center;">
         <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; text-align: left; margin-bottom: 30px;">
             <div style="flex: 1; min-width: 250px;">
@@ -216,7 +226,7 @@
                 <div>
                     <h4 style="color: #fff; margin-bottom: 12px; font-size: 15px;">Support & Legal</h4>
                     <ul style="list-style: none; padding: 0; line-height: 2;">
-                        <li><a href="/{{ current_lang }}/privacy" style="color: #8E94A9; text-decoration: none; font-size: 14px;">Privacy Policy (隐私中心)</a></li>
+                        <li><a href="privacy.html" style="color: #8E94A9; text-decoration: none; font-size: 14px;">Privacy Policy (隐私中心)</a></li>
                         <li><a href="mailto:your-email@example.com" style="color: #8E94A9; text-decoration: none; font-size: 14px;">Contact Us (联系我们)</a></li>
                     </ul>
                 </div>
