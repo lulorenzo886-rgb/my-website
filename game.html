@@ -38,14 +38,13 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        // 兼容匹配：不管是 url 里的 ?id= 还是 ?slug= 都能识别
         const targetId = urlParams.get('id') || urlParams.get('slug');
 
         if (targetId) {
-            fetch('games.json')
+            // 注意这里改成了 static/games.json
+            fetch('static/games.json')
                 .then(res => res.json())
                 .then(games => {
-                    // 同时匹配 id 或 slug
                     const game = games.find(g => g.id === targetId || g.slug === targetId);
                     if (game) {
                         document.title = `${game.title} - Free Classic Games`;
@@ -54,7 +53,6 @@
                         document.getElementById('game-controls').innerText = game.controls || 'Use Keyboard Arrows/WASD to move, Space/Mouse to interact.';
 
                         if (game.url && game.url.startsWith('http')) {
-                            // 直接使用 GameMonetize 链接，不搞复杂的拼接
                             document.getElementById('game-frame').src = game.url;
                         } else {
                             document.getElementById('game-frame').src = `static/games/${targetId}/index.html`;
@@ -64,7 +62,8 @@
                     }
                 })
                 .catch(err => {
-                    console.error('Error loading games.json:', err);
+                    console.error('Error loading static/games.json:', err);
+                    document.getElementById('game-title').innerText = 'Error loading games file';
                 });
         }
     </script>
