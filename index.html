@@ -11,22 +11,27 @@
         header { text-align: center; margin-bottom: 25px; }
         h1 { color: #6C5CE7; margin-bottom: 8px; font-size: 28px; }
         p.subtitle { color: #A0A5BA; font-size: 14px; }
-        
-        /* Category Group Container */
-        .category-container { max-width: 1200px; margin: 0 auto 30px auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; }
-        .cat-group { background: #1A1C29; border: 1px solid #2B2D3E; border-radius: 12px; padding: 15px; }
-        .cat-title { font-size: 13px; font-weight: bold; color: #6C5CE7; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .cat-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
-        
-        .nav-btn { background-color: #23263A; color: #A0A5BA; border: 1px solid #2B2D3E; padding: 6px 12px; border-radius: 15px; cursor: pointer; transition: 0.2s; font-size: 12px; }
-        .nav-btn.active, .nav-btn:hover { background-color: #6C5CE7; color: #fff; border-color: #6C5CE7; }
-        
-        /* Reset Filter Button */
-        .all-btn-wrap { text-align: center; margin-bottom: 20px; }
-        .all-btn { background: #6C5CE7; color: #fff; border: none; padding: 8px 24px; border-radius: 20px; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .all-btn:hover { background: #5a4bcf; }
 
-        /* Game Grid Layout */
+        /* 顶部主大类按钮容器 */
+        .main-categories { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 15px; }
+        .main-btn { background-color: #1A1C29; color: #ffffff; border: 1px solid #2B2D3E; padding: 10px 20px; border-radius: 25px; cursor: pointer; transition: 0.3s; font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 6px; }
+        .main-btn:hover, .main-btn.active { background-color: #6C5CE7; border-color: #6C5CE7; }
+        
+        /* 二级弹出小标签容器 */
+        .sub-categories-wrapper { max-width: 900px; margin: 0 auto 25px auto; display: none; background: #1A1C29; border: 1px solid #2B2D3E; border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .sub-categories-wrapper.open { display: block; animation: fadeIn 0.3s ease; }
+        .sub-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+        
+        .sub-btn { background-color: #23263A; color: #A0A5BA; border: 1px solid #2B2D3E; padding: 6px 14px; border-radius: 15px; cursor: pointer; transition: 0.2s; font-size: 13px; }
+        .sub-btn:hover, .sub-btn.active { background-color: #6C5CE7; color: #fff; border-color: #6C5CE7; }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 游戏网格 */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
         .card { background-color: #1A1C29; border-radius: 12px; overflow: hidden; border: 1px solid #2B2D3E; transition: transform 0.2s, border-color 0.2s; text-decoration: none; color: inherit; display: flex; flex-direction: column; }
         .card:hover { transform: translateY(-5px); border-color: #6C5CE7; }
@@ -44,76 +49,69 @@
         <p class="subtitle">Play free online HTML5 games directly in your browser with no downloads required!</p>
     </header>
 
-    <!-- Reset Filter Button -->
-    <div class="all-btn-wrap">
-        <button class="all-btn" onclick="filterGames('all', event)">🔥 Show All Games</button>
+    <!-- 顶层 4 个大分类集合按钮 + 全部按钮 -->
+    <div class="main-categories">
+        <button class="main-btn active" onclick="showAllGames(event)">🔥 All Games</button>
+        <button class="main-btn" onclick="toggleSubMenu('players', event)">👥 Players ▾</button>
+        <button class="main-btn" onclick="toggleSubMenu('genres', event)">⚡ Core Genres ▾</button>
+        <button class="main-btn" onclick="toggleSubMenu('styles', event)">🎨 Visuals ▾</button>
+        <button class="main-btn" onclick="toggleSubMenu('popular', event)">🎯 Popular Tags ▾</button>
     </div>
 
-    <!-- 4 Main Category Groups -->
-    <div class="category-container" id="category-bar">
+    <!-- 点击大类后弹出的二级小标签面板 -->
+    <div class="sub-categories-wrapper" id="sub-panel">
         
-        <!-- Group 1: Players & Audience -->
-        <div class="cat-group">
-            <div class="cat-title">👥 Players & Audience</div>
-            <div class="cat-buttons">
-                <button class="nav-btn" onclick="filterGames('2player', event)">2 Player</button>
-                <button class="nav-btn" onclick="filterGames('singleplayer', event)">Single Player</button>
-                <button class="nav-btn" onclick="filterGames('multiplayer', event)">Multiplayer</button>
-                <button class="nav-btn" onclick="filterGames('boys', event)">Boys</button>
-                <button class="nav-btn" onclick="filterGames('girls', event)">Girls</button>
-                <button class="nav-btn" onclick="filterGames('kids', event)">Kids</button>
-            </div>
+        <!-- 👥 Players & Audience 组 -->
+        <div class="sub-buttons sub-group" id="group-players" style="display:none;">
+            <button class="sub-btn" onclick="filterGames('2player', event)">2 Player</button>
+            <button class="sub-btn" onclick="filterGames('singleplayer', event)">Single Player</button>
+            <button class="sub-btn" onclick="filterGames('multiplayer', event)">Multiplayer</button>
+            <button class="sub-btn" onclick="filterGames('boys', event)">Boys</button>
+            <button class="sub-btn" onclick="filterGames('girls', event)">Girls</button>
+            <button class="sub-btn" onclick="filterGames('kids', event)">Kids</button>
         </div>
 
-        <!-- Group 2: Core Genres -->
-        <div class="cat-group">
-            <div class="cat-title">⚡ Core Genres</div>
-            <div class="cat-buttons">
-                <button class="nav-btn" onclick="filterGames('action', event)">Action</button>
-                <button class="nav-btn" onclick="filterGames('racing', event)">Racing</button>
-                <button class="nav-btn" onclick="filterGames('driving', event)">Driving</button>
-                <button class="nav-btn" onclick="filterGames('shooting', event)">Shooting</button>
-                <button class="nav-btn" onclick="filterGames('puzzle', event)">Puzzle</button>
-                <button class="nav-btn" onclick="filterGames('arcade', event)">Arcade</button>
-                <button class="nav-btn" onclick="filterGames('casual', event)">Casual</button>
-                <button class="nav-btn" onclick="filterGames('sports', event)">Sports</button>
-                <button class="nav-btn" onclick="filterGames('adventure', event)">Adventure</button>
-                <button class="nav-btn" onclick="filterGames('simulation', event)">Simulation</button>
-            </div>
+        <!-- ⚡ Core Genres 组 -->
+        <div class="sub-buttons sub-group" id="group-genres" style="display:none;">
+            <button class="sub-btn" onclick="filterGames('action', event)">Action</button>
+            <button class="sub-btn" onclick="filterGames('racing', event)">Racing</button>
+            <button class="sub-btn" onclick="filterGames('driving', event)">Driving</button>
+            <button class="sub-btn" onclick="filterGames('shooting', event)">Shooting</button>
+            <button class="sub-btn" onclick="filterGames('puzzle', event)">Puzzle</button>
+            <button class="sub-btn" onclick="filterGames('arcade', event)">Arcade</button>
+            <button class="sub-btn" onclick="filterGames('casual', event)">Casual</button>
+            <button class="sub-btn" onclick="filterGames('sports', event)">Sports</button>
+            <button class="sub-btn" onclick="filterGames('adventure', event)">Adventure</button>
+            <button class="sub-btn" onclick="filterGames('simulation', event)">Simulation</button>
         </div>
 
-        <!-- Group 3: Visuals & Styles -->
-        <div class="cat-group">
-            <div class="cat-title">🎨 Visuals & Styles</div>
-            <div class="cat-buttons">
-                <button class="nav-btn" onclick="filterGames('3d', event)">3D</button>
-                <button class="nav-btn" onclick="filterGames('2d', event)">2D</button>
-                <button class="nav-btn" onclick="filterGames('pixel', event)">Pixel</button>
-                <button class="nav-btn" onclick="filterGames('io', event)">.IO Games</button>
-            </div>
+        <!-- 🎨 Visuals & Styles 组 -->
+        <div class="sub-buttons sub-group" id="group-styles" style="display:none;">
+            <button class="sub-btn" onclick="filterGames('3d', event)">3D</button>
+            <button class="sub-btn" onclick="filterGames('2d', event)">2D</button>
+            <button class="sub-btn" onclick="filterGames('pixel', event)">Pixel</button>
+            <button class="sub-btn" onclick="filterGames('io', event)">.IO Games</button>
         </div>
 
-        <!-- Group 4: Popular Sub-genres -->
-        <div class="cat-group">
-            <div class="cat-title">🎯 Popular Tags</div>
-            <div class="cat-buttons">
-                <button class="nav-btn" onclick="filterGames('car', event)">Car</button>
-                <button class="nav-btn" onclick="filterGames('bike', event)">Bike</button>
-                <button class="nav-btn" onclick="filterGames('dressup', event)">Dress Up</button>
-                <button class="nav-btn" onclick="filterGames('cooking', event)">Cooking</button>
-                <button class="nav-btn" onclick="filterGames('runner', event)">Runner</button>
-                <button class="nav-btn" onclick="filterGames('clicker', event)">Clicker</button>
-                <button class="nav-btn" onclick="filterGames('zombie', event)">Zombie</button>
-            </div>
+        <!-- 🎯 Popular Tags 组 -->
+        <div class="sub-buttons sub-group" id="group-popular" style="display:none;">
+            <button class="sub-btn" onclick="filterGames('car', event)">Car</button>
+            <button class="sub-btn" onclick="filterGames('bike', event)">Bike</button>
+            <button class="sub-btn" onclick="filterGames('dressup', event)">Dress Up</button>
+            <button class="sub-btn" onclick="filterGames('cooking', event)">Cooking</button>
+            <button class="sub-btn" onclick="filterGames('runner', event)">Runner</button>
+            <button class="sub-btn" onclick="filterGames('clicker', event)">Clicker</button>
+            <button class="sub-btn" onclick="filterGames('zombie', event)">Zombie</button>
         </div>
 
     </div>
 
-    <!-- Games Display Grid -->
+    <!-- 游戏卡片展示区 -->
     <div class="grid" id="game-grid"></div>
 
     <script>
         let allGames = [];
+        let currentActiveGroup = null;
 
         fetch('static/games.json?t=' + new Date().getTime())
             .then(res => res.json())
@@ -126,6 +124,44 @@
                 document.getElementById('game-grid').innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#ff5555;">Failed to load games. Please check static/games.json file.</p>';
             });
 
+        // 切换展开/收起对应的二级小分类菜单
+        function toggleSubMenu(groupName, e) {
+            const panel = document.getElementById('sub-panel');
+            const targetGroup = document.getElementById('group-' + groupName);
+
+            // 更新顶层按钮高亮
+            document.querySelectorAll('.main-btn').forEach(btn => btn.classList.remove('active'));
+            if (e && e.currentTarget) {
+                e.currentTarget.classList.add('active');
+            }
+
+            // 如果点击的是已经打开的组，则收起面板
+            if (currentActiveGroup === groupName && panel.classList.contains('open')) {
+                panel.classList.remove('open');
+                currentActiveGroup = null;
+                return;
+            }
+
+            // 隐藏所有子组，只显示选中的组
+            document.querySelectorAll('.sub-group').forEach(group => group.style.display = 'none');
+            targetGroup.style.display = 'flex';
+            panel.classList.add('open');
+            currentActiveGroup = groupName;
+        }
+
+        // 显示全部游戏并收起二级面板
+        function showAllGames(e) {
+            document.querySelectorAll('.main-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.sub-btn').forEach(btn => btn.classList.remove('active'));
+            if (e && e.currentTarget) {
+                e.currentTarget.classList.add('active');
+            }
+            document.getElementById('sub-panel').classList.remove('open');
+            currentActiveGroup = null;
+            renderGames(allGames);
+        }
+
+        // 渲染游戏列表
         function renderGames(list) {
             const grid = document.getElementById('game-grid');
             grid.innerHTML = '';
@@ -164,25 +200,22 @@
             });
         }
 
+        // 筛选游戏
         function filterGames(cat, e) {
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            if (e && e.target && e.target.classList.contains('nav-btn')) {
+            document.querySelectorAll('.sub-btn').forEach(btn => btn.classList.remove('active'));
+            if (e && e.target) {
                 e.target.classList.add('active');
             }
 
-            if (cat === 'all') {
-                renderGames(allGames);
-            } else {
-                const filtered = allGames.filter(g => {
-                    if (Array.isArray(g.category)) {
-                        return g.category.some(c => c.toLowerCase() === cat.toLowerCase());
-                    } else if (typeof g.category === 'string') {
-                        return g.category.toLowerCase() === cat.toLowerCase();
-                    }
-                    return false;
-                });
-                renderGames(filtered);
-            }
+            const filtered = allGames.filter(g => {
+                if (Array.isArray(g.category)) {
+                    return g.category.some(c => c.toLowerCase() === cat.toLowerCase());
+                } else if (typeof g.category === 'string') {
+                    return g.category.toLowerCase() === cat.toLowerCase();
+                }
+                return false;
+            });
+            renderGames(filtered);
         }
     </script>
 </body>
