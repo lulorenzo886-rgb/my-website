@@ -31,8 +31,8 @@
       "simulation"
     ],
     "description": "Master the art of precision driving in Police Car Parking 2026!",
-    "cover": "static/images/Police Car Parking 2026-512x384.jpg",
-    "image": "static/images/Police Car Parking 2026-512x384.jpg",
+    "cover": "https://images.weserv.nl/?url=https://img.gamemonetize.com/zo8ocq9uu0gjavl3iazgiessapj6ov6n/512.jpg",
+    "image": "https://images.weserv.nl/?url=https://img.gamemonetize.com/zo8ocq9uu0gjavl3iazgiessapj6ov6n/512.jpg",
     "url": "https://html5.gamemonetize.co/zo8ocq9uu0gjavl3iazgiessapj6ov6n/"
   },
   {
@@ -52,5 +52,40 @@
     "cover": "static/images/spooky-escape.jpg",
     "image": "static/images/spooky-escape.jpg",
     "url": "https://html5.gamemonetize.co/mb29iwgb5anp93swbuzxsxt74lri4dx5/"
+  },
+  {
+    "id": "archery-master",
+    "slug": "archery-master",
+    "title": "Archery Master",
+    "category": [
+      "sports",
+      "action",
+      "3d",
+      "singleplayer",
+      "boys",
+      "casual"
+    ],
+    "description": "Test your precision skills! Aim, adjust for wind direction, and hit the bullseye in this ultimate 3D archery simulator.",
+    "cover": "https://images.weserv.nl/?url=https://img.gamemonetize.com/f471e4j1zv654kbamb500101omqd11hf/512.jpg",
+    "image": "https://images.weserv.nl/?url=https://img.gamemonetize.com/f471e4j1zv654kbamb500101omqd11hf/512.jpg",
+    "url": "https://html5.gamemonetize.co/f471e4j1zv654kbamb500101omqd11hf/"
+  },
+  {
+    "id": "crazy-drift-3d",
+    "slug": "crazy-drift-3d",
+    "title": "Crazy Drift 3D",
+    "category": [
+      "racing",
+      "driving",
+      "3d",
+      "car",
+      "singleplayer",
+      "boys",
+      "simulation"
+    ],
+    "description": "Burn rubber and show off your ultimate drifting skills! Control high-powered sports cars and conquer challenging 3D drift tracks.",
+    "cover": "https://images.weserv.nl/?url=https://img.gamemonetize.com/xj60g4n0wq0s5stq18qel8l04vc3zycw/512.jpg",
+    "image": "https://images.weserv.nl/?url=https://img.gamemonetize.com/xj60g4n0wq0s5stq18qel8l04vc3zycw/512.jpg",
+    "url": "https://html5.gamemonetize.co/xj60g4n0wq0s5stq18qel8l04vc3zycw/"
   }
 ]
