@@ -1,18 +1,10 @@
 [
   {
-    "id": "pool-duel",
-    "title": "8 Ball Pool",
-    "category": "Sports",
-    "description": "经典桌球对决，体验真实的物理碰撞！",
-    "image": "https://img.gamemonetize.com/9v4v9j69p8z35787612d6x994273z81s/512x512.jpg",
-    "url": "https://html5.gamemonetize.com/9v4v9j69p8z35787612d6x994273z81s/"
-  },
-  {
-    "id": "subway-surfers",
-    "title": "Subway Surfers",
+    "id": "fruit-ninja",
+    "title": "Fruit Ninja",
     "category": "Action",
-    "description": "火爆全球的跑酷游戏，快来挑战高分！",
-    "image": "https://img.gamemonetize.com/71239612348792138/512x512.jpg",
-    "url": "https://html5.gamemonetize.com/79a32c25k62z137p4829375y19302174/"
+    "description": "经典的 HTML5 网页游戏，即点即玩！",
+    "image": "https://img.gamemonetize.com/4kci7og3klgj0ivy2wz3gdvd9dth5e7n/512x512.jpg",
+    "url": "https://html5.gamemonetize.com/4kci7og3klgj0ivy2wz3gdvd9dth5e7n/"
   }
 ]
