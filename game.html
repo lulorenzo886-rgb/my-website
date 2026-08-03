@@ -38,13 +38,15 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const slug = urlParams.get('slug');
+        // 兼容匹配：不管是 url 里的 ?id= 还是 ?slug= 都能识别
+        const targetId = urlParams.get('id') || urlParams.get('slug');
 
-        if (slug) {
+        if (targetId) {
             fetch('games.json')
                 .then(res => res.json())
                 .then(games => {
-                    const game = games.find(g => g.slug === slug);
+                    // 同时匹配 id 或 slug
+                    const game = games.find(g => g.id === targetId || g.slug === targetId);
                     if (game) {
                         document.title = `${game.title} - Free Classic Games`;
                         document.getElementById('game-title').innerText = game.title;
@@ -52,17 +54,17 @@
                         document.getElementById('game-controls').innerText = game.controls || 'Use Keyboard Arrows/WASD to move, Space/Mouse to interact.';
 
                         if (game.url && game.url.startsWith('http')) {
-                            let baseUrl = game.url;
-                            if (!baseUrl.endsWith('/')) {
-                                baseUrl += '/';
-                            }
-                            // 按照你发的官方规范，自动把当前页面地址拼到参数里
-                            const currentPageUrl = encodeURIComponent(window.location.href);
-                            document.getElementById('game-frame').src = `${baseUrl}?gd_sdk_referrer_url=${currentPageUrl}`;
+                            // 直接使用 GameMonetize 链接，不搞复杂的拼接
+                            document.getElementById('game-frame').src = game.url;
                         } else {
-                            document.getElementById('game-frame').src = `static/games/${slug}/index.html`;
+                            document.getElementById('game-frame').src = `static/games/${targetId}/index.html`;
                         }
+                    } else {
+                        document.getElementById('game-title').innerText = 'Game Not Found';
                     }
+                })
+                .catch(err => {
+                    console.error('Error loading games.json:', err);
                 });
         }
     </script>
