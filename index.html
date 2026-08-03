@@ -4,23 +4,22 @@
     <meta charset="UTF-8">
     <meta name="referrer" content="no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <!-- 1. 浏览器标题 -->
     <title>LuluTap - Play Free Games</title>
 
     <!-- 2. 浏览器图标（Lu + 点击手势 👆） -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2307090e'/><text x='18' y='62' font-family='sans-serif' font-weight='900' font-size='48' fill='%2300f2fe'>Lu</text><path d='M58 42 L58 72 L66 65 L73 80 L79 77 L72 62 L82 62 Z' fill='%23ffffff' stroke='%2300f2fe' stroke-width='2.5'/></svg>">
 
-    <!-- 引入你的 CSS 文件（如果你的 css 在 static 目录下，请改成 static/style.css） -->
+    <!-- 3. 引入你的 CSS 文件 -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- 3. 顶部毛玻璃导航栏 -->
+    <!-- 4. 顶部毛玻璃导航栏（完美对齐 .glass-navbar） -->
     <nav class="glass-navbar">
         <div class="nav-brand">
-            <div class="brand-logo" style="background: linear-gradient(135deg, #00f2fe, #4facfe); border-radius: 10px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #000; font-size: 1rem; position: relative;">
-                Lu<span style="font-size: 0.75rem; position: absolute; right: 2px; bottom: 2px;">👆</span>
-            </div>
+            <div class="brand-logo">Lu👆</div>
             <div class="brand-name">Lulu<span class="highlight">Tap</span></div>
         </div>
         <div class="search-capsule">
@@ -29,21 +28,22 @@
         <a href="#" class="action-btn">Featured</a>
     </nav>
 
-    <!-- 4. 炫酷控制栏 -->
+    <!-- 5. 顶部分类控制栏（完美对齐 .category-control-bar） -->
     <div class="category-control-bar">
         <button class="btn-home" onclick="goHome()">🔥 Show All Games</button>
-        <button class="btn-folder" onclick="openFolder('players', event)">👥 Players ▾</button>
-        <button class="btn-folder" onclick="openFolder('genres', event)">⚡ Genres ▾</button>
-        <button class="btn-folder" onclick="openFolder('styles', event)">🎨 Styles ▾</button>
-        <button class="btn-folder" onclick="openFolder('tags', event)">🎯 Tags ▾</button>
+        <button class="btn-folder" id="btn-players" onclick="openFolder('players', this)">👥 Players ▾</button>
+        <button class="btn-folder" id="btn-genres" onclick="openFolder('genres', this)">⚡ Genres ▾</button>
+        <button class="btn-folder" id="btn-styles" onclick="openFolder('styles', this)">🎨 Styles ▾</button>
+        <button class="btn-folder" id="btn-tags" onclick="openFolder('tags', this)">🎯 Tags ▾</button>
     </div>
 
-    <!-- 5. 置顶的多选 Chip 胶囊栏 -->
+    <!-- 6. 置顶已选标签 Chip 胶囊栏（完美对齐 .selected-tags-bar） -->
     <div class="selected-tags-bar" id="selected-tags-bar">
-        Selected Filters: <div class="selected-tags-wrapper" id="selected-tags-list"></div>
+        Selected Filters: 
+        <div class="selected-tags-wrapper" id="selected-tags-list"></div>
     </div>
 
-    <!-- 6. 3D 弹出式毛玻璃二级面板 -->
+    <!-- 7. 二级分类毛玻璃弹出面板（完美对齐 .sub-category-panel） -->
     <div class="sub-category-panel" id="panel">
         <div class="sub-group" id="sub-players" style="display:none;">
             <button class="sub-btn" data-cat="2player" onclick="toggleTag('2player', this)">2 Player</button>
@@ -85,12 +85,12 @@
         </div>
     </div>
 
-    <!-- 7. 游戏展示网格区 -->
+    <!-- 8. 主体网格（完美对齐 .main-content & .arcade-grid） -->
     <main class="main-content">
         <div class="arcade-grid" id="game-grid"></div>
     </main>
 
-    <!-- 8. 页脚 -->
+    <!-- 9. 页脚（完美对齐 .arcade-footer） -->
     <footer class="arcade-footer">
         <div class="footer-inner">
             <div>© 2026 LuluTap. All rights reserved.</div>
@@ -102,14 +102,14 @@
         </div>
     </footer>
 
-    <!-- 9. 核心交互 JS 逻辑（带容错全量匹配） -->
+    <!-- 10. 交互逻辑 JS -->
     <script>
         let allGames = [];
         let activeFolderName = null;
         let selectedTags = new Map();
         let searchQuery = "";
 
-        // 读取游戏数据
+        // 自动兼容数据加载
         fetch('static/games.json?t=' + new Date().getTime())
             .then(res => res.json())
             .then(games => {
@@ -118,49 +118,48 @@
             })
             .catch(err => {
                 console.error('Error loading games:', err);
-                document.getElementById('game-grid').innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#ff5555;padding:40px 0;">Failed to load static/games.json file.</p>';
+                document.getElementById('game-grid').innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#ff5555;padding:40px 0;">Failed to load static/games.json</p>';
             });
 
-        // 展开 / 折叠集合面板
-        function openFolder(folderName, e) {
+        // 打开/关闭文件夹面板
+        function openFolder(folderName, btnElement) {
             const panel = document.getElementById('panel');
-            document.querySelectorAll('.btn-folder').forEach(btn => btn.classList.remove('active'));
 
             if (activeFolderName === folderName && panel.classList.contains('open')) {
                 panel.classList.remove('open');
+                btnElement.classList.remove('active');
                 activeFolderName = null;
                 return;
             }
 
-            if (e && e.currentTarget) {
-                e.currentTarget.classList.add('active');
-            }
+            document.querySelectorAll('.btn-folder').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
 
             document.querySelectorAll('.sub-group').forEach(g => g.style.display = 'none');
-            const subElem = document.getElementById('sub-' + folderName);
-            if (subElem) subElem.style.display = 'flex';
-            
+            const targetGroup = document.getElementById('sub-' + folderName);
+            if (targetGroup) targetGroup.style.display = 'flex';
+
             panel.classList.add('open');
             activeFolderName = folderName;
         }
 
-        // 点击 Show All / 重置
+        // 重置/显示全部
         function goHome() {
-            document.querySelectorAll('.btn-folder').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.sub-btn').forEach(btn => btn.classList.remove('selected'));
+            document.querySelectorAll('.btn-folder').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('selected'));
             
             selectedTags.clear();
             searchQuery = "";
             document.getElementById('search-input').value = "";
+            
             updateSelectedTagsUI();
-
             document.getElementById('panel').classList.remove('open');
             activeFolderName = null;
             
             renderGames(allGames);
         }
 
-        // 选择 / 取消选择标签
+        // 选择/取消选择 Chip 标签
         function toggleTag(cat, btnElement) {
             const catLower = cat.toLowerCase();
             const displayName = btnElement.textContent.trim();
@@ -177,7 +176,7 @@
             applyFilters();
         }
 
-        // 移除顶部的 Chip 标签
+        // 删除 Chip 标签
         function removeTag(catLower) {
             selectedTags.delete(catLower);
             document.querySelectorAll(`.sub-btn[data-cat="${catLower}"]`).forEach(btn => {
@@ -188,7 +187,7 @@
             applyFilters();
         }
 
-        // 刷新顶部已选 Chip UI
+        // 更新 Selected Filters 这一行的 Chip UI
         function updateSelectedTagsUI() {
             const bar = document.getElementById('selected-tags-bar');
             const listContainer = document.getElementById('selected-tags-list');
@@ -211,13 +210,13 @@
             }
         }
 
-        // 搜索框输入
+        // 搜索框过滤
         function onSearchInput(val) {
             searchQuery = val.trim().toLowerCase();
             applyFilters();
         }
 
-        // 过滤逻辑
+        // 筛选逻辑 (支持多选交集 + 关键字)
         function applyFilters() {
             const requiredKeys = Array.from(selectedTags.keys());
 
@@ -231,7 +230,7 @@
                 const matchesTags = requiredKeys.every(tagKey => {
                     return gameCategories.some(gc => gc.includes(tagKey) || tagKey.includes(gc));
                 });
-                
+
                 const title = String(game.title || '').toLowerCase();
                 const desc = String(game.description || '').toLowerCase();
                 const matchesSearch = !searchQuery || title.includes(searchQuery) || desc.includes(searchQuery);
@@ -242,20 +241,20 @@
             renderGames(filtered);
         }
 
-        // 渲染卡片
+        // 渲染卡片 (完全匹配你的 .game-card 结构)
         function renderGames(list) {
             const grid = document.getElementById('game-grid');
             grid.innerHTML = '';
-            
+
             if (!list || list.length === 0) {
-                grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#888;padding:60px 0;">No games match your selected filters.</p>';
+                grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#64748b;padding:60px 0;">No games found.</p>';
                 return;
             }
 
             list.forEach(game => {
                 const gameId = game.id || game.slug;
                 const coverImg = game.cover || game.image || 'https://via.placeholder.com/512';
-                
+
                 let rawCats = game.category || game.categories || [];
                 if (typeof rawCats === 'string') rawCats = [rawCats];
                 const catText = rawCats.slice(0, 2).join(' • ');
