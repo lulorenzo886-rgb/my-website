@@ -1,48 +1,120 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Classic Online Games</title>
+    <title>Free Online Games - Play Instant HTML5 Games</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #12131C; color: #ffffff; padding: 20px; }
-        header { text-align: center; margin-bottom: 30px; }
-        h1 { color: #6C5CE7; margin-bottom: 10px; }
-        .nav-categories { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
-        .nav-btn { background-color: #1A1C29; color: #A0A5BA; border: 1px solid #2B2D3E; padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: 0.3s; }
+        header { text-align: center; margin-bottom: 25px; }
+        h1 { color: #6C5CE7; margin-bottom: 8px; font-size: 28px; }
+        p.subtitle { color: #A0A5BA; font-size: 14px; }
+        
+        /* Category Group Container */
+        .category-container { max-width: 1200px; margin: 0 auto 30px auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; }
+        .cat-group { background: #1A1C29; border: 1px solid #2B2D3E; border-radius: 12px; padding: 15px; }
+        .cat-title { font-size: 13px; font-weight: bold; color: #6C5CE7; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .cat-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+        
+        .nav-btn { background-color: #23263A; color: #A0A5BA; border: 1px solid #2B2D3E; padding: 6px 12px; border-radius: 15px; cursor: pointer; transition: 0.2s; font-size: 12px; }
         .nav-btn.active, .nav-btn:hover { background-color: #6C5CE7; color: #fff; border-color: #6C5CE7; }
+        
+        /* Reset Filter Button */
+        .all-btn-wrap { text-align: center; margin-bottom: 20px; }
+        .all-btn { background: #6C5CE7; color: #fff; border: none; padding: 8px 24px; border-radius: 20px; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .all-btn:hover { background: #5a4bcf; }
+
+        /* Game Grid Layout */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
-        .card { background-color: #1A1C29; border-radius: 12px; overflow: hidden; border: 1px solid #2B2D3E; transition: transform 0.2s; text-decoration: none; color: inherit; display: flex; flex-direction: column; }
+        .card { background-color: #1A1C29; border-radius: 12px; overflow: hidden; border: 1px solid #2B2D3E; transition: transform 0.2s, border-color 0.2s; text-decoration: none; color: inherit; display: flex; flex-direction: column; }
         .card:hover { transform: translateY(-5px); border-color: #6C5CE7; }
-        .card img { width: 100%; height: 180px; object-fit: cover; }
+        .card img { width: 100%; height: 180px; object-fit: cover; background-color: #23263a; }
         .card-info { padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .card-title { font-size: 16px; font-weight: bold; margin-bottom: 8px; }
-        .card-cat { font-size: 12px; color: #6C5CE7; text-transform: uppercase; font-weight: bold; }
+        .card-title { font-size: 16px; font-weight: bold; margin-bottom: 8px; color: #fff; }
+        .card-desc { font-size: 12px; color: #8A8F9E; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-cat { font-size: 11px; color: #6C5CE7; text-transform: uppercase; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>🎮 Free Classic Games</h1>
-        <p>Play instant HTML5 games directly in your browser!</p>
+        <h1>🎮 Instant Game Station</h1>
+        <p class="subtitle">Play free online HTML5 games directly in your browser with no downloads required!</p>
     </header>
 
-    <div class="nav-categories" id="category-bar">
-        <button class="nav-btn active" onclick="filterGames('all')">🔥 All</button>
-        <button class="nav-btn" onclick="filterGames('action')">Action</button>
-        <button class="nav-btn" onclick="filterGames('racing')">Racing</button>
-        <button class="nav-btn" onclick="filterGames('puzzle')">Puzzle</button>
+    <!-- Reset Filter Button -->
+    <div class="all-btn-wrap">
+        <button class="all-btn" onclick="filterGames('all', event)">🔥 Show All Games</button>
     </div>
 
-    <div class="grid" id="game-grid">
-        <!-- 游戏卡片会自动在这里生成 -->
+    <!-- 4 Main Category Groups -->
+    <div class="category-container" id="category-bar">
+        
+        <!-- Group 1: Players & Audience -->
+        <div class="cat-group">
+            <div class="cat-title">👥 Players & Audience</div>
+            <div class="cat-buttons">
+                <button class="nav-btn" onclick="filterGames('2player', event)">2 Player</button>
+                <button class="nav-btn" onclick="filterGames('singleplayer', event)">Single Player</button>
+                <button class="nav-btn" onclick="filterGames('multiplayer', event)">Multiplayer</button>
+                <button class="nav-btn" onclick="filterGames('boys', event)">Boys</button>
+                <button class="nav-btn" onclick="filterGames('girls', event)">Girls</button>
+                <button class="nav-btn" onclick="filterGames('kids', event)">Kids</button>
+            </div>
+        </div>
+
+        <!-- Group 2: Core Genres -->
+        <div class="cat-group">
+            <div class="cat-title">⚡ Core Genres</div>
+            <div class="cat-buttons">
+                <button class="nav-btn" onclick="filterGames('action', event)">Action</button>
+                <button class="nav-btn" onclick="filterGames('racing', event)">Racing</button>
+                <button class="nav-btn" onclick="filterGames('driving', event)">Driving</button>
+                <button class="nav-btn" onclick="filterGames('shooting', event)">Shooting</button>
+                <button class="nav-btn" onclick="filterGames('puzzle', event)">Puzzle</button>
+                <button class="nav-btn" onclick="filterGames('arcade', event)">Arcade</button>
+                <button class="nav-btn" onclick="filterGames('casual', event)">Casual</button>
+                <button class="nav-btn" onclick="filterGames('sports', event)">Sports</button>
+                <button class="nav-btn" onclick="filterGames('adventure', event)">Adventure</button>
+                <button class="nav-btn" onclick="filterGames('simulation', event)">Simulation</button>
+            </div>
+        </div>
+
+        <!-- Group 3: Visuals & Styles -->
+        <div class="cat-group">
+            <div class="cat-title">🎨 Visuals & Styles</div>
+            <div class="cat-buttons">
+                <button class="nav-btn" onclick="filterGames('3d', event)">3D</button>
+                <button class="nav-btn" onclick="filterGames('2d', event)">2D</button>
+                <button class="nav-btn" onclick="filterGames('pixel', event)">Pixel</button>
+                <button class="nav-btn" onclick="filterGames('io', event)">.IO Games</button>
+            </div>
+        </div>
+
+        <!-- Group 4: Popular Sub-genres -->
+        <div class="cat-group">
+            <div class="cat-title">🎯 Popular Tags</div>
+            <div class="cat-buttons">
+                <button class="nav-btn" onclick="filterGames('car', event)">Car</button>
+                <button class="nav-btn" onclick="filterGames('bike', event)">Bike</button>
+                <button class="nav-btn" onclick="filterGames('dressup', event)">Dress Up</button>
+                <button class="nav-btn" onclick="filterGames('cooking', event)">Cooking</button>
+                <button class="nav-btn" onclick="filterGames('runner', event)">Runner</button>
+                <button class="nav-btn" onclick="filterGames('clicker', event)">Clicker</button>
+                <button class="nav-btn" onclick="filterGames('zombie', event)">Zombie</button>
+            </div>
+        </div>
+
     </div>
+
+    <!-- Games Display Grid -->
+    <div class="grid" id="game-grid"></div>
 
     <script>
         let allGames = [];
 
-        // 强行加上时间戳防止浏览器缓存 games.json
         fetch('static/games.json?t=' + new Date().getTime())
             .then(res => res.json())
             .then(games => {
@@ -50,8 +122,8 @@
                 renderGames(allGames);
             })
             .catch(err => {
-                console.error('Error:', err);
-                document.getElementById('game-grid').innerHTML = '<p style="text-align:center;grid-column:1/-1;">加载失败，请检查 static/games.json 路径或语法。</p>';
+                console.error('Error loading games:', err);
+                document.getElementById('game-grid').innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#ff5555;">Failed to load games. Please check static/games.json file.</p>';
             });
 
         function renderGames(list) {
@@ -59,38 +131,56 @@
             grid.innerHTML = '';
             
             if (!list || list.length === 0) {
-                grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;">暂无该分类下的游戏。</p>';
+                grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#8A8F9E;padding:40px 0;">No games found in this category. Try selecting another tag!</p>';
                 return;
             }
 
             list.forEach(game => {
                 const gameId = game.id || game.slug;
                 const coverImg = game.cover || game.image || 'https://via.placeholder.com/512';
-                const category = game.category || 'arcade';
+                
+                let categories = [];
+                if (Array.isArray(game.category)) {
+                    categories = game.category;
+                } else if (typeof game.category === 'string') {
+                    categories = [game.category];
+                }
+                const catText = categories.join(' • ').toUpperCase();
 
                 const a = document.createElement('a');
                 a.className = 'card';
                 a.href = `game.html?id=${gameId}`;
                 a.innerHTML = `
-                    <img src="${coverImg}" alt="${game.title}" onerror="this.src='https://via.placeholder.com/512'">
+                    <img src="${coverImg}" alt="${game.title}" onerror="this.src='https://via.placeholder.com/512?text=Game+Cover'">
                     <div class="card-info">
-                        <div class="card-title">${game.title}</div>
-                        <div class="card-cat">${category}</div>
+                        <div>
+                            <div class="card-title">${game.title}</div>
+                            <div class="card-desc">${game.description || ''}</div>
+                        </div>
+                        <div class="card-cat">${catText}</div>
                     </div>
                 `;
                 grid.appendChild(a);
             });
         }
 
-        function filterGames(cat) {
-            // 切换按钮样式
+        function filterGames(cat, e) {
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            if (e && e.target && e.target.classList.contains('nav-btn')) {
+                e.target.classList.add('active');
+            }
 
             if (cat === 'all') {
                 renderGames(allGames);
             } else {
-                const filtered = allGames.filter(g => (g.category || '').toLowerCase() === cat.toLowerCase());
+                const filtered = allGames.filter(g => {
+                    if (Array.isArray(g.category)) {
+                        return g.category.some(c => c.toLowerCase() === cat.toLowerCase());
+                    } else if (typeof g.category === 'string') {
+                        return g.category.toLowerCase() === cat.toLowerCase();
+                    }
+                    return false;
+                });
                 renderGames(filtered);
             }
         }
