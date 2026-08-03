@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LuluTap - Play Instant Free HTML5 Games</title>
 
-    <!-- ✨ 炫酷 Favicon 网页标签页图标（匹配主页光圈 Logo 风格） ✨ -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23111522'/><stop offset='100%' stop-color='%231a1c29'/></linearGradient></defs><circle cx='50' cy='50' r='48' fill='url(%23g)' stroke='%2300f2fe' stroke-width='3'/><circle cx='50' cy='50' r='38' fill='none' stroke='%236C5CE7' stroke-width='2' stroke-dasharray='4 2'/><text x='50%' y='68%' font-size='50' text-anchor='middle'>👆</text></svg>">
+    <!-- ✨ 炫酷 Favicon 网页标签页图标（匹配 LuluTap 光圈 Logo 风格） ✨ -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23111522'/><stop offset='100%' stop-color='%231a1c29'/></linearGradient></defs><circle cx='50' cy='50' r='48' fill='url(%23g)' stroke='%2300f2fe' stroke-width='3'/><circle cx='50' cy='50' r='38' fill='none' stroke='%23ff2a85' stroke-width='2' stroke-dasharray='4 2'/><text x='50%' y='68%' font-size='50' text-anchor='middle'>👆</text></svg>">
 
     <style>
         :root {
@@ -15,7 +15,9 @@
             --card-bg: #1A1C29;
             --primary-cyan: #00f2fe;
             --primary-purple: #6C5CE7;
+            --accent-pink: #ff2a85;
             --accent-glow: rgba(0, 242, 254, 0.35);
+            --pink-glow: rgba(255, 42, 133, 0.4);
             --purple-glow: rgba(108, 92, 231, 0.4);
             --text-muted: #A0A5BA;
         }
@@ -26,8 +28,8 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background-color: var(--bg-dark); 
             background-image: 
-                radial-gradient(circle at 15% 15%, rgba(108, 92, 231, 0.12) 0%, transparent 45%),
-                radial-gradient(circle at 85% 85%, rgba(0, 242, 254, 0.08) 0%, transparent 45%);
+                radial-gradient(circle at 15% 15%, rgba(255, 42, 133, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(0, 242, 254, 0.1) 0%, transparent 45%);
             background-attachment: fixed;
             color: #ffffff; 
             padding: 20px; 
@@ -35,11 +37,11 @@
         }
 
         /* =========================================================
-           1. 顶部 Header / 炫酷 Logo 区域 (蓝框重构)
+           1. 顶部 Header / 完整 LuluTap 炫酷 Logo 区域
            ========================================================= */
         header.hero-brand-header { 
             text-align: center; 
-            padding: 45px 20px 10px 20px; 
+            padding: 40px 20px 10px 20px; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -49,40 +51,40 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 16px;
+            gap: 14px;
             position: relative;
-            padding: 12px 28px;
-            background: rgba(26, 28, 41, 0.65);
+            padding: 10px 32px;
+            background: rgba(26, 28, 41, 0.7);
             border-radius: 100px;
-            border: 1px solid rgba(0, 242, 254, 0.25);
-            box-shadow: 0 0 35px rgba(0, 242, 254, 0.15), inset 0 0 15px rgba(108, 92, 231, 0.2);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            transition: all 0.3s ease;
+            border: 1.5px solid rgba(0, 242, 254, 0.3);
+            box-shadow: 0 0 35px rgba(255, 42, 133, 0.2), inset 0 0 20px rgba(0, 242, 254, 0.15);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
         }
 
         .lulutap-logo-wrapper:hover {
             border-color: var(--primary-cyan);
-            box-shadow: 0 0 50px rgba(0, 242, 254, 0.35), inset 0 0 25px rgba(108, 92, 231, 0.4);
-            transform: translateY(-2px);
+            box-shadow: 0 0 50px rgba(0, 242, 254, 0.4), inset 0 0 25px rgba(255, 42, 133, 0.3);
+            transform: translateY(-3px) scale(1.02);
         }
 
         /* 手指 Icon 与包围光圈 */
         .tap-circle-container {
             position: relative;
-            width: 44px;
-            height: 44px;
+            width: 46px;
+            height: 46px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .tap-hand-icon {
-            font-size: 1.8rem;
+            font-size: 1.9rem;
             z-index: 2;
             transform: rotate(-15deg);
-            filter: drop-shadow(0 0 8px var(--primary-cyan));
+            filter: drop-shadow(0 0 10px var(--primary-cyan));
             animation: tapBounce 2s infinite ease-in-out;
         }
 
@@ -96,44 +98,61 @@
             height: 40px;
             border-radius: 50%;
             border: 2px solid var(--primary-cyan);
-            box-shadow: 0 0 15px var(--primary-cyan), inset 0 0 10px var(--primary-purple);
+            box-shadow: 0 0 15px var(--primary-cyan), inset 0 0 10px var(--accent-pink);
             animation: neonRingPulse 2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
             z-index: 1;
         }
 
+        /* ✨ Highlight: Lulu + Tap 组合品牌字样 ✨ */
         .brand-title-text {
-            font-size: 2.6rem;
+            font-size: 2.8rem;
             font-weight: 900;
-            letter-spacing: 1px;
-            background: linear-gradient(135deg, #ffffff 0%, var(--primary-cyan) 50%, var(--primary-purple) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 25px rgba(0, 242, 254, 0.3);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
             line-height: 1;
             margin: 0;
+            font-family: 'Montserrat', 'Segoe UI', sans-serif;
+        }
+
+        /* 突出“Lulu”品牌名：采用粉紫到天蓝电光渐变 */
+        .brand-title-text .lulu-part {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 50%, #ffa400 100%);
+            background: linear-gradient(135deg, #ff2a85 0%, #a742ff 50%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 12px rgba(255, 42, 133, 0.4));
+        }
+
+        /* “Tap”字样：采用高亮冰蓝极光渐变 */
+        .brand-title-text .tap-part {
+            background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 12px rgba(0, 242, 254, 0.5));
         }
 
         p.subtitle { 
             color: var(--text-muted); 
-            font-size: 0.9rem; 
-            margin-top: 14px;
+            font-size: 0.95rem; 
+            margin-top: 16px;
             letter-spacing: 0.3px;
         }
 
         /* =========================================================
-           2. 分类控制栏 (紫框部分 - 整体下移)
+           2. 分类控制栏 (已调整下移)
            ========================================================= */
         .category-control-bar { 
             display: flex; 
             justify-content: center; 
             gap: 12px; 
             flex-wrap: wrap; 
-            margin-top: 30px;    /* 👈 整体下移 */
+            margin-top: 32px;    
             margin-bottom: 20px; 
         }
 
         .btn-home { 
-            background: linear-gradient(135deg, var(--primary-purple), var(--primary-cyan)); 
+            background: linear-gradient(135deg, var(--accent-pink), var(--primary-purple)); 
             color: #ffffff; 
             border: none; 
             padding: 10px 22px; 
@@ -142,7 +161,7 @@
             cursor: pointer; 
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
             font-size: 14px; 
-            box-shadow: 0 4px 15px var(--purple-glow);
+            box-shadow: 0 4px 15px var(--pink-glow);
         }
         .btn-home:hover { 
             transform: translateY(-2px) scale(1.03); 
@@ -191,13 +210,13 @@
             display: inline-flex; 
             align-items: center; 
             gap: 6px; 
-            background: linear-gradient(135deg, var(--primary-purple), #5a4bcf); 
+            background: linear-gradient(135deg, var(--accent-pink), var(--primary-purple)); 
             color: #ffffff; 
             padding: 5px 14px; 
             border-radius: 100px; 
             font-size: 13px; 
             font-weight: bold; 
-            box-shadow: 0 2px 10px var(--purple-glow);
+            box-shadow: 0 2px 10px var(--pink-glow);
         }
         .btn-close-chip { 
             cursor: pointer; 
@@ -252,14 +271,14 @@
         }
 
         /* =========================================================
-           3. 游戏网格区域 (绿框部分 - 整体下移)
+           3. 游戏网格区域
            ========================================================= */
         .grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
             gap: 22px; 
             max-width: 1200px; 
-            margin: 10px auto 50px auto; /* 👈 整体下移并拉开底部空间 */
+            margin: 10px auto 50px auto;
         }
         .card { 
             background-color: var(--card-bg); 
@@ -301,8 +320,8 @@
                 width: 48px;
                 height: 48px;
                 opacity: 0.8;
-                border-color: var(--primary-purple);
-                box-shadow: 0 0 20px var(--primary-purple);
+                border-color: var(--accent-pink);
+                box-shadow: 0 0 20px var(--accent-pink);
             }
             100% {
                 width: 65px;
@@ -324,19 +343,23 @@
 </head>
 <body>
 
-    <!-- 蓝框重构：Logo + 科技圆圈手势 -->
+    <!-- 重构：极具品牌感与科技感的全称 LuluTap Logo 区域 -->
     <header class="hero-brand-header">
         <div class="lulutap-logo-wrapper" onclick="goHome(event)">
             <div class="tap-circle-container">
                 <span class="tap-hand-icon">👆</span>
                 <div class="glow-pulse-ring"></div>
             </div>
-            <h1 class="brand-title-text">LuluTap</h1>
+            <!-- 完美的 LuluTap 文字视觉设计 -->
+            <h1 class="brand-title-text">
+                <span class="lulu-part">Lulu</span><span class="tap-part">Tap</span>
+            </h1>
         </div>
-        <p class="subtitle">Play free online HTML5 games directly in your browser with no downloads required!</p>
+        <!-- 🎯 已更新为方案一的融合副标题 -->
+        <p class="subtitle">Welcome to LuluTap! Tap into instant fun with the best free online games—no downloads required! 🚀</p>
     </header>
 
-    <!-- 紫框部分：顶部控制栏 (已下移) -->
+    <!-- 顶部控制栏 -->
     <div class="category-control-bar">
         <button class="btn-home" onclick="goHome(event)">🔥 Show All Games</button>
         <button class="btn-folder" onclick="openFolder('players', event)">👥 Players ▾</button>
@@ -398,7 +421,7 @@
 
     </div>
 
-    <!-- 绿框部分：游戏面板 (已下移) -->
+    <!-- 游戏网格面板 -->
     <div class="grid" id="game-grid"></div>
 
     <script>
