@@ -1,4 +1,110 @@
-<!-- 核心交互 JS 逻辑（容错与全量兼容增强版） -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- 1. 浏览器标签页标题 -->
+    <title>LuluTap - Play Free Games</title>
+
+    <!-- 2. 浏览器标签页图标（Favicon：Lu + 鼠标点击手势） -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2307090e'/><text x='18' y='62' font-family='sans-serif' font-weight='900' font-size='48' fill='%2300f2fe'>Lu</text><path d='M58 42 L58 72 L66 65 L73 80 L79 77 L72 62 L82 62 Z' fill='%23ffffff' stroke='%2300f2fe' stroke-width='2.5'/></svg>">
+
+    <!-- 引入样式表 -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 3. 顶部毛玻璃导航栏 -->
+    <nav class="glass-navbar">
+        <div class="nav-brand">
+            <!-- 网站 Logo：Lu + 点击手势图标 -->
+            <div class="brand-logo" style="background: linear-gradient(135deg, #00f2fe, #4facfe); border-radius: 10px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #000; font-size: 1rem; position: relative;">
+                Lu<span style="font-size: 0.75rem; position: absolute; right: 2px; bottom: 2px;">👆</span>
+            </div>
+            <div class="brand-name">Lulu<span class="highlight">Tap</span></div>
+        </div>
+        <div class="search-capsule">
+            <input type="text" id="search-input" placeholder="Search games..." oninput="onSearchInput(this.value)">
+        </div>
+        <a href="#" class="action-btn">Featured</a>
+    </nav>
+
+    <!-- 4. 炫酷控制栏（首页 + 4个大集合展开按钮） -->
+    <div class="category-control-bar">
+        <button class="btn-home" onclick="goHome()">🔥 Show All Games</button>
+        <button class="btn-folder" onclick="openFolder('players', event)">👥 Players ▾</button>
+        <button class="btn-folder" onclick="openFolder('genres', event)">⚡ Genres ▾</button>
+        <button class="btn-folder" onclick="openFolder('styles', event)">🎨 Styles ▾</button>
+        <button class="btn-folder" onclick="openFolder('tags', event)">🎯 Tags ▾</button>
+    </div>
+
+    <!-- 5. 置顶的多选 Chip 胶囊栏（带 ✕ 关掉效果） -->
+    <div class="selected-tags-bar" id="selected-tags-bar">
+        Selected Filters: <div class="selected-tags-wrapper" id="selected-tags-list"></div>
+    </div>
+
+    <!-- 6. 3D 弹出式毛玻璃二级面板 -->
+    <div class="sub-category-panel" id="panel">
+        <div class="sub-group" id="sub-players" style="display:none;">
+            <button class="sub-btn" data-cat="2player" onclick="toggleTag('2player', this)">2 Player</button>
+            <button class="sub-btn" data-cat="singleplayer" onclick="toggleTag('singleplayer', this)">Single Player</button>
+            <button class="sub-btn" data-cat="multiplayer" onclick="toggleTag('multiplayer', this)">Multiplayer</button>
+            <button class="sub-btn" data-cat="boys" onclick="toggleTag('boys', this)">Boys</button>
+            <button class="sub-btn" data-cat="girls" onclick="toggleTag('girls', this)">Girls</button>
+            <button class="sub-btn" data-cat="kids" onclick="toggleTag('kids', this)">Kids</button>
+        </div>
+
+        <div class="sub-group" id="sub-genres" style="display:none;">
+            <button class="sub-btn" data-cat="action" onclick="toggleTag('action', this)">Action</button>
+            <button class="sub-btn" data-cat="racing" onclick="toggleTag('racing', this)">Racing</button>
+            <button class="sub-btn" data-cat="driving" onclick="toggleTag('driving', this)">Driving</button>
+            <button class="sub-btn" data-cat="shooting" onclick="toggleTag('shooting', this)">Shooting</button>
+            <button class="sub-btn" data-cat="puzzle" onclick="toggleTag('puzzle', this)">Puzzle</button>
+            <button class="sub-btn" data-cat="arcade" onclick="toggleTag('arcade', this)">Arcade</button>
+            <button class="sub-btn" data-cat="casual" onclick="toggleTag('casual', this)">Casual</button>
+            <button class="sub-btn" data-cat="sports" onclick="toggleTag('sports', this)">Sports</button>
+            <button class="sub-btn" data-cat="adventure" onclick="toggleTag('adventure', this)">Adventure</button>
+            <button class="sub-btn" data-cat="simulation" onclick="toggleTag('simulation', this)">Simulation</button>
+        </div>
+
+        <div class="sub-group" id="sub-styles" style="display:none;">
+            <button class="sub-btn" data-cat="3d" onclick="toggleTag('3d', this)">3D</button>
+            <button class="sub-btn" data-cat="2d" onclick="toggleTag('2d', this)">2D</button>
+            <button class="sub-btn" data-cat="pixel" onclick="toggleTag('pixel', this)">Pixel</button>
+            <button class="sub-btn" data-cat="io" onclick="toggleTag('io', this)">.IO Games</button>
+        </div>
+
+        <div class="sub-group" id="sub-tags" style="display:none;">
+            <button class="sub-btn" data-cat="car" onclick="toggleTag('car', this)">Car</button>
+            <button class="sub-btn" data-cat="bike" onclick="toggleTag('bike', this)">Bike</button>
+            <button class="sub-btn" data-cat="dressup" onclick="toggleTag('dressup', this)">Dress Up</button>
+            <button class="sub-btn" data-cat="cooking" onclick="toggleTag('cooking', this)">Cooking</button>
+            <button class="sub-btn" data-cat="runner" onclick="toggleTag('runner', this)">Runner</button>
+            <button class="sub-btn" data-cat="clicker" onclick="toggleTag('clicker', this)">Clicker</button>
+            <button class="sub-btn" data-cat="zombie" onclick="toggleTag('zombie', this)">Zombie</button>
+        </div>
+    </div>
+
+    <!-- 7. 游戏展示网格区 -->
+    <main class="main-content">
+        <div class="arcade-grid" id="game-grid"></div>
+    </main>
+
+    <!-- 8. 页脚 -->
+    <footer class="arcade-footer">
+        <div class="footer-inner">
+            <div>© 2026 LuluTap. All rights reserved.</div>
+            <div class="footer-links">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Support</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 9. 🔥 核心交互 JS 逻辑（容错与全量兼容增强版） -->
     <script>
         let allGames = [];
         let activeFolderName = null;
@@ -177,3 +283,5 @@
             });
         }
     </script>
+</body>
+</html>
