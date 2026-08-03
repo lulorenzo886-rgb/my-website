@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LuluTap - Play Instant Free HTML5 Games</title>
 
-    <!-- ✨ 炫酷 Favicon 网页标签页图标（匹配 LuluTap 光圈 Logo 风格） ✨ -->
+    <!-- ✨ 炫酷 Favicon 网页标签页图标 ✨ -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23111522'/><stop offset='100%' stop-color='%231a1c29'/></linearGradient></defs><circle cx='50' cy='50' r='48' fill='url(%23g)' stroke='%2300f2fe' stroke-width='3'/><circle cx='50' cy='50' r='38' fill='none' stroke='%23ff2a85' stroke-width='2' stroke-dasharray='4 2'/><text x='50%' y='68%' font-size='50' text-anchor='middle'>👆</text></svg>">
 
     <style>
@@ -62,6 +62,7 @@
             -webkit-backdrop-filter: blur(16px);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
+            animation: slideUpFade 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .lulutap-logo-wrapper:hover {
@@ -103,7 +104,7 @@
             z-index: 1;
         }
 
-        /* ✨ Highlight: Lulu + Tap 组合品牌字样 ✨ */
+        /* Lulu + Tap 组合品牌字样 */
         .brand-title-text {
             font-size: 2.8rem;
             font-weight: 900;
@@ -115,16 +116,13 @@
             font-family: 'Montserrat', 'Segoe UI', sans-serif;
         }
 
-        /* 突出“Lulu”品牌名：采用粉紫到天蓝电光渐变 */
         .brand-title-text .lulu-part {
-            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 50%, #ffa400 100%);
             background: linear-gradient(135deg, #ff2a85 0%, #a742ff 50%, #00f2fe 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 12px rgba(255, 42, 133, 0.4));
         }
 
-        /* “Tap”字样：采用高亮冰蓝极光渐变 */
         .brand-title-text .tap-part {
             background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
             -webkit-background-clip: text;
@@ -132,15 +130,21 @@
             filter: drop-shadow(0 0 12px rgba(0, 242, 254, 0.5));
         }
 
+        /* 🌟🌟🌟 更新后的副标题样式：字号变大 + 优雅入场动画 🌟🌟🌟 */
         p.subtitle { 
             color: var(--text-muted); 
-            font-size: 0.95rem; 
-            margin-top: 16px;
-            letter-spacing: 0.3px;
+            font-size: 1.2rem;          /* 从 0.95rem 放大到 1.2rem */
+            font-weight: 500;
+            margin-top: 18px;
+            letter-spacing: 0.5px;
+            line-height: 1.5;
+            max-width: 750px;
+            /* 向上滑入 + 渐现动画 */
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
         }
 
         /* =========================================================
-           2. 分类控制栏 (已调整下移)
+           2. 分类控制栏
            ========================================================= */
         .category-control-bar { 
             display: flex; 
@@ -149,6 +153,7 @@
             flex-wrap: wrap; 
             margin-top: 32px;    
             margin-bottom: 20px; 
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s backwards;
         }
 
         .btn-home { 
@@ -189,7 +194,6 @@
             box-shadow: 0 0 15px var(--accent-glow);
         }
 
-        /* 顶部已选 Filter 胶囊条 */
         .selected-tags-bar { 
             max-width: 800px; 
             margin: 0 auto 20px auto; 
@@ -233,7 +237,6 @@
         }
         .btn-close-chip:hover { background: #ff4757; transform: scale(1.15); }
 
-        /* 弹出的子分类面板 */
         .sub-category-panel { 
             max-width: 800px; 
             margin: 0 auto 30px auto; 
@@ -247,7 +250,6 @@
             backdrop-filter: blur(12px);
         }
         .sub-category-panel.open { display: block; animation: slideDown 0.25s ease-out; }
-        
         .sub-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
         
         .sub-btn { 
@@ -279,6 +281,7 @@
             gap: 22px; 
             max-width: 1200px; 
             margin: 10px auto 50px auto;
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s backwards;
         }
         .card { 
             background-color: var(--card-bg); 
@@ -331,6 +334,18 @@
             }
         }
 
+        /* 向上淡入出场动画 */
+        @keyframes slideUpFade {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         @keyframes slideDown {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -343,23 +358,20 @@
 </head>
 <body>
 
-    <!-- 重构：极具品牌感与科技感的全称 LuluTap Logo 区域 -->
     <header class="hero-brand-header">
         <div class="lulutap-logo-wrapper" onclick="goHome(event)">
             <div class="tap-circle-container">
                 <span class="tap-hand-icon">👆</span>
                 <div class="glow-pulse-ring"></div>
             </div>
-            <!-- 完美的 LuluTap 文字视觉设计 -->
             <h1 class="brand-title-text">
                 <span class="lulu-part">Lulu</span><span class="tap-part">Tap</span>
             </h1>
         </div>
-        <!-- 🎯 已更新为方案一的融合副标题 -->
+        <!-- 🚀 副标题：已调大字号，加了流畅的上滑渐现入场动画 -->
         <p class="subtitle">Welcome to LuluTap! Tap into instant fun with the best free online games—no downloads required! 🚀</p>
     </header>
 
-    <!-- 顶部控制栏 -->
     <div class="category-control-bar">
         <button class="btn-home" onclick="goHome(event)">🔥 Show All Games</button>
         <button class="btn-folder" onclick="openFolder('players', event)">👥 Players ▾</button>
@@ -368,15 +380,11 @@
         <button class="btn-folder" onclick="openFolder('tags', event)">🎯 Tags ▾</button>
     </div>
 
-    <!-- 顶部的已选择标签展示条 -->
     <div class="selected-tags-bar" id="selected-tags-bar">
         Selected Filters: <div class="selected-tags-wrapper" id="selected-tags-list"></div>
     </div>
 
-    <!-- 弹出的具体小分类面板 -->
     <div class="sub-category-panel" id="panel">
-        
-        <!-- 👥 Players 子分类 -->
         <div class="sub-group" id="sub-players" style="display:none;">
             <button class="sub-btn" data-cat="2player" onclick="toggleTag('2player', this)">2 Player</button>
             <button class="sub-btn" data-cat="singleplayer" onclick="toggleTag('singleplayer', this)">Single Player</button>
@@ -386,7 +394,6 @@
             <button class="sub-btn" data-cat="kids" onclick="toggleTag('kids', this)">Kids</button>
         </div>
 
-        <!-- ⚡ Genres 子分类 -->
         <div class="sub-group" id="sub-genres" style="display:none;">
             <button class="sub-btn" data-cat="action" onclick="toggleTag('action', this)">Action</button>
             <button class="sub-btn" data-cat="racing" onclick="toggleTag('racing', this)">Racing</button>
@@ -400,7 +407,6 @@
             <button class="sub-btn" data-cat="simulation" onclick="toggleTag('simulation', this)">Simulation</button>
         </div>
 
-        <!-- 🎨 Styles 子分类 -->
         <div class="sub-group" id="sub-styles" style="display:none;">
             <button class="sub-btn" data-cat="3d" onclick="toggleTag('3d', this)">3D</button>
             <button class="sub-btn" data-cat="2d" onclick="toggleTag('2d', this)">2D</button>
@@ -408,7 +414,6 @@
             <button class="sub-btn" data-cat="io" onclick="toggleTag('io', this)">.IO Games</button>
         </div>
 
-        <!-- 🎯 Tags 子分类 -->
         <div class="sub-group" id="sub-tags" style="display:none;">
             <button class="sub-btn" data-cat="car" onclick="toggleTag('car', this)">Car</button>
             <button class="sub-btn" data-cat="bike" onclick="toggleTag('bike', this)">Bike</button>
@@ -418,10 +423,8 @@
             <button class="sub-btn" data-cat="clicker" onclick="toggleTag('clicker', this)">Clicker</button>
             <button class="sub-btn" data-cat="zombie" onclick="toggleTag('zombie', this)">Zombie</button>
         </div>
-
     </div>
 
-    <!-- 游戏网格面板 -->
     <div class="grid" id="game-grid"></div>
 
     <script>
