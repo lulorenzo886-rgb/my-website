@@ -34,6 +34,7 @@
             color: #ffffff; 
             padding: 20px; 
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* =========================================================
@@ -71,7 +72,6 @@
             transform: translateY(-3px) scale(1.02);
         }
 
-        /* 手指 Icon 与包围光圈 */
         .tap-circle-container {
             position: relative;
             width: 46px;
@@ -89,7 +89,6 @@
             animation: tapBounce 2s infinite ease-in-out;
         }
 
-        /* 以手指指尖为中心的扩散脉冲霓虹圈 */
         .glow-pulse-ring {
             position: absolute;
             top: 50%;
@@ -104,7 +103,6 @@
             z-index: 1;
         }
 
-        /* Lulu + Tap 组合品牌字样 */
         .brand-title-text {
             font-size: 2.8rem;
             font-weight: 900;
@@ -271,8 +269,28 @@
         }
 
         /* =========================================================
-           3. 游戏网格区域
+           3. 无缝跑马灯 & 动态网格区域 (Infinite Scroll Ready)
            ========================================================= */
+        .marquee-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            margin: 20px 0 40px 0;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+
+        .marquee-track {
+            display: flex;
+            gap: 22px;
+            width: max-content;
+            animation: infiniteScroll 35s linear infinite;
+        }
+
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+
         .grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
@@ -281,6 +299,7 @@
             margin: 10px auto 50px auto;
             animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s backwards;
         }
+
         .card { 
             background-color: var(--card-bg); 
             border-radius: 16px; 
@@ -291,6 +310,11 @@
             color: inherit; 
             display: flex; 
             flex-direction: column; 
+            width: 220px;
+            flex-shrink: 0;
+        }
+        .grid .card {
+            width: 100%;
         }
         .card:hover { 
             transform: translateY(-6px); 
@@ -304,6 +328,11 @@
         .card-cat { font-size: 11px; color: var(--primary-cyan); text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px; }
 
         /* Keyframe 动画 */
+        @keyframes infiniteScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
         @keyframes tapBounce {
             0%, 100% { transform: rotate(-15deg) scale(1) translateY(0); }
             50% { transform: rotate(-15deg) scale(0.88) translateY(3px); }
@@ -352,7 +381,6 @@
             to { opacity: 1; }
         }
 
-        /* 页脚链接样式 Hover 效果 */
         .footer-link {
             color: var(--text-muted);
             text-decoration: none;
@@ -432,9 +460,14 @@
         </div>
     </div>
 
+    <!-- 🌟 无缝无限轮播展示区 🌟 -->
+    <div class="marquee-wrapper" id="marquee-section">
+        <div class="marquee-track" id="marquee-track"></div>
+    </div>
+
+    <!-- 标准网格展示区 -->
     <div class="grid" id="game-grid"></div>
 
-    <!-- ⬇️ 补全的炫酷页脚区域 ⬇️ -->
     <footer style="margin-top: 60px; padding: 30px 20px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.08); font-size: 14px;">
         <p style="margin-bottom: 12px; color: var(--text-muted);">&copy; 2026 LuluTap. All rights reserved.</p>
         <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
@@ -455,11 +488,58 @@
             .then(games => {
                 allGames = games;
                 renderGames(allGames);
+                renderMarquee(allGames);
             })
             .catch(err => {
                 console.error('Error loading games:', err);
                 document.getElementById('game-grid').innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#ff5555;">Failed to load games. Please check static/games.json file.</p>';
             });
+
+        function createCardElement(game) {
+            const gameId = game.id || game.slug;
+            const coverImg = game.cover || game.image || 'https://via.placeholder.com/512';
+            
+            let categories = [];
+            if (Array.isArray(game.category)) {
+                categories = game.category;
+            } else if (typeof game.category === 'string') {
+                categories = [game.category];
+            }
+            const catText = categories.join(' • ').toUpperCase();
+
+            const a = document.createElement('a');
+            a.className = 'card';
+            a.href = `game.html?id=${gameId}`;
+            a.innerHTML = `
+                <img src="${coverImg}" alt="${game.title}" onerror="this.src='https://via.placeholder.com/512?text=Game+Cover'">
+                <div class="card-info">
+                    <div>
+                        <div class="card-title">${game.title}</div>
+                        <div class="card-desc">${game.description || ''}</div>
+                    </div>
+                    <div class="card-cat">${catText}</div>
+                </div>
+            `;
+            return a;
+        }
+
+        function renderMarquee(list) {
+            const track = document.getElementById('marquee-track');
+            const wrapper = document.getElementById('marquee-section');
+            track.innerHTML = '';
+
+            if (!list || list.length === 0) {
+                wrapper.style.display = 'none';
+                return;
+            }
+            wrapper.style.display = 'block';
+
+            // 双倍拼接实现无缝滚动
+            const displayList = list.concat(list);
+            displayList.forEach(game => {
+                track.appendChild(createCardElement(game));
+            });
+        }
 
         function openFolder(folderName, e) {
             const panel = document.getElementById('panel');
@@ -493,6 +573,7 @@
             activeFolderName = null;
             
             renderGames(allGames);
+            renderMarquee(allGames);
         }
 
         function toggleTag(cat, btnElement) {
@@ -547,6 +628,7 @@
         function applyMultiFilter() {
             if (selectedTags.size === 0) {
                 renderGames(allGames);
+                renderMarquee(allGames);
                 return;
             }
 
@@ -564,6 +646,7 @@
             });
 
             renderGames(filtered);
+            renderMarquee(filtered);
         }
 
         function renderGames(list) {
@@ -576,31 +659,7 @@
             }
 
             list.forEach(game => {
-                const gameId = game.id || game.slug;
-                const coverImg = game.cover || game.image || 'https://via.placeholder.com/512';
-                
-                let categories = [];
-                if (Array.isArray(game.category)) {
-                    categories = game.category;
-                } else if (typeof game.category === 'string') {
-                    categories = [game.category];
-                }
-                const catText = categories.join(' • ').toUpperCase();
-
-                const a = document.createElement('a');
-                a.className = 'card';
-                a.href = `game.html?id=${gameId}`;
-                a.innerHTML = `
-                    <img src="${coverImg}" alt="${game.title}" onerror="this.src='https://via.placeholder.com/512?text=Game+Cover'">
-                    <div class="card-info">
-                        <div>
-                            <div class="card-title">${game.title}</div>
-                            <div class="card-desc">${game.description || ''}</div>
-                        </div>
-                        <div class="card-cat">${catText}</div>
-                    </div>
-                `;
-                grid.appendChild(a);
+                grid.appendChild(createCardElement(game));
             });
         }
     </script>
