@@ -37,6 +37,17 @@
             overflow-x: hidden;
         }
 
+        /* 🌟 切西瓜/点击特效 Canvas 样式 🌟 */
+        #fx-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none; /* 穿透鼠标事件，不影响下方按钮点击 */
+            z-index: 9999;
+        }
+
         /* =========================================================
            1. 顶部 Header / 完整 LuluTap 炫酷 Logo 区域
            ========================================================= */
@@ -269,7 +280,7 @@
         }
 
         /* =========================================================
-           3. 无缝跑马灯 & 动态网格区域 (Infinite Scroll Ready)
+           3. 无缝跑马灯 & 动态网格区域
            ========================================================= */
         .marquee-wrapper {
             position: relative;
@@ -394,6 +405,9 @@
 </head>
 <body>
 
+    <!-- 🌟 全屏视觉特效 Canvas (切西瓜刀光 + 点击粒子) 🌟 -->
+    <canvas id="fx-canvas"></canvas>
+
     <header class="hero-brand-header">
         <div class="lulutap-logo-wrapper" onclick="goHome(event)">
             <div class="tap-circle-container">
@@ -479,6 +493,138 @@
     </footer>
 
     <script>
+        // =========================================================
+        // 🌟 1. 切西瓜刀光拖尾 + 点击爆炸粒子特效 🌟
+        // =========================================================
+        (function initNinjaFx() {
+            const canvas = document.getElementById('fx-canvas');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            const points = [];
+            const particles = [];
+            const colors = ['#00f2fe', '#ff2a85', '#6C5CE7', '#ffffff'];
+
+            // 监听鼠标/触摸移动（切西瓜刀光）
+            function addPoint(x, y) {
+                points.push({
+                    x: x,
+                    y: y,
+                    time: Date.now(),
+                    width: 8
+                });
+            }
+
+            window.addEventListener('mousemove', (e) => {
+                addPoint(e.clientX, e.clientY);
+            });
+
+            window.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 0) {
+                    addPoint(e.touches[0].clientX, e.touches[0].clientY);
+                }
+            }, { passive: true });
+
+            // 监听鼠标/触摸点击（粒子爆发）
+            function createParticles(x, y) {
+                const particleCount = 18;
+                for (let i = 0; i < particleCount; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 6 + 2;
+                    particles.push({
+                        x: x,
+                        y: y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        size: Math.random() * 4 + 2,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        alpha: 1,
+                        decay: Math.random() * 0.03 + 0.02
+                    });
+                }
+            }
+
+            window.addEventListener('click', (e) => {
+                createParticles(e.clientX, e.clientY);
+            });
+
+            // 动画主循环
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const now = Date.now();
+                const maxAge = 180; // 刀光残留毫秒数
+
+                // 清理过期刀光点
+                while (points.length > 0 && now - points[0].time > maxAge) {
+                    points.shift();
+                }
+
+                // 绘制切西瓜刀光拖尾
+                if (points.length > 1) {
+                    for (let i = 1; i < points.length; i++) {
+                        const pt1 = points[i - 1];
+                        const pt2 = points[i];
+                        const age = now - pt2.time;
+                        const progress = 1 - (age / maxAge);
+
+                        if (progress <= 0) continue;
+
+                        ctx.beginPath();
+                        ctx.moveTo(pt1.x, pt1.y);
+                        ctx.lineTo(pt2.x, pt2.y);
+
+                        ctx.strokeStyle = '#00f2fe';
+                        ctx.lineWidth = (i / points.length) * 10 * progress;
+                        ctx.lineCap = 'round';
+                        ctx.shadowBlur = 15;
+                        ctx.shadowColor = '#ff2a85';
+
+                        ctx.stroke();
+                    }
+                    ctx.shadowBlur = 0; // 重置阴影
+                }
+
+                // 绘制与更新点击爆炸粒子
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    const p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vx *= 0.95; // 阻尼衰减
+                    p.vy *= 0.95;
+                    p.alpha -= p.decay;
+
+                    if (p.alpha <= 0) {
+                        particles.splice(i, 1);
+                        continue;
+                    }
+
+                    ctx.save();
+                    ctx.globalAlpha = p.alpha;
+                    ctx.fillStyle = p.color;
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        })();
+
+        // =========================================================
+        // 🌟 2. 游戏数据与逻辑处理 🌟
+        // =========================================================
         let allGames = [];
         let activeFolderName = null;
         let selectedTags = new Map();
