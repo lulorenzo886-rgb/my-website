@@ -13,8 +13,8 @@
       "2d"
     ],
     "description": "Slice, dice, and slash your way through endless juicy fruits while avoiding dangerous bombs!",
-    "cover": "static/images/Police Car Parking 2026-512x384.jpg",
-    "image": "static/images/Police Car Parking 2026-512x384.jpg",
+    "cover": "https://images.weserv.nl/?url=https://img.gamemonetize.com/4kci7og3klgj0ivy2wz3gdvd9dth5e7n/512x512.jpg",
+    "image": "https://images.weserv.nl/?url=https://img.gamemonetize.com/4kci7og3klgj0ivy2wz3gdvd9dth5e7n/512x512.jpg",
     "url": "https://html5.gamemonetize.com/4kci7og3klgj0ivy2wz3gdvd9dth5e7n/"
   },
   {
@@ -31,8 +31,8 @@
       "simulation"
     ],
     "description": "Master the art of precision driving in Police Car Parking 2026!",
-    "cover": "static/images/",
-    "image": "static/images/",
+    "cover": "static/images/Police Car Parking 2026-512x384.jpg",
+    "image": "static/images/Police Car Parking 2026-512x384.jpg",
     "url": "https://html5.gamemonetize.co/zo8ocq9uu0gjavl3iazgiessapj6ov6n/"
   },
   {
@@ -66,26 +66,26 @@
       "casual"
     ],
     "description": "Test your precision skills! Aim, adjust for wind direction, and hit the bullseye in this ultimate 3D archery simulator.",
-    "cover": "static/images/spooky-escape.jpg",
-    "image": "static/images/spooky-escape.jpg",
+    "cover": "static/images/Super Buddy Archer-512x384.jpg",
+    "image": "static/images/Super Buddy Archer-512x384.jpg",
     "url": "https://html5.gamemonetize.co/f471e4j1zv654kbamb500101omqd11hf/"
   },
   {
-    "id": "super-buddy-archer",
-    "slug": "super-buddy-archer",
-    "title": "Super Buddy Archer",
+    "id": "crazy-drift-3d",
+    "slug": "crazy-drift-3d",
+    "title": "Crazy Drift 3D",
     "category": [
-      "puzzle",
-      "arcade",
-      "casual",
+      "racing",
+      "driving",
+      "3d",
+      "car",
       "singleplayer",
       "boys",
-      "girls",
-      "2d"
+      "simulation"
     ],
-    "description": "Aim carefully and shoot arrows to cut the ropes and save Buddy! Test your physics and archery puzzle skills across challenging levels.",
-    "cover": "static/images/Super Buddy Archer-512x384.jpg",
-    "image": "static/images/Super Buddy Archer-512x384.jpg",
+    "description": "Burn rubber and show off your ultimate drifting skills! Control high-powered sports cars and conquer challenging 3D drift tracks.",
+    "cover": "static/images/spooky-escape.jpg",
+    "image": "static/images/spooky-escape.jpg",
     "url": "https://html5.gamemonetize.co/xj60g4n0wq0s5stq18qel8l04vc3zycw/"
   }
 ]
