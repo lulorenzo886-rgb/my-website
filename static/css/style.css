@@ -1,5 +1,5 @@
 /* =========================================================
-   🎮 INSTANT GAME STATION - 全局完整 CSS 样式
+   🎮 LuluTap Games - 全局完整 CSS 样式 (全新完美匹配版)
    ========================================================= */
 
 :root {
@@ -19,7 +19,7 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background-color: var(--bg-dark);
     color: var(--text-main);
     min-height: 100vh;
@@ -35,6 +35,7 @@ body {
     padding: 14px 32px;
     background: rgba(17, 21, 34, 0.85);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -57,7 +58,8 @@ body {
     justify-content: center;
     font-weight: 900;
     color: #000;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    box-shadow: 0 0 10px var(--neon-glow);
 }
 
 .brand-name {
@@ -79,6 +81,12 @@ body {
     border-radius: 100px;
     padding: 8px 18px;
     width: 380px;
+    transition: all 0.3s ease;
+}
+
+.search-capsule:focus-within {
+    border-color: var(--primary-cyan);
+    box-shadow: 0 0 15px var(--neon-glow);
 }
 
 .search-capsule input {
@@ -87,12 +95,7 @@ body {
     outline: none;
     color: #fff;
     width: 100%;
-}
-
-.search-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
+    font-size: 0.9rem;
 }
 
 .action-btn {
@@ -100,19 +103,24 @@ body {
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 600;
+    transition: color 0.2s;
 }
 
-/* 2. 顶部分类控制栏 (首页 + 4个大集合) */
+.action-btn:hover {
+    color: #fff;
+}
+
+/* 2. 顶部分类控制栏 */
 .category-control-bar {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
-    padding: 20px 32px 10px;
+    padding: 24px 32px 16px;
 }
 
-/* 绿色/首页主按钮 */
+/* 🔥 主/首页按钮 */
 .btn-home {
     background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple));
     color: #000;
@@ -131,7 +139,7 @@ body {
     box-shadow: 0 0 25px rgba(0, 242, 254, 0.5);
 }
 
-/* 4 个集合大按钮 */
+/* 4 个分类大按钮 */
 .btn-folder {
     background: #121724;
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -145,8 +153,6 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
-    position: relative;
-    overflow: hidden;
 }
 
 .btn-folder:hover {
@@ -164,7 +170,7 @@ body {
     font-weight: 700;
 }
 
-/* 3. 已选标签置顶栏 (带有 ✕ 的 Chip 胶囊) */
+/* 3. 已选标签置顶胶囊栏 (带有 ✕ 的 Chip) */
 .selected-tags-bar {
     max-width: 900px;
     margin: 0 auto 16px auto;
@@ -174,6 +180,7 @@ body {
     color: var(--text-muted);
     background: rgba(17, 21, 34, 0.6);
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     padding: 10px 20px;
     border-radius: 100px;
     border: 1px dashed rgba(0, 242, 254, 0.3);
@@ -190,10 +197,10 @@ body {
     gap: 8px;
     justify-content: center;
     align-items: center;
-    margin-left: 10px;
+    margin-left: 8px;
 }
 
-/* 科技感选中的 Chip 标签 */
+/* Selected Chip 样式 */
 .selected-chip {
     display: inline-flex;
     align-items: center;
@@ -229,13 +236,14 @@ body {
     transform: scale(1.15) rotate(90deg);
 }
 
-/* 4. 二级分类弹出面板 (毛玻璃悬浮框) */
+/* 4. 二级分类悬浮面板 */
 .sub-category-panel {
     max-width: 900px;
     margin: 0 auto 24px auto;
     display: none;
     background: rgba(17, 21, 34, 0.85);
     backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(0, 242, 254, 0.3);
     border-radius: 20px;
     padding: 20px;
@@ -255,7 +263,6 @@ body {
     gap: 10px;
 }
 
-/* 紫色面板内部的按钮 */
 .sub-btn {
     background: #121724;
     color: var(--text-muted);
@@ -283,46 +290,19 @@ body {
     box-shadow: 0 0 15px var(--neon-glow);
 }
 
-/* 5. 传统横向滚动标签 (兼容保留) */
-.category-wrapper {
-    padding: 16px 32px;
-}
-
-.category-scroll {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-}
-
-.pill-tag {
-    background: #121724;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    color: var(--text-muted);
-    padding: 8px 18px;
-    border-radius: 100px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    white-space: nowrap;
-}
-
-.pill-tag:hover, .pill-tag.active {
-    background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple));
-    color: #000;
-    font-weight: 700;
-}
-
-/* 6. 主体网格与游戏卡片 */
+/* 5. 核心网格与游戏卡片限制（防大图撑破） */
 .main-content {
     flex: 1;
     padding: 0 32px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .arcade-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 22px;
 }
 
 .game-card {
@@ -330,12 +310,13 @@ body {
     border-radius: 18px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.game-card.hero-card {
-    grid-column: span 2;
-    grid-row: span 2;
+.game-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--primary-cyan);
+    box-shadow: 0 10px 25px -5px var(--neon-glow);
 }
 
 .card-link {
@@ -346,167 +327,61 @@ body {
     height: 100%;
 }
 
+/* 🛑 重点：彻底约束封面图片尺寸 */
 .image-wrapper {
     position: relative;
     width: 100%;
-    height: 140px;
+    height: 150px;
     overflow: hidden;
-}
-
-.hero-card .image-wrapper {
-    height: 300px;
+    background: #181d2d;
 }
 
 .image-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s;
+    object-fit: cover; /* 保证充满框且不拉伸变形 */
+    transition: transform 0.4s ease;
 }
 
-.license-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
-    color: var(--primary-cyan);
-    font-size: 0.65rem;
-    padding: 3px 8px;
-    border-radius: 6px;
-    border: 1px solid var(--primary-cyan);
+.game-card:hover .image-wrapper img {
+    transform: scale(1.08);
 }
 
 .card-meta {
-    padding: 12px 16px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .cat-label {
     font-size: 0.7rem;
     color: var(--primary-cyan);
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .card-title {
     font-size: 0.95rem;
     font-weight: 700;
-    margin-top: 2px;
     color: #ffffff;
-}
-
-.hero-card .card-title {
-    font-size: 1.3rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .card-author {
     font-size: 0.75rem;
     color: var(--text-muted);
-    margin-top: 4px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    line-height: 1.4;
 }
 
-.game-card:hover {
-    transform: translateY(-6px);
-    border-color: var(--primary-cyan);
-    box-shadow: 0 10px 25px -5px var(--neon-glow);
-}
-
-.game-card:hover .image-wrapper img {
-    transform: scale(1.05);
-}
-
-/* 7. 游戏详情页专属样式 */
-.detail-container {
-    max-width: 1100px;
-    margin: 20px auto;
-    padding: 0 20px;
-    flex: 1;
-    width: 100%;
-}
-
-.game-frame-wrapper {
-    width: 100%;
-    height: 600px;
-    background: #000;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-.game-frame-wrapper iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-
-.game-info-panel {
-    background: var(--card-bg);
-    margin-top: 24px;
-    padding: 24px;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.info-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.detail-title {
-    font-size: 1.8rem;
-    margin: 6px 0;
-}
-
-.detail-author {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-}
-
-.license-tag-large {
-    background: rgba(0, 242, 254, 0.1);
-    border: 1px solid var(--primary-cyan);
-    color: var(--primary-cyan);
-    padding: 8px 14px;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    font-weight: 600;
-}
-
-.divider {
-    border: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    margin: 20px 0;
-}
-
-.info-body h3 {
-    font-size: 1.1rem;
-    color: var(--primary-cyan);
-    margin-bottom: 8px;
-}
-
-.info-body p {
-    color: #cbd5e1;
-    line-height: 1.6;
-    font-size: 0.95rem;
-}
-
-.copyright-notice {
-    margin-top: 24px;
-    background: rgba(0, 0, 0, 0.2);
-    padding: 12px 16px;
-    border-radius: 8px;
-    border-left: 3px solid var(--primary-cyan);
-    font-size: 0.8rem;
-    color: var(--text-muted);
-}
-
-/* 8. 页脚 */
+/* 6. 页脚 */
 .arcade-footer {
     background: #0b0e17;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -517,22 +392,27 @@ body {
 }
 
 .footer-inner {
+    max-width: 1400px;
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 .footer-links a {
     color: var(--text-muted);
     text-decoration: none;
     margin-left: 15px;
+    transition: color 0.2s;
 }
 
 .footer-links a:hover {
     color: var(--primary-cyan);
 }
 
-/* 9. Keyframes 动画帧 */
+/* 7. Keyframes 动画帧 */
 @keyframes slideDown3D {
     from {
         opacity: 0;
@@ -557,5 +437,28 @@ body {
     to {
         opacity: 1;
         transform: scale(1);
+    }
+}
+
+/* 📱 移动端小屏自适应调整 */
+@media (max-width: 768px) {
+    .glass-navbar {
+        padding: 12px 16px;
+    }
+    .search-capsule {
+        width: 180px;
+    }
+    .category-control-bar {
+        padding: 16px 16px 8px;
+    }
+    .main-content {
+        padding: 0 16px 30px;
+    }
+    .arcade-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 14px;
+    }
+    .image-wrapper {
+        height: 110px;
     }
 }
