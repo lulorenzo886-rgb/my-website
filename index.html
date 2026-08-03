@@ -130,16 +130,14 @@
             filter: drop-shadow(0 0 12px rgba(0, 242, 254, 0.5));
         }
 
-        /* 🌟🌟🌟 更新后的副标题样式：字号变大 + 优雅入场动画 🌟🌟🌟 */
         p.subtitle { 
             color: var(--text-muted); 
-            font-size: 1.2rem;          /* 从 0.95rem 放大到 1.2rem */
+            font-size: 1.2rem; 
             font-weight: 500;
             margin-top: 18px;
             letter-spacing: 0.5px;
             line-height: 1.5;
             max-width: 750px;
-            /* 向上滑入 + 渐现动画 */
             animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
         }
 
@@ -334,7 +332,6 @@
             }
         }
 
-        /* 向上淡入出场动画 */
         @keyframes slideUpFade {
             0% {
                 opacity: 0;
@@ -354,6 +351,17 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
+        /* 页脚链接样式 Hover 效果 */
+        .footer-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .footer-link:hover {
+            color: var(--primary-cyan);
+            text-shadow: 0 0 8px var(--accent-glow);
+        }
     </style>
 </head>
 <body>
@@ -368,7 +376,6 @@
                 <span class="lulu-part">Lulu</span><span class="tap-part">Tap</span>
             </h1>
         </div>
-        <!-- 🚀 副标题：已调大字号，加了流畅的上滑渐现入场动画 -->
         <p class="subtitle">Welcome to LuluTap! Tap into instant fun with the best free online games—no downloads required! 🚀</p>
     </header>
 
@@ -426,6 +433,17 @@
     </div>
 
     <div class="grid" id="game-grid"></div>
+
+    <!-- ⬇️ 补全的炫酷页脚区域 ⬇️ -->
+    <footer style="margin-top: 60px; padding: 30px 20px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.08); font-size: 14px;">
+        <p style="margin-bottom: 12px; color: var(--text-muted);">&copy; 2026 LuluTap. All rights reserved.</p>
+        <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+            <a href="privacy.html" class="footer-link">Privacy Policy</a>
+            <a href="terms.html" class="footer-link">Terms of Service</a>
+            <a href="dmca.html" class="footer-link">DMCA / Copyright</a>
+            <a href="contact.html" class="footer-link">Contact Us</a>
+        </div>
+    </footer>
 
     <script>
         let allGames = [];
