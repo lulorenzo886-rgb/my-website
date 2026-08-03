@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LuluTap - Play Instant Free HTML5 Games</title>
 
-    <!-- ✨ Favicon 图标 ✨ -->
+    <!-- ✨ 炫酷 Favicon 网页标签页图标 ✨ -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23111522'/><stop offset='100%' stop-color='%231a1c29'/></linearGradient></defs><circle cx='50' cy='50' r='48' fill='url(%23g)' stroke='%2300f2fe' stroke-width='3'/><circle cx='50' cy='50' r='38' fill='none' stroke='%23ff2a85' stroke-width='2' stroke-dasharray='4 2'/><text x='50%' y='68%' font-size='50' text-anchor='middle'>👆</text></svg>">
 
     <style>
@@ -37,19 +37,19 @@
             overflow-x: hidden;
         }
 
-        /* 🌟 切西瓜/点击特效 Canvas 🌟 */
+        /* 🌟 切西瓜/点击特效 Canvas 样式 🌟 */
         #fx-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            pointer-events: none;
+            pointer-events: none; /* 穿透鼠标事件，不影响下方按钮点击 */
             z-index: 9999;
         }
 
         /* =========================================================
-           1. Header
+           1. 顶部 Header / 完整 LuluTap 炫酷 Logo 区域
            ========================================================= */
         header.hero-brand-header { 
             text-align: center; 
@@ -122,7 +122,7 @@
             align-items: center;
             line-height: 1;
             margin: 0;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Montserrat', 'Segoe UI', sans-serif;
         }
 
         .brand-title-text .lulu-part {
@@ -280,15 +280,15 @@
         }
 
         /* =========================================================
-           3. 无缝跑马灯 & 动态网格区域（完美解决卡片变形与高度对齐）
+           3. 无缝跑马灯 & 动态网格区域
            ========================================================= */
         .marquee-wrapper {
             position: relative;
             width: 100%;
             overflow: hidden;
             margin: 20px 0 40px 0;
-            mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-            -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
         }
 
         .marquee-track {
@@ -304,14 +304,13 @@
 
         .grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
             gap: 22px; 
             max-width: 1200px; 
             margin: 10px auto 50px auto;
             animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s backwards;
         }
 
-        /* 统一固定大小卡片与图片尺寸 */
         .card { 
             background-color: var(--card-bg); 
             border-radius: 16px; 
@@ -323,7 +322,6 @@
             display: flex; 
             flex-direction: column; 
             width: 220px;
-            height: 320px; /* 固定卡片总高度，防止塌陷 */
             flex-shrink: 0;
         }
         .grid .card {
@@ -334,31 +332,13 @@
             border-color: var(--primary-cyan); 
             box-shadow: 0 10px 25px -5px var(--accent-glow);
         }
-        .card .card-img-wrapper {
-            width: 100%;
-            height: 175px;
-            min-height: 175px;
-            background-color: #121522;
-            overflow: hidden;
-            position: relative;
-        }
-        .card img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            display: block;
-        }
-        .card-info { 
-            padding: 14px; 
-            flex: 1; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between; 
-        }
-        .card-title { font-size: 15px; font-weight: bold; margin-bottom: 6px; color: #fff; line-height: 1.2; }
-        .card-desc { font-size: 12px; color: #8A8F9E; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
+        .card img { width: 100%; height: 175px; object-fit: cover; background-color: #181d2d; }
+        .card-info { padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-title { font-size: 15px; font-weight: bold; margin-bottom: 6px; color: #fff; }
+        .card-desc { font-size: 12px; color: #8A8F9E; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
         .card-cat { font-size: 11px; color: var(--primary-cyan); text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px; }
 
+        /* Keyframe 动画 */
         @keyframes infiniteScroll {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
@@ -370,14 +350,37 @@
         }
 
         @keyframes neonRingPulse {
-            0% { width: 18px; height: 18px; opacity: 1; border-color: var(--primary-cyan); box-shadow: 0 0 10px var(--primary-cyan); }
-            50% { width: 48px; height: 48px; opacity: 0.8; border-color: var(--accent-pink); box-shadow: 0 0 20px var(--accent-pink); }
-            100% { width: 65px; height: 65px; opacity: 0; border-color: var(--primary-cyan); }
+            0% {
+                width: 18px;
+                height: 18px;
+                opacity: 1;
+                border-color: var(--primary-cyan);
+                box-shadow: 0 0 10px var(--primary-cyan);
+            }
+            50% {
+                width: 48px;
+                height: 48px;
+                opacity: 0.8;
+                border-color: var(--accent-pink);
+                box-shadow: 0 0 20px var(--accent-pink);
+            }
+            100% {
+                width: 65px;
+                height: 65px;
+                opacity: 0;
+                border-color: var(--primary-cyan);
+            }
         }
 
         @keyframes slideUpFade {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes slideDown {
@@ -389,12 +392,20 @@
             to { opacity: 1; }
         }
 
-        .footer-link { color: var(--text-muted); text-decoration: none; transition: all 0.2s ease; }
-        .footer-link:hover { color: var(--primary-cyan); text-shadow: 0 0 8px var(--accent-glow); }
+        .footer-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .footer-link:hover {
+            color: var(--primary-cyan);
+            text-shadow: 0 0 8px var(--accent-glow);
+        }
     </style>
 </head>
 <body>
 
+    <!-- 🌟 全屏视觉特效 Canvas (切西瓜刀光 + 点击粒子) 🌟 -->
     <canvas id="fx-canvas"></canvas>
 
     <header class="hero-brand-header">
@@ -463,12 +474,12 @@
         </div>
     </div>
 
-    <!-- 🌟 跑马灯 🌟 -->
+    <!-- 🌟 无缝无限轮播展示区 🌟 -->
     <div class="marquee-wrapper" id="marquee-section">
         <div class="marquee-track" id="marquee-track"></div>
     </div>
 
-    <!-- 网格 -->
+    <!-- 标准网格展示区 -->
     <div class="grid" id="game-grid"></div>
 
     <footer style="margin-top: 60px; padding: 30px 20px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.08); font-size: 14px;">
@@ -482,11 +493,17 @@
     </footer>
 
     <script>
-        // 特效
+        // =========================================================
+        // 🌟 1. 切西瓜刀光拖尾 + 点击爆炸粒子特效 🌟
+        // =========================================================
         (function initNinjaFx() {
             const canvas = document.getElementById('fx-canvas');
             const ctx = canvas.getContext('2d');
-            function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
 
@@ -494,51 +511,100 @@
             const particles = [];
             const colors = ['#00f2fe', '#ff2a85', '#6C5CE7', '#ffffff'];
 
-            function addPoint(x, y) { points.push({ x: x, y: y, time: Date.now() }); }
-            window.addEventListener('mousemove', (e) => addPoint(e.clientX, e.clientY));
-            window.addEventListener('touchmove', (e) => { if (e.touches.length > 0) addPoint(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+            // 监听鼠标/触摸移动（切西瓜刀光）
+            function addPoint(x, y) {
+                points.push({
+                    x: x,
+                    y: y,
+                    time: Date.now(),
+                    width: 8
+                });
+            }
 
-            window.addEventListener('click', (e) => {
-                for (let i = 0; i < 18; i++) {
+            window.addEventListener('mousemove', (e) => {
+                addPoint(e.clientX, e.clientY);
+            });
+
+            window.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 0) {
+                    addPoint(e.touches[0].clientX, e.touches[0].clientY);
+                }
+            }, { passive: true });
+
+            // 监听鼠标/触摸点击（粒子爆发）
+            function createParticles(x, y) {
+                const particleCount = 18;
+                for (let i = 0; i < particleCount; i++) {
                     const angle = Math.random() * Math.PI * 2;
                     const speed = Math.random() * 6 + 2;
                     particles.push({
-                        x: e.clientX, y: e.clientY,
-                        vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-                        size: Math.random() * 4 + 2, color: colors[Math.floor(Math.random() * colors.length)],
-                        alpha: 1, decay: Math.random() * 0.03 + 0.02
+                        x: x,
+                        y: y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        size: Math.random() * 4 + 2,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        alpha: 1,
+                        decay: Math.random() * 0.03 + 0.02
                     });
                 }
+            }
+
+            window.addEventListener('click', (e) => {
+                createParticles(e.clientX, e.clientY);
             });
 
+            // 动画主循环
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                const now = Date.now();
-                while (points.length > 0 && now - points[0].time > 180) points.shift();
 
+                const now = Date.now();
+                const maxAge = 180; // 刀光残留毫秒数
+
+                // 清理过期刀光点
+                while (points.length > 0 && now - points[0].time > maxAge) {
+                    points.shift();
+                }
+
+                // 绘制切西瓜刀光拖尾
                 if (points.length > 1) {
                     for (let i = 1; i < points.length; i++) {
-                        const pt1 = points[i - 1], pt2 = points[i];
-                        const progress = 1 - ((now - pt2.time) / 180);
+                        const pt1 = points[i - 1];
+                        const pt2 = points[i];
+                        const age = now - pt2.time;
+                        const progress = 1 - (age / maxAge);
+
                         if (progress <= 0) continue;
+
                         ctx.beginPath();
                         ctx.moveTo(pt1.x, pt1.y);
                         ctx.lineTo(pt2.x, pt2.y);
+
                         ctx.strokeStyle = '#00f2fe';
                         ctx.lineWidth = (i / points.length) * 10 * progress;
                         ctx.lineCap = 'round';
                         ctx.shadowBlur = 15;
                         ctx.shadowColor = '#ff2a85';
+
                         ctx.stroke();
                     }
-                    ctx.shadowBlur = 0;
+                    ctx.shadowBlur = 0; // 重置阴影
                 }
 
+                // 绘制与更新点击爆炸粒子
                 for (let i = particles.length - 1; i >= 0; i--) {
                     const p = particles[i];
-                    p.x += p.vx; p.y += p.vy;
-                    p.vx *= 0.95; p.vy *= 0.95; p.alpha -= p.decay;
-                    if (p.alpha <= 0) { particles.splice(i, 1); continue; }
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vx *= 0.95; // 阻尼衰减
+                    p.vy *= 0.95;
+                    p.alpha -= p.decay;
+
+                    if (p.alpha <= 0) {
+                        particles.splice(i, 1);
+                        continue;
+                    }
+
                     ctx.save();
                     ctx.globalAlpha = p.alpha;
                     ctx.fillStyle = p.color;
@@ -549,12 +615,16 @@
                     ctx.fill();
                     ctx.restore();
                 }
+
                 requestAnimationFrame(animate);
             }
+
             animate();
         })();
 
-        // 逻辑控制
+        // =========================================================
+        // 🌟 2. 游戏数据与逻辑处理 🌟
+        // =========================================================
         let allGames = [];
         let activeFolderName = null;
         let selectedTags = new Map();
@@ -568,30 +638,26 @@
             })
             .catch(err => {
                 console.error('Error loading games:', err);
+                document.getElementById('game-grid').innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#ff5555;">Failed to load games. Please check static/games.json file.</p>';
             });
 
-        // 生成卡片 (增强图片防盗链 + 错误兜底)
         function createCardElement(game) {
             const gameId = game.id || game.slug;
-            const coverImg = game.cover || game.image || 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500';
+            const coverImg = game.cover || game.image || 'https://via.placeholder.com/512';
             
             let categories = [];
-            if (Array.isArray(game.category)) categories = game.category;
-            else if (typeof game.category === 'string') categories = [game.category];
+            if (Array.isArray(game.category)) {
+                categories = game.category;
+            } else if (typeof game.category === 'string') {
+                categories = [game.category];
+            }
             const catText = categories.join(' • ').toUpperCase();
-
-            const fallbackSvg = "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='300' viewBox='0 0 500 300'%3E%3Crect width='100%25' height='100%25' fill='%231f2333'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%2300f2fe' font-size='20' font-family='sans-serif'%3E🎮 ${encodeURIComponent(game.title)}%3C/text%3E%3C/svg%3E";
 
             const a = document.createElement('a');
             a.className = 'card';
             a.href = `game.html?id=${gameId}`;
             a.innerHTML = `
-                <div class="card-img-wrapper">
-                    <img src="${coverImg}" 
-                         alt="${game.title}" 
-                         referrerpolicy="no-referrer"
-                         onerror="this.onerror=null; this.src='${fallbackSvg}';">
-                </div>
+                <img src="${coverImg}" alt="${game.title}" onerror="this.src='https://via.placeholder.com/512?text=Game+Cover'">
                 <div class="card-info">
                     <div>
                         <div class="card-title">${game.title}</div>
@@ -614,6 +680,7 @@
             }
             wrapper.style.display = 'block';
 
+            // 双倍拼接实现无缝滚动
             const displayList = list.concat(list);
             displayList.forEach(game => {
                 track.appendChild(createCardElement(game));
@@ -630,7 +697,9 @@
                 return;
             }
 
-            if (e && e.currentTarget) e.currentTarget.classList.add('active');
+            if (e && e.currentTarget) {
+                e.currentTarget.classList.add('active');
+            }
 
             document.querySelectorAll('.sub-group').forEach(g => g.style.display = 'none');
             document.getElementById('sub-' + folderName).style.display = 'flex';
@@ -642,10 +711,13 @@
         function goHome(e) {
             document.querySelectorAll('.btn-folder').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.sub-btn').forEach(btn => btn.classList.remove('selected'));
+            
             selectedTags.clear();
             updateSelectedTagsUI();
+
             document.getElementById('panel').classList.remove('open');
             activeFolderName = null;
+            
             renderGames(allGames);
             renderMarquee(allGames);
         }
@@ -653,6 +725,7 @@
         function toggleTag(cat, btnElement) {
             const catLower = cat.toLowerCase();
             const displayName = btnElement.textContent.trim();
+
             if (selectedTags.has(catLower)) {
                 selectedTags.delete(catLower);
                 btnElement.classList.remove('selected');
@@ -660,13 +733,18 @@
                 selectedTags.set(catLower, displayName);
                 btnElement.classList.add('selected');
             }
+
             updateSelectedTagsUI();
             applyMultiFilter();
         }
 
         function removeTag(catLower) {
             selectedTags.delete(catLower);
-            document.querySelectorAll(`.sub-btn[data-cat="${catLower}"]`).forEach(btn => btn.classList.remove('selected'));
+            
+            document.querySelectorAll(`.sub-btn[data-cat="${catLower}"]`).forEach(btn => {
+                btn.classList.remove('selected');
+            });
+
             updateSelectedTagsUI();
             applyMultiFilter();
         }
@@ -674,6 +752,7 @@
         function updateSelectedTagsUI() {
             const bar = document.getElementById('selected-tags-bar');
             const listContainer = document.getElementById('selected-tags-list');
+
             if (selectedTags.size === 0) {
                 bar.classList.remove('active');
                 listContainer.innerHTML = '';
@@ -681,7 +760,12 @@
                 bar.classList.add('active');
                 let html = '';
                 selectedTags.forEach((displayName, keyLower) => {
-                    html += `<span class="selected-chip">${displayName}<span class="btn-close-chip" onclick="removeTag('${keyLower}')">✕</span></span>`;
+                    html += `
+                        <span class="selected-chip">
+                            ${displayName}
+                            <span class="btn-close-chip" onclick="removeTag('${keyLower}')">✕</span>
+                        </span>
+                    `;
                 });
                 listContainer.innerHTML = html;
             }
@@ -695,10 +779,15 @@
             }
 
             const requiredKeys = Array.from(selectedTags.keys());
+
             const filtered = allGames.filter(game => {
                 let gameCategories = [];
-                if (Array.isArray(game.category)) gameCategories = game.category.map(c => c.toLowerCase());
-                else if (typeof game.category === 'string') gameCategories = [game.category.toLowerCase()];
+                if (Array.isArray(game.category)) {
+                    gameCategories = game.category.map(c => c.toLowerCase());
+                } else if (typeof game.category === 'string') {
+                    gameCategories = [game.category.toLowerCase()];
+                }
+
                 return requiredKeys.every(tagKey => gameCategories.includes(tagKey));
             });
 
@@ -709,11 +798,15 @@
         function renderGames(list) {
             const grid = document.getElementById('game-grid');
             grid.innerHTML = '';
+            
             if (!list || list.length === 0) {
-                grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#8A8F9E;padding:40px 0;">No games found.</p>';
+                grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#8A8F9E;padding:40px 0;">No games match all selected tags. Try removing some filters by clicking ✕!</p>';
                 return;
             }
-            list.forEach(game => grid.appendChild(createCardElement(game)));
+
+            list.forEach(game => {
+                grid.appendChild(createCardElement(game));
+            });
         }
     </script>
 </body>
