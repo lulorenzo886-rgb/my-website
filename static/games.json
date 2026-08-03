@@ -3,8 +3,8 @@
     "id": "fruit-ninja",
     "slug": "fruit-ninja",
     "title": "Fruit Ninja",
-    "category": "action",
-    "description": "Slice fruit, avoid bombs, and score high in this classic HTML5 arcade game!",
+    "category": ["action", "arcade", "casual", "singleplayer", "boys", "girls", "2d"],
+    "description": "Slice, dice, and slash your way through endless juicy fruits while avoiding dangerous bombs!",
     "cover": "https://img.gamemonetize.com/4kci7og3klgj0ivy2wz3gdvd9dth5e7n/512x512.jpg",
     "image": "https://img.gamemonetize.com/4kci7og3klgj0ivy2wz3gdvd9dth5e7n/512x512.jpg",
     "url": "https://html5.gamemonetize.com/4kci7og3klgj0ivy2wz3gdvd9dth5e7n/"
@@ -13,10 +13,10 @@
     "id": "police-car-parking-2026",
     "slug": "police-car-parking-2026",
     "title": "Police Car Parking 2026",
-    "category": "racing",
+    "category": ["racing", "driving", "3d", "singleplayer", "boys", "car", "simulation"],
     "description": "Master the art of precision driving in Police Car Parking 2026!",
-    "cover": "https://img.gamemonetize.com/zo8ocq9uu0gjavl3iazgiessapj6ov6n/512x512.jpg",
-    "image": "https://play-lh.googleusercontent.com/m4lOafxUXqeZgDBeHcrcO7Cg_7zcMd-es7DU5K7bafQOnhnNkuK2VSGbrxAjgGfFqiOxl4M1ZruccnEfE9nIVg",
+    "cover": "static/police.jpg",
+    "image": "static/police.jpg",
     "url": "https://html5.gamemonetize.co/zo8ocq9uu0gjavl3iazgiessapj6ov6n/"
   }
 ]
