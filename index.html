@@ -4,45 +4,309 @@
     <meta charset="UTF-8">
     <meta name="referrer" content="no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Online Games - Play Instant HTML5 Games</title>
+    <title>LuluTap - Play Instant Free HTML5 Games</title>
     <style>
+        :root {
+            --bg-dark: #07090e;
+            --card-bg: #1A1C29;
+            --primary-cyan: #00f2fe;
+            --primary-purple: #6C5CE7;
+            --accent-glow: rgba(0, 242, 254, 0.35);
+            --purple-glow: rgba(108, 92, 231, 0.4);
+            --text-muted: #A0A5BA;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #12131C; color: #ffffff; padding: 20px; }
-        header { text-align: center; margin-bottom: 25px; }
-        h1 { color: #6C5CE7; margin-bottom: 8px; font-size: 28px; }
-        p.subtitle { color: #A0A5BA; font-size: 14px; }
-
-        /* 顶部导航控制栏 */
-        .category-control-bar { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; }
         
-        /* 绿色按钮：重置/首页 */
-        .btn-home { background-color: #6C5CE7; color: #ffffff; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 14px; }
-        .btn-home:hover { background-color: #5a4bcf; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--bg-dark); 
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(108, 92, 231, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(0, 242, 254, 0.08) 0%, transparent 45%);
+            background-attachment: fixed;
+            color: #ffffff; 
+            padding: 20px; 
+            min-height: 100vh;
+        }
 
-        /* 4 个精简集合按钮 */
-        .btn-folder { background-color: #1A1C29; color: #A0A5BA; border: 1px solid #2B2D3E; padding: 10px 18px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 14px; display: flex; align-items: center; gap: 6px; }
-        .btn-folder:hover, .btn-folder.active { background-color: #23263A; color: #6C5CE7; border-color: #6C5CE7; }
+        /* =========================================================
+           1. 顶部 Header / 炫酷 Logo 区域 (蓝框重构)
+           ========================================================= */
+        header.hero-brand-header { 
+            text-align: center; 
+            padding: 45px 20px 10px 20px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-        /* 顶部已选标签列表区域 (支持点击 ✕ 移除) */
-        .selected-tags-bar { max-width: 800px; margin: 0 auto 15px auto; display: none; text-align: center; font-size: 13px; color: #A0A5BA; background: #1A1C29; padding: 10px 15px; border-radius: 25px; border: 1px dashed #6C5CE7; }
+        .lulutap-logo-wrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            position: relative;
+            padding: 12px 28px;
+            background: rgba(26, 28, 41, 0.65);
+            border-radius: 100px;
+            border: 1px solid rgba(0, 242, 254, 0.25);
+            box-shadow: 0 0 35px rgba(0, 242, 254, 0.15), inset 0 0 15px rgba(108, 92, 231, 0.2);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .lulutap-logo-wrapper:hover {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 50px rgba(0, 242, 254, 0.35), inset 0 0 25px rgba(108, 92, 231, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* 手指 Icon 与包围光圈 */
+        .tap-circle-container {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tap-hand-icon {
+            font-size: 1.8rem;
+            z-index: 2;
+            transform: rotate(-15deg);
+            filter: drop-shadow(0 0 8px var(--primary-cyan));
+            animation: tapBounce 2s infinite ease-in-out;
+        }
+
+        /* 以手指指尖为中心的扩散脉冲霓虹圈 */
+        .glow-pulse-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-cyan);
+            box-shadow: 0 0 15px var(--primary-cyan), inset 0 0 10px var(--primary-purple);
+            animation: neonRingPulse 2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+            z-index: 1;
+        }
+
+        .brand-title-text {
+            font-size: 2.6rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary-cyan) 50%, var(--primary-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 25px rgba(0, 242, 254, 0.3);
+            line-height: 1;
+            margin: 0;
+        }
+
+        p.subtitle { 
+            color: var(--text-muted); 
+            font-size: 0.9rem; 
+            margin-top: 14px;
+            letter-spacing: 0.3px;
+        }
+
+        /* =========================================================
+           2. 分类控制栏 (紫框部分 - 整体下移)
+           ========================================================= */
+        .category-control-bar { 
+            display: flex; 
+            justify-content: center; 
+            gap: 12px; 
+            flex-wrap: wrap; 
+            margin-top: 30px;    /* 👈 整体下移 */
+            margin-bottom: 20px; 
+        }
+
+        .btn-home { 
+            background: linear-gradient(135deg, var(--primary-purple), var(--primary-cyan)); 
+            color: #ffffff; 
+            border: none; 
+            padding: 10px 22px; 
+            border-radius: 100px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            font-size: 14px; 
+            box-shadow: 0 4px 15px var(--purple-glow);
+        }
+        .btn-home:hover { 
+            transform: translateY(-2px) scale(1.03); 
+            box-shadow: 0 6px 20px var(--accent-glow);
+        }
+
+        .btn-folder { 
+            background-color: #1A1C29; 
+            color: var(--text-muted); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            padding: 10px 20px; 
+            border-radius: 100px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            font-size: 14px; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+        }
+        .btn-folder:hover, .btn-folder.active { 
+            background-color: #23263A; 
+            color: var(--primary-cyan); 
+            border-color: var(--primary-cyan); 
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        /* 顶部已选 Filter 胶囊条 */
+        .selected-tags-bar { 
+            max-width: 800px; 
+            margin: 0 auto 20px auto; 
+            display: none; 
+            text-align: center; 
+            font-size: 13px; 
+            color: var(--text-muted); 
+            background: rgba(26, 28, 41, 0.8); 
+            padding: 10px 18px; 
+            border-radius: 100px; 
+            border: 1px dashed var(--primary-purple); 
+            backdrop-filter: blur(10px);
+        }
         .selected-tags-bar.active { display: block; animation: fadeIn 0.3s ease; }
         .selected-tags-wrapper { display: inline-flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; margin-left: 8px; }
         
-        .selected-chip { display: inline-flex; align-items: center; gap: 6px; background-color: #6C5CE7; color: #ffffff; padding: 4px 12px; border-radius: 15px; font-size: 13px; font-weight: bold; transition: background-color 0.2s; }
-        .selected-chip:hover { background-color: #5a4bcf; }
-        .btn-close-chip { cursor: pointer; font-size: 14px; font-weight: bold; display: inline-block; margin-left: 2px; line-height: 1; border-radius: 50%; width: 16px; height: 16px; text-align: center; background: rgba(0, 0, 0, 0.2); }
-        .btn-close-chip:hover { background: rgba(255, 255, 255, 0.3); }
+        .selected-chip { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 6px; 
+            background: linear-gradient(135deg, var(--primary-purple), #5a4bcf); 
+            color: #ffffff; 
+            padding: 5px 14px; 
+            border-radius: 100px; 
+            font-size: 13px; 
+            font-weight: bold; 
+            box-shadow: 0 2px 10px var(--purple-glow);
+        }
+        .btn-close-chip { 
+            cursor: pointer; 
+            font-size: 12px; 
+            font-weight: bold; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            border-radius: 50%; 
+            width: 16px; 
+            height: 16px; 
+            background: rgba(0, 0, 0, 0.3); 
+            transition: all 0.2s;
+        }
+        .btn-close-chip:hover { background: #ff4757; transform: scale(1.15); }
 
-        /* 紫色框：弹出的子分类面板 (默认隐藏) */
-        .sub-category-panel { max-width: 800px; margin: 0 auto 25px auto; display: none; background: #1A1C29; border: 1px solid #6C5CE7; border-radius: 14px; padding: 15px; text-align: center; box-shadow: 0 8px 20px rgba(108, 92, 231, 0.2); }
+        /* 弹出的子分类面板 */
+        .sub-category-panel { 
+            max-width: 800px; 
+            margin: 0 auto 30px auto; 
+            display: none; 
+            background: rgba(26, 28, 41, 0.9); 
+            border: 1px solid var(--primary-purple); 
+            border-radius: 18px; 
+            padding: 18px; 
+            text-align: center; 
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px var(--purple-glow); 
+            backdrop-filter: blur(12px);
+        }
         .sub-category-panel.open { display: block; animation: slideDown 0.25s ease-out; }
         
         .sub-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
         
-        /* 子标签按钮 */
-        .sub-btn { background-color: #23263A; color: #A0A5BA; border: 1px solid #2B2D3E; padding: 6px 14px; border-radius: 15px; cursor: pointer; transition: 0.2s; font-size: 13px; user-select: none; }
-        .sub-btn:hover { border-color: #6C5CE7; color: #fff; }
-        .sub-btn.selected { background-color: #6C5CE7; color: #ffffff; border-color: #6C5CE7; font-weight: bold; }
+        .sub-btn { 
+            background-color: #121420; 
+            color: var(--text-muted); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            padding: 6px 16px; 
+            border-radius: 100px; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            font-size: 13px; 
+            user-select: none; 
+        }
+        .sub-btn:hover { border-color: var(--primary-cyan); color: #fff; box-shadow: 0 0 10px var(--accent-glow); }
+        .sub-btn.selected { 
+            background: linear-gradient(135deg, var(--primary-cyan), #00b4d8); 
+            color: #07090e; 
+            border-color: transparent; 
+            font-weight: bold; 
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        /* =========================================================
+           3. 游戏网格区域 (绿框部分 - 整体下移)
+           ========================================================= */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+            gap: 22px; 
+            max-width: 1200px; 
+            margin: 10px auto 50px auto; /* 👈 整体下移并拉开底部空间 */
+        }
+        .card { 
+            background-color: var(--card-bg); 
+            border-radius: 16px; 
+            overflow: hidden; 
+            border: 1px solid rgba(255, 255, 255, 0.06); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            text-decoration: none; 
+            color: inherit; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .card:hover { 
+            transform: translateY(-6px); 
+            border-color: var(--primary-cyan); 
+            box-shadow: 0 10px 25px -5px var(--accent-glow);
+        }
+        .card img { width: 100%; height: 175px; object-fit: cover; background-color: #181d2d; }
+        .card-info { padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-title { font-size: 15px; font-weight: bold; margin-bottom: 6px; color: #fff; }
+        .card-desc { font-size: 12px; color: #8A8F9E; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
+        .card-cat { font-size: 11px; color: var(--primary-cyan); text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px; }
+
+        /* Keyframe 动画 */
+        @keyframes tapBounce {
+            0%, 100% { transform: rotate(-15deg) scale(1) translateY(0); }
+            50% { transform: rotate(-15deg) scale(0.88) translateY(3px); }
+        }
+
+        @keyframes neonRingPulse {
+            0% {
+                width: 18px;
+                height: 18px;
+                opacity: 1;
+                border-color: var(--primary-cyan);
+                box-shadow: 0 0 10px var(--primary-cyan);
+            }
+            50% {
+                width: 48px;
+                height: 48px;
+                opacity: 0.8;
+                border-color: var(--primary-purple);
+                box-shadow: 0 0 20px var(--primary-purple);
+            }
+            100% {
+                width: 65px;
+                height: 65px;
+                opacity: 0;
+                border-color: var(--primary-cyan);
+            }
+        }
 
         @keyframes slideDown {
             from { opacity: 0; transform: translateY(-10px); }
@@ -52,43 +316,37 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
-        /* 游戏列表网格 */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
-        .card { background-color: #1A1C29; border-radius: 12px; overflow: hidden; border: 1px solid #2B2D3E; transition: transform 0.2s, border-color 0.2s; text-decoration: none; color: inherit; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-5px); border-color: #6C5CE7; }
-        .card img { width: 100%; height: 180px; object-fit: cover; background-color: #23263a; }
-        .card-info { padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .card-title { font-size: 16px; font-weight: bold; margin-bottom: 8px; color: #fff; }
-        .card-desc { font-size: 12px; color: #8A8F9E; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .card-cat { font-size: 11px; color: #6C5CE7; text-transform: uppercase; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>🎮 Instant Game Station</h1>
+    <!-- 蓝框重构：Logo + 科技圆圈手势 -->
+    <header class="hero-brand-header">
+        <div class="lulutap-logo-wrapper" onclick="goHome(event)">
+            <div class="tap-circle-container">
+                <span class="tap-hand-icon">👆</span>
+                <div class="glow-pulse-ring"></div>
+            </div>
+            <h1 class="brand-title-text">LuluTap</h1>
+        </div>
         <p class="subtitle">Play free online HTML5 games directly in your browser with no downloads required!</p>
     </header>
 
-    <!-- 顶部控制栏 -->
+    <!-- 紫框部分：顶部控制栏 (已下移) -->
     <div class="category-control-bar">
-        <!-- 绿色区域：点击重置所有选中的标签，返回首页状态 -->
         <button class="btn-home" onclick="goHome(event)">🔥 Show All Games</button>
-
-        <!-- 红色区域：4 个小型集合总开关 -->
         <button class="btn-folder" onclick="openFolder('players', event)">👥 Players ▾</button>
         <button class="btn-folder" onclick="openFolder('genres', event)">⚡ Genres ▾</button>
         <button class="btn-folder" onclick="openFolder('styles', event)">🎨 Styles ▾</button>
         <button class="btn-folder" onclick="openFolder('tags', event)">🎯 Tags ▾</button>
     </div>
 
-    <!-- 顶部的【已选择标签展示条】，带有 ✕ 可以直接关掉 -->
+    <!-- 顶部的已选择标签展示条 -->
     <div class="selected-tags-bar" id="selected-tags-bar">
         Selected Filters: <div class="selected-tags-wrapper" id="selected-tags-list"></div>
     </div>
 
-    <!-- 紫色区域：点击对应集合后，在这里弹出的具体小分类面板 -->
+    <!-- 弹出的具体小分类面板 -->
     <div class="sub-category-panel" id="panel">
         
         <!-- 👥 Players 子分类 -->
@@ -136,14 +394,12 @@
 
     </div>
 
-    <!-- 游戏面板 -->
+    <!-- 绿框部分：游戏面板 (已下移) -->
     <div class="grid" id="game-grid"></div>
 
     <script>
         let allGames = [];
         let activeFolderName = null;
-        
-        // 存储当前选中的所有小标签（Map 对象保存原始大小写及标准键）
         let selectedTags = new Map();
 
         fetch('static/games.json?t=' + new Date().getTime())
@@ -157,10 +413,8 @@
                 document.getElementById('game-grid').innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#ff5555;">Failed to load games. Please check static/games.json file.</p>';
             });
 
-        // 切换展开/收起 4 个大集合菜单
         function openFolder(folderName, e) {
             const panel = document.getElementById('panel');
-            
             document.querySelectorAll('.btn-folder').forEach(btn => btn.classList.remove('active'));
 
             if (activeFolderName === folderName && panel.classList.contains('open')) {
@@ -180,48 +434,38 @@
             activeFolderName = folderName;
         }
 
-        // 点击 Show All Games：清空所有多选标签并重置
         function goHome(e) {
             document.querySelectorAll('.btn-folder').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.sub-btn').forEach(btn => btn.classList.remove('selected'));
             
-            // 清空选中的标签集合
             selectedTags.clear();
             updateSelectedTagsUI();
 
-            // 收起紫色弹出面板
             document.getElementById('panel').classList.remove('open');
             activeFolderName = null;
             
-            // 恢复显示全部游戏
             renderGames(allGames);
         }
 
-        // 多选 / 取消选择单个小标签
         function toggleTag(cat, btnElement) {
             const catLower = cat.toLowerCase();
             const displayName = btnElement.textContent.trim();
 
             if (selectedTags.has(catLower)) {
-                // 如果已存在，则取消选择
                 selectedTags.delete(catLower);
                 btnElement.classList.remove('selected');
             } else {
-                // 如果不存在，则添加选择
                 selectedTags.set(catLower, displayName);
                 btnElement.classList.add('selected');
             }
 
-            // 更新顶部选中标签的带 ✕ UI
             updateSelectedTagsUI();
             applyMultiFilter();
         }
 
-        // 移除指定的标签（点击顶部标签上的 ✕ 时触发）
         function removeTag(catLower) {
             selectedTags.delete(catLower);
             
-            // 同步解除紫色面板对应按钮的高亮选中状态
             document.querySelectorAll(`.sub-btn[data-cat="${catLower}"]`).forEach(btn => {
                 btn.classList.remove('selected');
             });
@@ -230,7 +474,6 @@
             applyMultiFilter();
         }
 
-        // 渲染顶部选中的标签和 ✕ 按钮
         function updateSelectedTagsUI() {
             const bar = document.getElementById('selected-tags-bar');
             const listContainer = document.getElementById('selected-tags-list');
@@ -253,7 +496,6 @@
             }
         }
 
-        // 多重逻辑筛选（必须同时匹配所有选中的标签）
         function applyMultiFilter() {
             if (selectedTags.size === 0) {
                 renderGames(allGames);
@@ -270,14 +512,12 @@
                     gameCategories = [game.category.toLowerCase()];
                 }
 
-                // 检查游戏分类是否满足用户选中的每一个标签
                 return requiredKeys.every(tagKey => gameCategories.includes(tagKey));
             });
 
             renderGames(filtered);
         }
 
-        // 渲染游戏列表
         function renderGames(list) {
             const grid = document.getElementById('game-grid');
             grid.innerHTML = '';
