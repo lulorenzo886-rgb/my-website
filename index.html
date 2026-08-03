@@ -49,7 +49,7 @@
 
     <div class="container">
         <div class="game-grid" id="game-grid">
-            <!-- JS 会读取 games.json 自动把几百个游戏画在这里 -->
+            <!-- JS 自动画卡片 -->
         </div>
     </div>
 
@@ -76,12 +76,17 @@
             games.forEach(game => {
                 const card = document.createElement('div');
                 card.className = 'game-card';
+                // 自动兼容各种封面字段名称 (cover / image / thumb)
+                const thumbUrl = game.cover || game.image || game.thumb;
+                // 自动兼容各种 ID 字段名称 (id / slug)
+                const gameId = game.id || game.slug;
+
                 card.innerHTML = `
-                    <img src="${game.cover}" class="game-thumb" alt="${game.title}" onerror="this.src='https://via.placeholder.com/300x200/1A1C29/FFFFFF?text=${encodeURIComponent(game.title)}'">
+                    <img src="${thumbUrl}" class="game-thumb" alt="${game.title}" onerror="this.src='https://via.placeholder.com/300x200/1A1C29/FFFFFF?text=${encodeURIComponent(game.title)}'">
                     <div class="game-info">
                         <div class="game-title">${game.title}</div>
                         <div class="game-desc">${game.description || '经典的 HTML5 网页游戏，即点即玩！'}</div>
-                        <a href="game.html?slug=${game.slug}" class="play-btn">Play Now</a>
+                        <a href="game.html?id=${gameId}" class="play-btn">Play Now</a>
                     </div>
                 `;
                 grid.appendChild(card);
