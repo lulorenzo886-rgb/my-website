@@ -38,27 +38,90 @@ body {
 }
 
 /* =========================================================
-   1. 顶部 Header / 导航 (兼容 Header 与 Glass-Navbar)
+   🎮 1. Logo 区域 & 炫酷 Tap 点击光圈 (蓝色圈部分重写)
    ========================================================= */
-header {
+header.hero-brand-header {
     text-align: center;
-    padding: 30px 20px 10px 20px;
+    padding: 45px 20px 20px 20px; /* 增加顶部边距，拉开与极简顶部的距离 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-header h1 {
-    font-size: 2.2rem;
+.lulutap-logo-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    position: relative;
+    padding: 10px 24px;
+    background: rgba(17, 21, 34, 0.6);
+    border-radius: 100px;
+    border: 1px solid rgba(0, 242, 254, 0.2);
+    box-shadow: 0 0 35px rgba(0, 242, 254, 0.15), inset 0 0 15px rgba(108, 92, 231, 0.2);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.lulutap-logo-wrapper:hover {
+    border-color: var(--primary-cyan);
+    box-shadow: 0 0 50px rgba(0, 242, 254, 0.35), inset 0 0 25px rgba(108, 92, 231, 0.4);
+    transform: translateY(-2px);
+}
+
+/* 手指 Icon 与包围光圈 */
+.tap-circle-container {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tap-hand-icon {
+    font-size: 1.8rem;
+    z-index: 2;
+    transform: rotate(-15deg);
+    filter: drop-shadow(0 0 8px var(--primary-cyan));
+    animation: tapBounce 2s infinite ease-in-out;
+}
+
+/* 以手指指尖为中心的扩散脉冲霓虹圈 */
+.glow-pulse-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-cyan);
+    box-shadow: 0 0 15px var(--primary-cyan), inset 0 0 10px var(--primary-purple);
+    animation: neonRingPulse 2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+    z-index: 1;
+}
+
+/* Logo 炫酷文字渐变 */
+.brand-title-text {
+    font-size: 2.8rem;
     font-weight: 900;
-    background: linear-gradient(135deg, #ffffff 30%, var(--primary-cyan) 70%, var(--primary-purple) 100%);
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #ffffff 0%, var(--primary-cyan) 50%, var(--primary-purple) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    letter-spacing: -0.5px;
-    margin-bottom: 8px;
-    text-shadow: 0 0 30px rgba(0, 242, 254, 0.2);
+    text-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+    margin: 0;
+    line-height: 1;
 }
 
 p.subtitle {
     color: var(--text-muted);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    margin-top: 14px;
+    letter-spacing: 0.3px;
 }
 
 /* 顶部毛玻璃导航栏（预留支持导航组件） */
@@ -121,7 +184,7 @@ p.subtitle {
 }
 
 /* =========================================================
-   2. 分类控制栏 (Category Control Bar)
+   💜 2. 紫色分类按钮栏 - 整体下移 (紫色画圈部分)
    ========================================================= */
 .category-control-bar {
     display: flex;
@@ -129,7 +192,8 @@ p.subtitle {
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
-    margin: 20px auto 16px auto;
+    margin-top: 25px;    /* 👈 增加顶部距离，让它整体下移 */
+    margin-bottom: 25px; /* 👈 增加底部距离，给展开面板和游戏区域留出空间 */
     padding: 0 20px;
 }
 
@@ -310,7 +374,7 @@ p.subtitle {
 }
 
 /* =========================================================
-   5. 核心游戏网格 & 卡片 (Arcade Grid & Cards)
+   💚 3. 绿色游戏网格 - 整体下移 (绿色画圈部分)
    ========================================================= */
 .main-content {
     flex: 1;
@@ -320,12 +384,18 @@ p.subtitle {
     width: 100%;
 }
 
+.grid, .arcade-grid, .main-content {
+    margin-top: 20px; /* 👈 整体往下推，不再贴着分类按钮 */
+    padding-bottom: 60px;
+}
+
 .grid, .arcade-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
     gap: 22px;
     max-width: 1200px;
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* 兼容 HTML 中的 a.card 结构 */
@@ -402,7 +472,7 @@ p.subtitle {
 }
 
 /* =========================================================
-   6. 页脚 & 关键帧动画
+   6. 页脚
    ========================================================= */
 .arcade-footer {
     background: #090b12;
@@ -434,6 +504,41 @@ p.subtitle {
     color: var(--primary-cyan);
 }
 
+/* =========================================================
+   ✨ 4. 光圈与手的 Tap 核心炫酷动画及通用动画
+   ========================================================= */
+@keyframes tapBounce {
+    0%, 100% {
+        transform: rotate(-15deg) scale(1) translateY(0);
+    }
+    50% {
+        transform: rotate(-15deg) scale(0.88) translateY(3px); /* 像手指轻点一下 */
+    }
+}
+
+@keyframes neonRingPulse {
+    0% {
+        width: 20px;
+        height: 20px;
+        opacity: 1;
+        border-color: var(--primary-cyan);
+        box-shadow: 0 0 10px var(--primary-cyan);
+    }
+    50% {
+        width: 52px;
+        height: 52px;
+        opacity: 0.8;
+        border-color: var(--primary-purple);
+        box-shadow: 0 0 25px var(--primary-purple);
+    }
+    100% {
+        width: 68px;
+        height: 68px;
+        opacity: 0;
+        border-color: var(--primary-cyan);
+    }
+}
+
 @keyframes slideDown {
     from { 
         opacity: 0; 
@@ -463,7 +568,6 @@ p.subtitle {
 
 /* 📱 移动设备微调 */
 @media (max-width: 768px) {
-    header h1 { font-size: 1.7rem; }
     .grid, .arcade-grid {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         gap: 14px;
