@@ -36,21 +36,21 @@
     "url": "https://html5.gamemonetize.co/zo8ocq9uu0gjavl3iazgiessapj6ov6n/"
   },
   {
-    "id": "motorbike-driving-simulator-3d",
-    "slug": "motorbike-driving-simulator-3d",
-    "title": "Motorbike Driving Simulator 3D",
+    "id": "spooky-escape",
+    "slug": "spooky-escape",
+    "title": "Spooky Escape",
     "category": [
-      "racing",
-      "driving",
-      "3d",
+      "action",
+      "adventure",
+      "casual",
       "singleplayer",
+      "3d",
       "boys",
-      "bike",
-      "simulation"
+      "girls"
     ],
-    "description": "Experience intense high-speed driving! Master bike stunts, navigate challenging obstacles, and race through 3D tracks directly in your browser.",
-    "cover": "https://images.weserv.nl/?url=https://img.gamemonetize.com/mb29iwgb5anp93swbuzxsxt74lri4dx5/512.jpg",
-    "image": "https://images.weserv.nl/?url=https://img.gamemonetize.com/mb29iwgb5anp93swbuzxsxt74lri4dx5/512.jpg",
+    "description": "Experience intense high-speed driving and ghost chasing! Dodge spooky ghosts and navigate challenging tracks.",
+    "cover": "static/spooky-escape.jpg",
+    "image": "static/spooky-escape.jpg",
     "url": "https://html5.gamemonetize.co/mb29iwgb5anp93swbuzxsxt74lri4dx5/"
   }
 ]
