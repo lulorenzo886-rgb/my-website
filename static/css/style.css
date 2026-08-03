@@ -7,9 +7,10 @@
     --card-bg: #111522;
     --panel-bg: rgba(26, 28, 41, 0.85);
     
-    /* 核心配色：霓虹青 + 霓虹紫 */
+    /* 核心配色：霓虹青 + 霓虹紫 + 霓虹粉 */
     --primary-cyan: #00f2fe;
     --primary-purple: #6C5CE7;
+    --accent-pink: #ff2a85;
     --accent-glow: rgba(0, 242, 254, 0.35);
     --purple-glow: rgba(108, 92, 231, 0.4);
     
@@ -38,11 +39,11 @@ body {
 }
 
 /* =========================================================
-   🎮 1. Logo 区域 & 炫酷 Tap 点击光圈 (蓝色圈部分重写)
+   🎮 1. Logo 区域 & 3D 悬浮/点击爆发反馈
    ========================================================= */
 header.hero-brand-header {
     text-align: center;
-    padding: 45px 20px 20px 20px; /* 增加顶部边距，拉开与极简顶部的距离 */
+    padding: 45px 20px 20px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -63,12 +64,13 @@ header.hero-brand-header {
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
     cursor: pointer;
+    user-select: none;
+    perspective: 1000px; /* 支持 3D 倾斜 */
 }
 
 .lulutap-logo-wrapper:hover {
     border-color: var(--primary-cyan);
     box-shadow: 0 0 50px rgba(0, 242, 254, 0.35), inset 0 0 25px rgba(108, 92, 231, 0.4);
-    transform: translateY(-2px);
 }
 
 /* 手指 Icon 与包围光圈 */
@@ -87,9 +89,15 @@ header.hero-brand-header {
     transform: rotate(-15deg);
     filter: drop-shadow(0 0 8px var(--primary-cyan));
     animation: tapBounce 2s infinite ease-in-out;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* 以手指指尖为中心的扩散脉冲霓虹圈 */
+.lulutap-logo-wrapper:hover .tap-hand-icon {
+    transform: rotate(5deg) scale(1.15);
+    filter: drop-shadow(0 0 15px var(--accent-pink));
+}
+
+/* 脉冲霓虹圈 */
 .glow-pulse-ring {
     position: absolute;
     top: 50%;
@@ -115,6 +123,20 @@ header.hero-brand-header {
     text-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
     margin: 0;
     line-height: 1;
+    transition: filter 0.3s ease;
+}
+
+.lulutap-logo-wrapper:hover .brand-title-text {
+    filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.6));
+}
+
+/* 按压与冲击爆破效果 */
+.lulutap-logo-wrapper:active {
+    transform: scale(0.95);
+}
+
+.logo-click-effect {
+    animation: logoPulse 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
 p.subtitle {
@@ -124,7 +146,7 @@ p.subtitle {
     letter-spacing: 0.3px;
 }
 
-/* 顶部毛玻璃导航栏（预留支持导航组件） */
+/* 顶部毛玻璃导航栏 */
 .glass-navbar {
     display: flex;
     align-items: center;
@@ -184,7 +206,7 @@ p.subtitle {
 }
 
 /* =========================================================
-   💜 2. 紫色分类按钮栏 - 整体下移 (紫色画圈部分)
+   💜 2. 紫色分类按钮栏
    ========================================================= */
 .category-control-bar {
     display: flex;
@@ -192,12 +214,11 @@ p.subtitle {
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
-    margin-top: 25px;    /* 👈 增加顶部距离，让它整体下移 */
-    margin-bottom: 25px; /* 👈 增加底部距离，给展开面板和游戏区域留出空间 */
+    margin-top: 25px;
+    margin-bottom: 25px;
     padding: 0 20px;
 }
 
-/* 🔥 Show All / 首页渐变按钮 */
 .btn-home {
     background: linear-gradient(135deg, var(--primary-purple), var(--primary-cyan));
     color: #ffffff;
@@ -217,7 +238,6 @@ p.subtitle {
     box-shadow: 0 6px 25px rgba(0, 242, 254, 0.5);
 }
 
-/* 4 个集合控制按钮 */
 .btn-folder {
     background: #1A1C29;
     color: var(--text-muted);
@@ -249,7 +269,7 @@ p.subtitle {
 }
 
 /* =========================================================
-   3. 已选 Filter 胶囊条 (Selected Tags Bar & Chips)
+   3. 已选 Filter 胶囊条
    ========================================================= */
 .selected-tags-bar {
     max-width: 850px;
@@ -281,7 +301,6 @@ p.subtitle {
     margin-left: 8px;
 }
 
-/* 动态生成的高亮 Chip */
 .selected-chip {
     display: inline-flex;
     align-items: center;
@@ -317,7 +336,7 @@ p.subtitle {
 }
 
 /* =========================================================
-   4. 二级弹出分类面板 (Sub Category Panel)
+   4. 二级弹出分类面板
    ========================================================= */
 .sub-category-panel {
     max-width: 850px;
@@ -374,7 +393,7 @@ p.subtitle {
 }
 
 /* =========================================================
-   💚 3. 绿色游戏网格 - 整体下移 (绿色画圈部分)
+   💚 5. 游戏网格
    ========================================================= */
 .main-content {
     flex: 1;
@@ -385,7 +404,7 @@ p.subtitle {
 }
 
 .grid, .arcade-grid, .main-content {
-    margin-top: 20px; /* 👈 整体往下推，不再贴着分类按钮 */
+    margin-top: 20px;
     padding-bottom: 60px;
 }
 
@@ -398,7 +417,6 @@ p.subtitle {
     margin-right: auto;
 }
 
-/* 兼容 HTML 中的 a.card 结构 */
 .card, .game-card {
     background-color: var(--card-bg);
     border-radius: 16px;
@@ -418,7 +436,6 @@ p.subtitle {
     box-shadow: 0 12px 30px -5px var(--accent-glow), 0 0 15px rgba(108, 92, 231, 0.2);
 }
 
-/* 封面图片严苛保护逻辑（决不破框） */
 .card img, .image-wrapper img {
     width: 100%;
     height: 165px;
@@ -432,7 +449,6 @@ p.subtitle {
     transform: scale(1.08);
 }
 
-/* 卡片文本元数据 */
 .card-info, .card-meta {
     padding: 14px;
     flex: 1;
@@ -472,6 +488,28 @@ p.subtitle {
 }
 
 /* =========================================================
+   🌐 6. 全局鼠标爆破粒子 & 点击涟漪样式
+   ========================================================= */
+.click-particle {
+    position: fixed;
+    pointer-events: none;
+    border-radius: 50%;
+    z-index: 99999;
+    will-change: transform, opacity;
+}
+
+.click-ripple {
+    position: fixed;
+    pointer-events: none;
+    border-radius: 50%;
+    border: 2px solid var(--primary-cyan);
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 1;
+    z-index: 99998;
+    animation: rippleExpand 0.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+/* =========================================================
    6. 页脚
    ========================================================= */
 .arcade-footer {
@@ -505,14 +543,14 @@ p.subtitle {
 }
 
 /* =========================================================
-   ✨ 4. 光圈与手的 Tap 核心炫酷动画及通用动画
+   ✨ 7. 核心动画关键帧
    ========================================================= */
 @keyframes tapBounce {
     0%, 100% {
         transform: rotate(-15deg) scale(1) translateY(0);
     }
     50% {
-        transform: rotate(-15deg) scale(0.88) translateY(3px); /* 像手指轻点一下 */
+        transform: rotate(-15deg) scale(0.88) translateY(3px);
     }
 }
 
@@ -536,6 +574,43 @@ p.subtitle {
         height: 68px;
         opacity: 0;
         border-color: var(--primary-cyan);
+    }
+}
+
+@keyframes logoPulse {
+    0% {
+        transform: scale(1);
+    }
+    30% {
+        transform: scale(1.15) rotate(3deg);
+        filter: drop-shadow(0 0 20px #00f2fe) drop-shadow(0 0 40px #ff2a85);
+    }
+    50% {
+        transform: scale(0.95) rotate(-2deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        filter: drop-shadow(0 0 0px transparent);
+    }
+}
+
+@keyframes rippleExpand {
+    0% {
+        width: 10px;
+        height: 10px;
+        opacity: 0.8;
+        border-color: var(--primary-cyan);
+        box-shadow: 0 0 10px var(--primary-cyan);
+    }
+    50% {
+        border-color: var(--accent-pink);
+        box-shadow: 0 0 15px var(--accent-pink);
+    }
+    100% {
+        width: 80px;
+        height: 80px;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.5);
     }
 }
 
