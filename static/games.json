@@ -1,66 +1,10 @@
 [
   {
-    "title": "Annoying Boss Punch Game",
-    "slug": "boss-punch",
-    "category": "action",
-    "description": "The ultimate office stress buster! Tired of boring meetings and overtime work? Punch, kick, and throw eggs or water balloons at your annoying boss to unleash your inner frustration!",
-    "controls": "Left Click to punch/combo. Arrow Keys to move. Spacebar for heavy punch. E/R for special props. Esc to pause.",
-    "cover": "https://img.gamedistribution.com/bd9cc9da45b04ee293306209653d8cfb-512x384.jpg"
-  },
-  {
-    "title": "Nitro Speed 2 Underground",
-    "slug": "nitro-speed-2-underground",
-    "category": "racing",
-    "description": "Get ready for intense underground street racing! Drive fast cars, dodge obstacles, and beat your rivals in Nitro Speed 2.",
-    "controls": "Use Arrow Keys or WASD to drive. Press Space for Handbrake.",
-    "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdzRL96JZx6fM3VxJ6VXI47ze6rTcU4cWGdm50UcBewg&s"
-  },
-  {
-    "title": "Archer: Dungeon Hero",
-    "slug": "archer-dungeon-hero",
-    "category": "action",
-    "description": "Embark on an epic adventure as a master archer! Fight through dangerous dungeons, defeat monsters, and upgrade your skills.",
-    "controls": "Use WASD or Arrow keys to move. Aim and shoot automatically or using Mouse.",
-    "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjIi1GjAbq-bVmEncHG44m3RxW4VcSmpK1lFEiEofPFAZGEXQtS7_6qVI&s=10"
-  },
-  {
-    "title": "MergeDuel.io",
-    "slug": "mergeduel-io",
-    "category": "puzzle",
-    "description": "Merge weapons, upgrade your gear, and battle against other players in this fast-paced online duel arena!",
-    "controls": "Drag and drop to merge items. Click to interact and battle.",
-    "cover": "https://yupgames.io/_next/image?url=https%3A%2F%2Fs3.growsolutions.tech%2Fyupgames%2Fgames%2Fimages%2F1771330038718-MergeDuel IO.png&w=3840&q=75"
-  },
-  {
-    "title": "Fireboy and Watergirl 7: and Friends",
-    "slug": "fireboy-and-watergirl-7-and-friends",
-    "category": "multiplayer",
-    "description": "Work together with Fireboy, Watergirl, and their friends to solve tricky elemental puzzles, collect gems, and overcome traps in the temples!",
-    "controls": "WASD to control Watergirl. Arrow keys to control Fireboy.",
-    "cover": "https://play-lh.googleusercontent.com/Yp6rY457OYZaoBB0lsClI1OWFEvIMR5a1wGhAA7-kq9mUZoU5mEfg2ZQ0FoP0HVOAJQDlZ4qM_WwhjNLz0phVA"
-  },
-  {
-    "title": "Farm Vs Zombies",
-    "slug": "farm-vs-zombies",
-    "category": "action",
-    "description": "Protect your farm from incoming waves of hungry zombies! Deploy upgrades, hold the defense line, and save the crops in this action-packed shooter.",
-    "controls": "Mouse or Touch to aim and shoot. Keyboard shortcuts to activate power-ups.",
-    "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThIAGXIYKEKP-ccK1zIaPVH4YUTiOakmPJf-pHLcxW4Q&s"
-  },
-  {
-    "title": "Fury Tanks",
-    "slug": "fury Tanks",
-    "category": "action",
-    "description": "Drive powerful armored tanks, blast through enemy lines, and upgrade your war machine in action-packed tank battles!",
-    "controls": "WASD or Arrow keys to move, Mouse to aim and shoot.",
-    "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAmmtskSsa1ZFCU50MxIJ0qbi12qSMz4JEIs9nK4WWT6l2N-9Y0_0YvuDn&s=10"
-  },
-  {
-    "title": "Pool Duel",
-    "slug": "pool Duel",
-    "category": "sports",
-    "description": "Test your billiards skills in Pool Duel! Aim your cue, adjust your power, and pocket all the balls to defeat your opponent in this realistic 8-ball pool challenge.",
-    "controls": "Mouse / Touch to aim the cue, drag and release to adjust power and shot.",
-    "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyo8QCfOlTmclyU9nZTt5gqqQKAnAQAKxkM1BMjbWKQQ&s=10"
+    "id": "fruit-ninja",
+    "title": "Fruit Ninja",
+    "category": "Action",
+    "description": "经典的 HTML5 网页游戏，即点即玩！",
+    "image": "https://img.gamemonetize.com/4kci7og3klgj0ivy2wz3gdvd9dth5e7n/512x512.jpg",
+    "url": "https://html5.gamemonetize.com/4kci7og3klgj0ivy2wz3gdvd9dth5e7n/"
   }
 ]
