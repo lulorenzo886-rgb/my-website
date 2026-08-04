@@ -6,6 +6,28 @@
     <title>LuluTap - Play Game</title>
     <!-- 标签页 Favicon 图标（与首页 LOGO 保持一致） -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cdefs%3E%3ClinearGradient id='lulutap-main' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300F2FE'/%3E%3Cstop offset='100%25' stop-color='%239B51E0'/%3E%3C/linearGradient%3E%3ClinearGradient id='cat-warm' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23FF9472'/%3E%3Cstop offset='100%25' stop-color='%23F2709C'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg transform='translate(6, 4)'%3E%3Ccircle cx='26' cy='26' r='24' stroke='url(%23lulutap-main)' stroke-width='1.5' stroke-dasharray='6 3' opacity='0.4'/%3E%3Cpath d='M10 38 C10 32, 14 30, 26 30 C38 30, 42 32, 42 38 L44 42 C44 44, 42 45, 40 45 L12 45 C10 45, 8 44, 8 42 Z' fill='%231E2332' stroke='url(%23lulutap-main)' stroke-width='1.5' stroke-linejoin='round'/%3E%3Cpath d='M21 16 C21 12, 31 12, 31 16 C32 19, 31 23, 26 23 C21 23, 20 19, 21 16 Z' fill='%230F111A'/%3E%3Cpath d='M22 13 C23 10, 29 10, 30 13 C31 15, 29 16, 26 16 C23 16, 21 15, 22 13 Z' fill='url(%23lulutap-main)'/%3E%3Cpath d='M19 16 C19 10, 33 10, 33 16' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3Crect x='17' y='15' width='4' height='7' rx='2' fill='url(%23lulutap-main)'/%3E%3Crect x='31' y='15' width='4' height='7' rx='2' fill='url(%23lulutap-main)'/%3E%3Cpath d='M20 24 C23 23, 29 23, 32 24 L34 33 L18 33 Z' fill='%23292D3E'/%3E%3Cg transform='translate(13, 28)'%3E%3Crect x='0' y='2' width='12' height='8' rx='3' fill='url(%23lulutap-main)'/%3E%3Ccircle cx='3' cy='5' r='1' fill='%230F111A'/%3E%3Ccircle cx='9' cy='5' r='1' fill='%23FFFFFF'/%3E%3C/g%3E%3Cg transform='translate(31, 27)'%3E%3Cpath d='M3 7 C3 4, 7 3, 9 5 C11 7, 10 12, 8 13 C6 13, 3 11, 3 7 Z' fill='url(%23cat-warm)'/%3E%3Cpath d='M4 4 L6 1 L7 4 Z' fill='url(%23cat-warm)'/%3E%3Cpath d='M7 4 L9 1 L10 4 Z' fill='url(%23cat-warm)'/%3E%3Cpath d='M9 11 C12 11, 13 8, 12 7' stroke='url(%23cat-warm)' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/g%3E%3Cpath d='M30 27 Q33 26 34 28' stroke='%23FFFFFF' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/g%3E%3C/svg%3E">
+
+    <!-- GameMonetize SDK 广告收益初始化 (绑定你的Approved域名) -->
+    <script type="text/javascript">
+        window.SDK_OPTIONS = {
+            gameId: "my-website-6jb.pages.dev",
+            onEvent: function(a) {
+                switch (a.name) {
+                    case "SDK_GAME_START":
+                        console.log("Ad ended or resumed");
+                        break;
+                    case "SDK_GAME_PAUSE":
+                        console.log("Ad started playing");
+                        break;
+                }
+            }
+        };
+        (function(a, b, c) {
+            var d = a.getElementsByTagName(b)[0];
+            a.getElementById(c) || (a = a.createElement(b), a.id = c, a.src = "https://api.gamemonetize.com/sdk.js", d.parentNode.insertBefore(a, d));
+        })(document, "script", "gamemonetize-sdk");
+    </script>
+
     <style>
         * {
             box-sizing: border-box;
