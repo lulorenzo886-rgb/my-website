@@ -97,7 +97,6 @@
             border: none;
         }
 
-        /* 🟢 控制按钮移至游戏画面右上角 */
         .controls-bar {
             position: absolute;
             top: 12px;
@@ -151,13 +150,33 @@
             color: #fff;
         }
 
-        .like-badge {
+        /* 🔴 交互式真实点赞按钮 */
+        .like-btn {
             background: rgba(255, 71, 87, 0.15);
+            border: 1px solid rgba(255, 71, 87, 0.3);
             color: #ff4757;
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-size: 13px;
             font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .like-btn:hover {
+            transform: scale(1.05);
+            background: rgba(255, 71, 87, 0.25);
+        }
+
+        .like-btn.liked {
+            background: #ff4757;
+            color: #ffffff;
+            border-color: #ff4757;
+            box-shadow: 0 0 12px rgba(255, 71, 87, 0.4);
         }
 
         .tags-row {
@@ -300,7 +319,6 @@
             transform: rotate(-90deg);
         }
 
-        /* 🔴 推荐区域：保持无限循环滚动 */
         .recommend-section {
             max-width: 1500px;
             width: 100%;
@@ -401,7 +419,6 @@
         <div class="left-panel">
             <div class="screen-box" id="screen-box">
                 <iframe class="game-iframe" id="game-frame" allowfullscreen src="about:blank"></iframe>
-                <!-- 🟢 按钮维持在右上角 -->
                 <div class="controls-bar">
                     <button class="action-btn" onclick="reloadGame()">🔄 Reload</button>
                     <button class="action-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
@@ -411,14 +428,17 @@
             <!-- Title & Tags -->
             <div class="game-meta-box">
                 <div class="meta-header">
-                    <h1 class="game-title" id="game-title">Find the Kitten: Spot the Cat</h1>
-                    <span class="like-badge" id="game-likes">👍 2.8k</span>
+                    <h1 class="game-title" id="game-title">Real Car Parking Game</h1>
+                    
+                    <!-- 🔴 将 2.8k 替换为真实可点的清零点赞按钮 -->
+                    <button class="like-btn" id="like-btn" onclick="toggleLike()">
+                        👍 <span id="like-count">0</span>
+                    </button>
                 </div>
                 
                 <div class="tags-row">
                     <span>🏷️ Categories & Tags:</span>
                     <div id="game-tags" style="display: flex; gap: 6px; flex-wrap: wrap;">
-                        <span class="meta-tag">HTML5</span>
                         <span class="meta-tag">Puzzle</span>
                         <span class="meta-tag">Casual</span>
                         <span class="meta-tag">Find Object</span>
@@ -480,7 +500,7 @@
         </div>
     </div>
 
-    <!-- 🔴 保持无限循环滚动，同时加载最匹配标签的 10 款游戏 -->
+    <!-- Recommended Games Marquee -->
     <section class="recommend-section">
         <div class="rec-header">🎯 SIMILAR GAMES</div>
         <div class="marquee-wrapper">
@@ -491,8 +511,8 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const gameUrl = urlParams.get('url') || 'https://html5.gamedistribution.com/rvvASAhfx001/';
-        const gameTitle = urlParams.get('title') || 'Find the Kitten: Spot the Cat';
-        const tagsParam = urlParams.get('tags') || 'Puzzle,Casual,Find Object';
+        const gameTitle = urlParams.get('title') || 'Real Car Parking Game';
+        const tagsParam = urlParams.get('tags') || 'puzzle,casual,find object';
 
         const frame = document.getElementById('game-frame');
         const titleEl = document.getElementById('game-title');
@@ -502,9 +522,45 @@
         titleEl.textContent = gameTitle;
         document.title = `${gameTitle} - LuluTap`;
 
-        // 解析并展示当前游戏标签
         let currentTags = tagsParam.split(',').map(t => t.trim().toLowerCase());
         tagsContainer.innerHTML = currentTags.map(tag => `<span class="meta-tag">${tag}</span>`).join('');
+
+        // 🔴 真实点赞计数与本地数据绑定逻辑
+        const gameId = encodeURIComponent(gameTitle); // 以游戏名作为独立唯一 key
+        const likeBtn = document.getElementById('like-btn');
+        const likeCountEl = document.getElementById('like-count');
+
+        // 从本地读取当前游戏的点赞数据（初始归零为 0）
+        let likeCount = parseInt(localStorage.getItem(`likes_${gameId}`) || '0', 10);
+        let isLiked = localStorage.getItem(`user_liked_${gameId}`) === 'true';
+
+        function updateLikeUI() {
+            likeCountEl.textContent = likeCount;
+            if (isLiked) {
+                likeBtn.classList.add('liked');
+            } else {
+                likeBtn.classList.remove('liked');
+            }
+        }
+
+        function toggleLike() {
+            if (isLiked) {
+                likeCount = Math.max(0, likeCount - 1);
+                isLiked = false;
+            } else {
+                likeCount += 1;
+                isLiked = true;
+            }
+            
+            // 写入本地，保持状态
+            localStorage.setItem(`likes_${gameId}`, likeCount);
+            localStorage.setItem(`user_liked_${gameId}`, isLiked);
+            
+            updateLikeUI();
+        }
+
+        // 初始化加载点赞状态
+        updateLikeUI();
 
         function toggleGameInfo() {
             const card = document.getElementById('game-info-card');
@@ -542,14 +598,12 @@
             }
         }
 
-        // 🔴 算标签相似度，筛选出最匹配的10款进行无缝无缝无限循环滚动
         async function loadSimilarGamesMarquee() {
             const track = document.getElementById('marquee-track');
             try {
                 const res = await fetch('https://gamemonetize.com/feed.php?format=0&page=1');
                 const games = await res.json();
 
-                // 依据 Tag 重合度计算分值
                 const rankedGames = games.map(item => {
                     const itemTags = (item.tags || item.category || '').toLowerCase().split(',').map(t => t.trim());
                     let score = 0;
@@ -561,7 +615,6 @@
                     return { ...item, score };
                 });
 
-                // 按标签相关度降序排序，选出前 10 款最相似的游戏
                 rankedGames.sort((a, b) => b.score - a.score);
                 const top10 = rankedGames.slice(0, 10);
 
@@ -572,7 +625,6 @@
                     </a>
                 `).join('');
 
-                // 复制一份节点（cardsHTML + cardsHTML）实现 CSS 无缝死循环无缝无缝无缝滚动
                 track.innerHTML = cardsHTML + cardsHTML;
             } catch(e) {
                 let fallback = '';
