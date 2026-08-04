@@ -71,7 +71,7 @@
             box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
         }
 
-        /* === 2. Sticky Multi-Tag Filter Bar === */
+        /* === 2. Sticky Multi-Tag Dropdown Bar === */
         .filter-wrapper {
             position: sticky;
             top: 60px;
@@ -88,25 +88,63 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
+            position: relative;
         }
 
-        .tags-scroll-group {
+        /* Dropdown Trigger Button */
+        .tags-dropdown-btn {
+            background: #161926;
+            border: 1px solid #262b3d;
+            color: #00f2fe;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
             display: flex;
+            align-items: center;
             gap: 8px;
-            overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: none;
-            padding: 2px 0;
+            transition: all 0.2s;
         }
 
-        .tags-scroll-group::-webkit-scrollbar {
+        .tags-dropdown-btn:hover {
+            border-color: #00f2fe;
+            box-shadow: 0 0 12px rgba(0, 242, 254, 0.25);
+        }
+
+        /* Collapsible Tags Panel */
+        .tags-dropdown-panel {
+            position: absolute;
+            top: 48px;
+            left: 0;
+            background: #161926;
+            border: 1px solid #2a3146;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
             display: none;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-width: 600px;
+            width: 90vw;
+            z-index: 95;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .tags-dropdown-panel.show {
+            display: flex;
+            animation: fadeInDown 0.2s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .tag-chip {
-            background: #161926;
-            border: 1px solid #262b3d;
+            background: #222738;
+            border: 1px solid #323950;
             color: #a0aec0;
             padding: 6px 14px;
             border-radius: 20px;
@@ -124,7 +162,6 @@
             color: #fff;
         }
 
-        /* Active Tag Highlight */
         .tag-chip.active {
             background: rgba(0, 242, 254, 0.15);
             border-color: #00f2fe;
@@ -135,16 +172,8 @@
         .tag-chip .close-icon {
             font-size: 11px;
             opacity: 0.7;
-            padding: 1px 3px;
-            border-radius: 50%;
         }
 
-        .tag-chip .close-icon:hover {
-            opacity: 1;
-            background: rgba(0, 242, 254, 0.3);
-        }
-
-        /* Clear All Button */
         .clear-all-btn {
             background: rgba(255, 71, 87, 0.15);
             color: #ff4757;
@@ -154,7 +183,6 @@
             font-size: 12px;
             font-weight: bold;
             cursor: pointer;
-            white-space: nowrap;
             display: none;
             transition: all 0.2s;
         }
@@ -163,21 +191,121 @@
             background: #ff4757;
             color: #fff;
             box-shadow: 0 0 10px rgba(255, 71, 87, 0.4);
-            transform: scale(1.03);
         }
 
-        /* === 3. Bento Grid Layout === */
+        /* === 3. Top 10 Infinite Ticker Carousel (Red Box Area) === */
+        .ticker-section {
+            max-width: 1500px;
+            width: 100%;
+            margin: 20px auto 10px auto;
+            padding: 0 24px;
+        }
+
+        .ticker-header {
+            font-size: 14px;
+            font-weight: bold;
+            color: #ff4757;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ticker-container {
+            width: 100%;
+            overflow: hidden;
+            background: #161926;
+            border: 1px solid #222738;
+            border-radius: 12px;
+            padding: 12px 0;
+            position: relative;
+        }
+
+        /* Infinite Seamless Scroll Track */
+        .ticker-track {
+            display: flex;
+            gap: 16px;
+            width: max-content;
+            animation: marqueeScroll 25s linear infinite;
+        }
+
+        /* Pause Scrolling on Hover */
+        .ticker-container:hover .ticker-track {
+            animation-play-state: paused;
+        }
+
+        @keyframes marqueeScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-card {
+            width: 200px;
+            height: 110px;
+            flex-shrink: 0;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #2b3248;
+            text-decoration: none;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .ticker-card:hover {
+            transform: scale(1.03);
+            border-color: #00f2fe;
+            z-index: 2;
+        }
+
+        .ticker-card-cover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .ticker-card-overlay {
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(0deg, rgba(15,17,26,0.95) 0%, rgba(15,17,26,0.2) 80%);
+            padding: 8px;
+        }
+
+        .ticker-card-title {
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ticker-card-likes {
+            font-size: 10px;
+            color: #ff4757;
+            font-weight: bold;
+        }
+
+        /* === 4. Bento Grid Layout === */
         .main-content {
             max-width: 1500px;
             width: 100%;
-            margin: 20px auto;
+            margin: 10px auto 20px auto;
             padding: 0 24px;
             flex: 1;
             transition: max-width 0.3s ease;
         }
 
-        /* Mobile Mode Layout Simulation */
-        body.mobile-mode .main-content {
+        body.mobile-mode .main-content,
+        body.mobile-mode .ticker-section {
             max-width: 480px;
         }
 
@@ -215,7 +343,6 @@
             z-index: 2;
         }
 
-        /* Bento Featured Card (2x2 Grid Span) */
         .game-card.featured {
             grid-column: span 2;
             grid-row: span 2;
@@ -283,12 +410,6 @@
             font-weight: 600;
         }
 
-        .featured .card-tag {
-            background: #00f2fe;
-            color: #000;
-            font-weight: bold;
-        }
-
         .card-likes {
             display: flex;
             align-items: center;
@@ -297,7 +418,6 @@
             font-weight: bold;
         }
 
-        /* === 4. Loading Indicators === */
         .loading-status {
             text-align: center;
             padding: 30px 0;
@@ -323,7 +443,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Responsive Breakpoints */
         @media (max-width: 1024px) {
             .bento-grid {
                 grid-template-columns: repeat(4, 1fr);
@@ -342,11 +461,7 @@
                 aspect-ratio: 16 / 9;
             }
 
-            .filter-wrapper {
-                padding: 10px 12px;
-            }
-
-            .main-content {
+            .filter-wrapper, .ticker-section, .main-content {
                 padding: 0 12px;
             }
         }
@@ -354,26 +469,43 @@
 </head>
 <body>
 
-    <!-- 1. Top Header -->
+    <!-- 1. Header -->
     <header>
         <a href="index.html" class="logo">🕹️ LuluTap</a>
         <button class="mode-btn" id="mode-btn" onclick="toggleDeviceMode()">💻 PC Mode</button>
     </header>
 
-    <!-- 2. Sticky Multi-Tag Filter Bar -->
+    <!-- 2. Sticky Filter Bar with Tags Dropdown -->
     <div class="filter-wrapper">
         <div class="filter-container">
-            <div class="tags-scroll-group" id="tags-group"></div>
+            <div>
+                <button class="tags-dropdown-btn" id="tags-btn" onclick="toggleTagsDropdown(event)">
+                    <span>🏷️ Tags</span>
+                    <span id="dropdown-arrow">▾</span>
+                </button>
+                <div class="tags-dropdown-panel" id="tags-panel"></div>
+            </div>
+            
             <button class="clear-all-btn" id="clear-all-btn" onclick="clearAllFilters()">✕ Clear All</button>
         </div>
     </div>
 
-    <!-- 3. Main Bento Game Grid -->
+    <!-- 3. Top 10 Trending Games Infinite Ticker Carousel -->
+    <section class="ticker-section">
+        <div class="ticker-header">🔥 Top 10 Trending Games</div>
+        <div class="ticker-container">
+            <div class="ticker-track" id="ticker-track">
+                <!-- Top 10 cards injected dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Main Bento Game Grid -->
     <main class="main-content">
         <div class="bento-grid" id="game-grid">
             <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #a0aec0;">
                 <div class="spinner" style="margin: 0 auto 12px auto; width: 24px; height: 24px;"></div>
-                Loading games list from GameMonetize...
+                Loading games list...
             </div>
         </div>
 
@@ -392,7 +524,7 @@
         let hasMoreData = true;
         let isMobileMode = false;
 
-        // 1. Device Mode Toggle (PC / Mobile)
+        // Toggle PC/Mobile Simulation Mode
         function toggleDeviceMode() {
             isMobileMode = !isMobileMode;
             const btn = document.getElementById('mode-btn');
@@ -405,7 +537,33 @@
             }
         }
 
-        // 2. Fetch Data from GameMonetize API
+        // Toggle Tags Dropdown Menu
+        function toggleTagsDropdown(e) {
+            e.stopPropagation();
+            const panel = document.getElementById('tags-panel');
+            const arrow = document.getElementById('dropdown-arrow');
+            const isOpen = panel.classList.contains('show');
+
+            if (isOpen) {
+                panel.classList.remove('show');
+                arrow.innerText = '▾';
+            } else {
+                panel.classList.add('show');
+                arrow.innerText = '▴';
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const panel = document.getElementById('tags-panel');
+            const btn = document.getElementById('tags-btn');
+            if (panel && !panel.contains(e.target) && !btn.contains(e.target)) {
+                panel.classList.remove('show');
+                document.getElementById('dropdown-arrow').innerText = '▾';
+            }
+        });
+
+        // Fetch Data from GameMonetize API
         async function initGameData(page = 1) {
             if (isLoading) return;
             isLoading = true;
@@ -445,12 +603,13 @@
                         likes: (Math.floor(Math.random() * 20) / 10 + 3.0).toFixed(1) + "k",
                         img: item.thumb,
                         gameUrl: item.url,
-                        featured: (page === 1 && idx === 0) // First game is featured 2x2 Bento item
+                        featured: (page === 1 && idx === 0)
                     };
                 });
 
                 if (page === 1) {
                     gamesData = formattedGames;
+                    renderTop10Ticker(); // Render Top 10 Marquee
                 } else {
                     gamesData = [...gamesData, ...formattedGames];
                 }
@@ -462,8 +621,8 @@
                 if (page === 1) {
                     grid.innerHTML = `
                         <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #ff4757;">
-                            ⚠️ Failed to load games! If running locally, your browser might be blocking cross-origin requests (CORS).<br>
-                            Please preview via VSCode <b>Live Server</b>, or deploy directly to <b>GitHub Pages</b>.
+                            ⚠️ Failed to load games! If running locally, CORS may be blocked.<br>
+                            Please test via VSCode <b>Live Server</b> or deploy to <b>GitHub Pages</b>.
                         </div>`;
                 }
             } finally {
@@ -472,10 +631,32 @@
             }
         }
 
-        // 3. Render Tag Filter Bar
+        // Render Top 10 Carousel (Duplicated for Seamless Infinite Loop)
+        function renderTop10Ticker() {
+            const track = document.getElementById('ticker-track');
+            const top10 = gamesData.slice(0, 10);
+            
+            if (top10.length === 0) return;
+
+            // Duplicate array to achieve smooth infinite scrolling
+            const listToRender = [...top10, ...top10];
+
+            track.innerHTML = listToRender.map(game => `
+                <a href="game.html?url=${encodeURIComponent(game.gameUrl)}&title=${encodeURIComponent(game.title)}" class="ticker-card">
+                    <div class="ticker-card-cover" style="background-image: url('${game.img}');"></div>
+                    <div class="ticker-card-overlay">
+                        <div class="ticker-card-title">${game.title}</div>
+                        <div class="ticker-card-likes">🔥 👍 ${game.likes}</div>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        // Render Dropdown Tag Items
         function renderTags() {
-            const container = document.getElementById('tags-group');
+            const container = document.getElementById('tags-panel');
             const clearBtn = document.getElementById('clear-all-btn');
+            const btnText = document.querySelector('.tags-dropdown-btn span');
 
             container.innerHTML = allCategories.map(cat => {
                 const isAll = cat === "🔥 All";
@@ -489,11 +670,17 @@
                 `;
             }).join('');
 
-            // Show "Clear All" when at least 1 tag is selected
+            // Dynamic Button Text
+            if (selectedTags.length > 0) {
+                btnText.innerText = `🏷️ Tags (${selectedTags.length})`;
+            } else {
+                btnText.innerText = `🏷️ Tags`;
+            }
+
             clearBtn.style.display = selectedTags.length >= 1 ? 'block' : 'none';
         }
 
-        // 4. Tag Toggle Logic (Supports Multi-Selection)
+        // Multi-Tag Selection Logic
         function toggleTag(cat) {
             if (cat === "🔥 All") {
                 selectedTags = [];
@@ -508,14 +695,14 @@
             renderGames();
         }
 
-        // 5. Clear All Active Filters
+        // Clear All Active Filter Tags
         function clearAllFilters() {
             selectedTags = [];
             renderTags();
             renderGames();
         }
 
-        // 6. Render Game Cards Grid
+        // Render Games Grid
         function renderGames() {
             const grid = document.getElementById('game-grid');
             
@@ -535,7 +722,7 @@
                     <div class="card-overlay">
                         <div class="card-title">${game.title}</div>
                         <div class="card-meta">
-                            <span class="card-tag">${game.featured ? '🔥 Featured' : game.category}</span>
+                            <span class="card-tag">${game.category}</span>
                             <span class="card-likes">👍 ${game.likes}</span>
                         </div>
                     </div>
@@ -543,18 +730,16 @@
             `).join('');
         }
 
-        // 7. Infinite Scroll Trigger
+        // Infinite Scroll
         window.addEventListener('scroll', () => {
             if (isLoading || !hasMoreData) return;
-            
-            // Check if user scrolled within 300px of bottom
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
                 currentPage++;
                 initGameData(currentPage);
             }
         });
 
-        // Initialize Application
+        // Initialize App
         initGameData();
     </script>
 </body>
