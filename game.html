@@ -97,9 +97,10 @@
             border: none;
         }
 
+        /* 🟢 移动到游戏画面右上角 */
         .controls-bar {
             position: absolute;
-            bottom: 12px;
+            top: 12px;
             right: 12px;
             display: flex;
             gap: 8px;
@@ -159,7 +160,6 @@
             font-weight: bold;
         }
 
-        /* 🔴 红色圈：标签样式 */
         .tags-row {
             display: flex;
             gap: 8px;
@@ -209,7 +209,6 @@
             justify-content: space-between;
         }
 
-        /* 🟢 绿色圈：绘制物理按键与详细说明 */
         .controls-list {
             padding: 16px;
             display: flex;
@@ -269,7 +268,6 @@
             min-width: 80px;
         }
 
-        /* 🟡 黄色圈：展开/收起 GAME INFO */
         .collapsible-header {
             cursor: pointer;
             user-select: none;
@@ -290,19 +288,19 @@
             font-size: 13px;
             color: #a0aec0;
             line-height: 1.6;
-            display: block; /* 初始展开 */
+            display: block;
             border-top: 1px solid #262b3d;
         }
 
         .info-body.collapsed {
-            display: none; /* 收起状态 */
+            display: none;
         }
 
         .side-card.collapsed .toggle-arrow {
             transform: rotate(-90deg);
         }
 
-        /* Recommended Games Marquee */
+        /* 🔴 推荐区域：改成标签高度相关的静态网格（不再滑动） */
         .recommend-section {
             max-width: 1500px;
             width: 100%;
@@ -317,37 +315,30 @@
             margin-bottom: 12px;
         }
 
-        .marquee-wrapper {
-            width: 100%;
-            overflow: hidden;
-            position: relative;
+        .similar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 16px;
             background: #161926;
             border-radius: 12px;
             border: 1px solid #262b3d;
-            padding: 16px 0;
-        }
-
-        .marquee-track {
-            display: flex;
-            gap: 16px;
-            width: max-content;
-            animation: scrollMarquee 25s linear infinite;
-        }
-
-        .marquee-track:hover {
-            animation-play-state: paused;
+            padding: 16px;
         }
 
         .rec-card {
-            width: 140px;
-            height: 140px;
+            aspect-ratio: 1;
             background: #222738;
             border-radius: 10px;
             overflow: hidden;
             position: relative;
             text-decoration: none;
-            flex-shrink: 0;
             border: 1px solid #323950;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .rec-card:hover {
+            transform: translateY(-4px);
+            border-color: #00f2fe;
         }
 
         .rec-card img {
@@ -369,11 +360,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-
-        @keyframes scrollMarquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
         }
 
         @media (max-width: 1024px) {
@@ -398,6 +384,7 @@
         <div class="left-panel">
             <div class="screen-box" id="screen-box">
                 <iframe class="game-iframe" id="game-frame" allowfullscreen src="about:blank"></iframe>
+                <!-- 🟢 绿色圈：已移至右上角 -->
                 <div class="controls-bar">
                     <button class="action-btn" onclick="reloadGame()">🔄 Reload</button>
                     <button class="action-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
@@ -411,7 +398,6 @@
                     <span class="like-badge" id="game-likes">👍 2.8k</span>
                 </div>
                 
-                <!-- 🔴 红色圈放置游戏标签的地方 -->
                 <div class="tags-row">
                     <span>🏷️ Categories & Tags:</span>
                     <div id="game-tags" style="display: flex; gap: 6px; flex-wrap: wrap;">
@@ -419,7 +405,6 @@
                         <span class="meta-tag">Puzzle</span>
                         <span class="meta-tag">Casual</span>
                         <span class="meta-tag">Find Object</span>
-                        <span class="meta-tag">🔥 Hot</span>
                     </div>
                 </div>
             </div>
@@ -427,12 +412,9 @@
 
         <!-- Right Panel -->
         <div class="right-panel">
-            
-            <!-- 🟢 绿色圈：绘制物理按键与详细说明 -->
             <div class="side-card">
                 <div class="card-h3">🎮 CONTROLS</div>
                 <div class="controls-list">
-                    <!-- WASD 方向键 -->
                     <div class="control-item">
                         <span class="control-action">Movement / WASD</span>
                         <div class="key-group">
@@ -443,7 +425,6 @@
                         </div>
                     </div>
 
-                    <!-- 键盘方向键 -->
                     <div class="control-item">
                         <span class="control-action">Arrow Controls</span>
                         <div class="key-group">
@@ -454,7 +435,6 @@
                         </div>
                     </div>
 
-                    <!-- 空格键 -->
                     <div class="control-item">
                         <span class="control-action">Jump / Action</span>
                         <div class="key-group">
@@ -462,7 +442,6 @@
                         </div>
                     </div>
 
-                    <!-- 鼠标左键点击 -->
                     <div class="control-item">
                         <span class="control-action">Click / Select</span>
                         <div class="key-group">
@@ -472,7 +451,6 @@
                 </div>
             </div>
 
-            <!-- 🟡 黄色圈：初始为展开状态，可点击收起/展开的 GAME INFO -->
             <div class="side-card" id="game-info-card">
                 <div class="card-h3 collapsible-header" onclick="toggleGameInfo()">
                     <span>📖 GAME INFO</span>
@@ -482,23 +460,20 @@
                     Use Arrow keys or WASD to control movement. Click the target kittens using your mouse. Click the fullscreen button for an immersive gaming experience! Test your observation skills and spot all hidden cats to reach the next level.
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- Bottom Section -->
+    <!-- 🔴 红色圈：10款高相关度相似游戏（不滚动） -->
     <section class="recommend-section">
-        <div class="rec-header">🔥 SIMILAR GAMES</div>
-        <div class="marquee-wrapper">
-            <div class="marquee-track" id="marquee-track"></div>
-        </div>
+        <div class="rec-header">🎯 MOST SIMILAR GAMES</div>
+        <div class="similar-grid" id="similar-grid"></div>
     </section>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const gameUrl = urlParams.get('url') || 'https://html5.gamedistribution.com/rvvASAhfx001/';
         const gameTitle = urlParams.get('title') || 'Find the Kitten: Spot the Cat';
-        const tagsParam = urlParams.get('tags');
+        const tagsParam = urlParams.get('tags') || 'Puzzle,Casual,Find Object';
 
         const frame = document.getElementById('game-frame');
         const titleEl = document.getElementById('game-title');
@@ -508,20 +483,16 @@
         titleEl.textContent = gameTitle;
         document.title = `${gameTitle} - LuluTap`;
 
-        // 🔴 解析并更新标签
-        if (tagsParam) {
-            const tagsArr = tagsParam.split(',');
-            tagsContainer.innerHTML = tagsArr.map(tag => `<span class="meta-tag">${tag.trim()}</span>`).join('');
-        }
+        // 解析并展示当前游戏标签
+        let currentTags = tagsParam.split(',').map(t => t.trim().toLowerCase());
+        tagsContainer.innerHTML = currentTags.map(tag => `<span class="meta-tag">${tag}</span>`).join('');
 
-        // 🟡 折叠/展开 GAME INFO 交互（初始为展开状态）
         function toggleGameInfo() {
             const card = document.getElementById('game-info-card');
             const body = document.getElementById('game-info-body');
             const arrow = document.getElementById('info-arrow');
 
             const isCollapsed = body.classList.contains('collapsed');
-
             if (isCollapsed) {
                 body.classList.remove('collapsed');
                 card.classList.remove('collapsed');
@@ -552,36 +523,50 @@
             }
         }
 
-        async function loadRecommendations() {
-            const track = document.getElementById('marquee-track');
+        // 🔴 算标签相似度并取出最匹配的 10 款游戏
+        async function loadSimilarGames() {
+            const grid = document.getElementById('similar-grid');
             try {
                 const res = await fetch('https://gamemonetize.com/feed.php?format=0&page=1');
-                const data = await res.json();
-                const list = data.slice(0, 10);
+                const games = await res.json();
 
-                const cardsHTML = list.map(item => `
-                    <a href="game.html?url=${encodeURIComponent(item.url)}&title=${encodeURIComponent(item.title)}" class="rec-card">
+                // 依据 Tag 重合度计算分值
+                const rankedGames = games.map(item => {
+                    const itemTags = (item.tags || item.category || '').toLowerCase().split(',').map(t => t.trim());
+                    let score = 0;
+                    currentTags.forEach(tag => {
+                        if (itemTags.some(t => t.includes(tag) || tag.includes(t))) {
+                            score += 1;
+                        }
+                    });
+                    return { ...item, score };
+                });
+
+                // 优先按标签相关度降序排序，取前 10 款
+                rankedGames.sort((a, b) => b.score - a.score);
+                const top10 = rankedGames.slice(0, 10);
+
+                grid.innerHTML = top10.map(item => `
+                    <a href="game.html?url=${encodeURIComponent(item.url)}&title=${encodeURIComponent(item.title)}&tags=${encodeURIComponent(item.tags || item.category || '')}" class="rec-card">
                         <img src="${item.thumb}" alt="${item.title}">
                         <div class="rec-card-title">${item.title}</div>
                     </a>
                 `).join('');
-
-                track.innerHTML = cardsHTML + cardsHTML;
             } catch(e) {
                 let fallback = '';
-                for(let i=1; i<=10; i++) {
+                for(let i = 1; i <= 10; i++) {
                     fallback += `
                         <div class="rec-card">
                             <img src="https://picsum.photos/200/200?random=${i}">
-                            <div class="rec-card-title">Recommended ${i}</div>
+                            <div class="rec-card-title">Similar Game ${i}</div>
                         </div>
                     `;
                 }
-                track.innerHTML = fallback + fallback;
+                grid.innerHTML = fallback;
             }
         }
 
-        window.addEventListener('DOMContentLoaded', loadRecommendations);
+        window.addEventListener('DOMContentLoaded', loadSimilarGames);
     </script>
 </body>
 </html>
