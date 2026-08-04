@@ -3,26 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Play Game - LuluTap</title>
-
-    <!-- 动态 SEO / Open Graph 占位符 -->
-    <meta name="description" id="meta-desc" content="Play free online HTML5 games on LuluTap!">
-    <meta property="og:type" content="website">
-    <meta property="og:title" id="og-title" content="Play Game - LuluTap">
-    <meta property="og:description" id="og-desc" content="Play free online HTML5 games on LuluTap!">
-    <meta property="og:image" id="og-image" content="">
-    <meta property="og:url" id="og-url" content="">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" id="tw-title" content="Play Game - LuluTap">
-    <meta name="twitter:description" id="tw-desc" content="Play free online HTML5 games on LuluTap!">
-    <meta name="twitter:image" id="tw-image" content="">
-
-    <!-- Google 结构化数据 (JSON-LD) 动态容器 -->
-    <script type="application/ld+json" id="ld-json-schema"></script>
-
-    <!-- 标签页 Favicon 图标 -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cdefs%3E%3ClinearGradient id='lulutap-main' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300F2FE'/%3E%3Cstop offset='100%25' stop-color='%239B51E0'/%3E%3C/linearGradient%3E%3ClinearGradient id='cat-warm' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23FF9472'/%3E%3Cstop offset='100%25' stop-color='%23F2709C'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg transform='translate(6, 4)'%3E%3Ccircle cx='26' cy='26' r='24' stroke='url(%23lulutap-main)' stroke-width='1.5' stroke-dasharray='6 3' opacity='0.4'/%3E%3Cpath d='M10 38 C10 32, 14 30, 26 30 C38 30, 42 32, 42 38 L44 42 C44 44, 42 45, 40 45 L12 45 C10 45, 8 44, 8 42 Z' fill='%231E2332' stroke='url(%23lulutap-main)' stroke-width='1.5' stroke-linejoin='round'/%3E%3Cpath d='M21 16 C21 12, 31 12, 31 16 C32 19, 31 23, 26 23 C21 23, 20 19, 21 16 Z' fill='%230F111A'/%3E%3Cpath d='M22 13 C23 10, 29 10, 30 13 C31 15, 29 16, 26 16 C23 16, 21 15, 22 13 Z' fill='url(%23lulutap-main)'/%3E%3Cpath d='M19 16 C19 10, 33 10, 33 16' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3Crect x='17' y='15' width='4' height='7' rx='2' fill='url(%23lulutap-main)'/%3E%3Crect x='31' y='15' width='4' height='7' rx='2' fill='url(%23lulutap-main)'/%3E%3Cpath d='M20 24 C23 23, 29 23, 32 24 L34 33 L18 33 Z' fill='%23292D3E'/%3E%3Cg transform='translate(13, 28)'%3E%3Crect x='0' y='2' width='12' height='8' rx='3' fill='url(%23lulutap-main)'/%3E%3Ccircle cx='3' cy='5' r='1' fill='%230F111A'/%3E%3Ccircle cx='9' cy='5' r='1' fill='%23FFFFFF'/%3E%3C/g%3E%3Cg transform='translate(31, 27)'%3E%3Cpath d='M3 7 C3 4, 7 3, 9 5 C11 7, 10 12, 8 13 C6 13, 3 11, 3 7 Z' fill='url(%23cat-warm)'/%3E%3Cpath d='M4 4 L6 1 L7 4 Z' fill='url(%23cat-warm)'/%3E%3Cpath d='M7 4 L9 1 L10 4 Z' fill='url(%23cat-warm)'/%3E%3Cpath d='M9 11 C12 11, 13 8, 12 7' stroke='url(%23cat-warm)' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/g%3E%3Cpath d='M30 27 Q33 26 34 28' stroke='%23FFFFFF' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/g%3E%3C/svg%3E">
-
+    <title>LuluTap - Play Game</title>
     <style>
         * {
             box-sizing: border-box;
@@ -54,9 +35,13 @@
         }
 
         .logo {
+            font-size: 20px;
+            font-weight: 800;
+            color: #00f2fe;
+            text-decoration: none;
             display: flex;
             align-items: center;
-            text-decoration: none;
+            gap: 8px;
         }
 
         .back-btn {
@@ -88,13 +73,13 @@
             flex: 1;
         }
 
+        /* Left Panel */
         .left-panel {
             display: flex;
             flex-direction: column;
             gap: 16px;
         }
 
-        /* Screen Box & Loading Overlay */
         .screen-box {
             position: relative;
             width: 100%;
@@ -112,48 +97,34 @@
             border: none;
         }
 
-        /* 游戏加载遮罩动画 */
-        .game-loader-overlay {
+        .controls-bar {
             position: absolute;
-            inset: 0;
-            background: #111420;
+            top: 12px;
+            right: 12px;
             display: flex;
-            flex-direction: column;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .action-btn {
+            background: rgba(22, 25, 38, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 16px;
-            z-index: 20;
-            transition: opacity 0.5s ease, visibility 0.5s;
+            gap: 6px;
         }
 
-        .game-loader-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .spinner-cat {
-            width: 60px;
-            height: 60px;
-            animation: pulseCat 1.5s ease-in-out infinite alternate;
-        }
-
-        .loader-text {
-            font-size: 14px;
-            color: #00f2fe;
-            font-weight: 600;
-            letter-spacing: 1px;
-            animation: blinkText 1.2s infinite;
-        }
-
-        @keyframes pulseCat {
-            0% { transform: scale(0.9); opacity: 0.7; }
-            100% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 12px #00f2fe); }
-        }
-
-        @keyframes blinkText {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
+        .action-btn:hover {
+            background: #00f2fe;
+            color: #000;
+            font-weight: bold;
         }
 
         /* Game Metadata */
@@ -179,6 +150,7 @@
             color: #fff;
         }
 
+        /* 交互式点赞按钮 */
         .like-btn {
             background: rgba(255, 71, 87, 0.15);
             border: 1px solid rgba(255, 71, 87, 0.3);
@@ -303,7 +275,10 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
 
-        .key-cap.wide { min-width: 70px; }
+        .key-cap.wide {
+            min-width: 70px;
+        }
+
         .key-cap.mouse-btn {
             background: linear-gradient(180deg, #00f2fe 0%, #0099ff 100%);
             color: #000;
@@ -318,7 +293,9 @@
             transition: background 0.2s;
         }
 
-        .collapsible-header:hover { background: #222738; }
+        .collapsible-header:hover {
+            background: #222738;
+        }
 
         .toggle-arrow {
             font-size: 12px;
@@ -334,10 +311,14 @@
             border-top: 1px solid #262b3d;
         }
 
-        .info-body.collapsed { display: none; }
-        .side-card.collapsed .toggle-arrow { transform: rotate(-90deg); }
+        .info-body.collapsed {
+            display: none;
+        }
 
-        /* 🎪 跑马灯无限循环平滑滚动 */
+        .side-card.collapsed .toggle-arrow {
+            transform: rotate(-90deg);
+        }
+
         .recommend-section {
             max-width: 1500px;
             width: 100%;
@@ -359,23 +340,23 @@
             background: #161926;
             border-radius: 12px;
             border: 1px solid #262b3d;
-            padding: 16px;
+            padding: 16px 0;
         }
 
         .marquee-track {
             display: flex;
             gap: 16px;
             width: max-content;
-            animation: scrollMarquee 28s linear infinite;
+            animation: scrollMarquee 25s linear infinite;
         }
 
-        .marquee-wrapper:hover .marquee-track {
+        .marquee-track:hover {
             animation-play-state: paused;
         }
 
         .rec-card {
-            width: 130px;
-            height: 130px;
+            width: 140px;
+            height: 140px;
             background: #222738;
             border-radius: 10px;
             overflow: hidden;
@@ -383,13 +364,11 @@
             text-decoration: none;
             flex-shrink: 0;
             border: 1px solid #323950;
-            transition: border-color 0.2s, transform 0.2s;
-            cursor: pointer;
+            transition: border-color 0.2s;
         }
 
         .rec-card:hover {
             border-color: #00f2fe;
-            transform: translateY(-4px);
         }
 
         .rec-card img {
@@ -403,10 +382,10 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background: rgba(15, 17, 26, 0.88);
+            background: rgba(15, 17, 26, 0.85);
             color: #fff;
             font-size: 11px;
-            padding: 6px 4px;
+            padding: 6px;
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
@@ -415,17 +394,28 @@
 
         @keyframes scrollMarquee {
             0% { transform: translateX(0); }
-            100% { transform: translateX(calc(-50% - 8px)); }
+            100% { transform: translateX(-50%); }
         }
 
+        /* 响应式适配微调 */
         @media (max-width: 1024px) {
-            .play-container { grid-template-columns: 1fr; }
+            .play-container {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 640px) {
-            .play-container { padding: 0 12px; margin: 10px auto; }
-            .game-title { font-size: 16px; }
-            .recommend-section { padding: 0 12px; }
+            .play-container {
+                padding: 0 12px;
+                margin: 10px auto;
+            }
+            .game-title {
+                font-size: 16px;
+            }
+            .action-btn {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
         }
     </style>
 </head>
@@ -433,86 +423,48 @@
 
     <!-- Header -->
     <header>
-        <a href="index.html" class="logo" aria-label="LuluTap Homepage">
-            <svg width="220" height="60" viewBox="0 0 220 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="lulutap-main" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#00F2FE" />
-                        <stop offset="100%" stop-color="#9B51E0" />
-                    </linearGradient>
-                    <linearGradient id="cat-warm" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#FF9472" />
-                        <stop offset="100%" stop-color="#F2709C" />
-                    </linearGradient>
-                </defs>
-                <g transform="translate(6, 4)">
-                    <circle cx="26" cy="26" r="24" stroke="url(#lulutap-main)" stroke-width="1.5" stroke-dasharray="6 3" opacity="0.4" />
-                    <path d="M10 38 C10 32, 14 30, 26 30 C38 30, 42 32, 42 38 L44 42 C44 44, 42 45, 40 45 L12 45 C10 45, 8 44, 8 42 Z" fill="#1E2332" stroke="url(#lulutap-main)" stroke-width="1.5" stroke-linejoin="round"/>
-                    <path d="M21 16 C21 12, 31 12, 31 16 C32 19, 31 23, 26 23 C21 23, 20 19, 21 16 Z" fill="#0F111A"/>
-                    <path d="M22 13 C23 10, 29 10, 30 13 C31 15, 29 16, 26 16 C23 16, 21 15, 22 13 Z" fill="url(#lulutap-main)"/>
-                    <path d="M19 16 C19 10, 33 10, 33 16" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" fill="none"/>
-                    <rect x="17" y="15" width="4" height="7" rx="2" fill="url(#lulutap-main)"/>
-                    <rect x="31" y="15" width="4" height="7" rx="2" fill="url(#lulutap-main)"/>
-                    <path d="M20 24 C23 23, 29 23, 32 24 L34 33 L18 33 Z" fill="#292D3E"/>
-                    <g transform="translate(13, 28)">
-                        <rect x="0" y="2" width="12" height="8" rx="3" fill="url(#lulutap-main)"/>
-                        <circle cx="3" cy="5" r="1" fill="#0F111A"/>
-                        <circle cx="9" cy="5" r="1" fill="#FFFFFF"/>
-                    </g>
-                    <g transform="translate(31, 27)">
-                        <path d="M3 7 C3 4, 7 3, 9 5 C11 7, 10 12, 8 13 C6 13, 3 11, 3 7 Z" fill="url(#cat-warm)"/>
-                        <path d="M4 4 L6 1 L7 4 Z" fill="url(#cat-warm)"/>
-                        <path d="M7 4 L9 1 L10 4 Z" fill="url(#cat-warm)"/>
-                        <path d="M9 11 C12 11, 13 8, 12 7" stroke="url(#cat-warm)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-                    </g>
-                    <path d="M30 27 Q33 26 34 28" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-                </g>
-                <text x="64" y="37" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="24" letter-spacing="0.8">
-                    <tspan fill="url(#lulutap-main)">Lulu</tspan>
-                    <tspan fill="#FFFFFF">Tap</tspan>
-                </text>
-            </svg>
-        </a>
-        <a href="index.html" class="back-btn" aria-label="Return to Homepage">🏠 Home</a>
+        <a href="index.html" class="logo">🕹️ LuluTap</a>
+        <a href="index.html" class="back-btn">🏠 Home</a>
     </header>
 
     <!-- Main Game Container -->
     <div class="play-container">
+        
+        <!-- Left Panel -->
         <div class="left-panel">
-            <div class="screen-box" id="screen-box" onclick="focusGameFrame()">
-                <div class="game-loader-overlay" id="game-loader">
-                    <svg class="spinner-cat" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="30" cy="30" r="26" stroke="#00F2FE" stroke-width="2" stroke-dasharray="8 4"/>
-                        <path d="M20 22 C20 18, 26 18, 30 22 C34 18, 40 18, 40 22" stroke="#FF9472" stroke-width="2" fill="none"/>
-                        <circle cx="23" cy="28" r="2" fill="#00F2FE"/>
-                        <circle cx="37" cy="28" r="2" fill="#00F2FE"/>
-                    </svg>
-                    <div class="loader-text">LOADING GAME...</div>
-                </div>
-
+            <div class="screen-box" id="screen-box">
+                <!-- 补全 allow 权限与 sandbox 安全策略属性 -->
                 <iframe 
                     class="game-iframe" 
                     id="game-frame" 
                     allowfullscreen 
                     allow="autoplay; gamepad; keyboard-map; accelerated-2d; pointer-lock"
                     sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-                    src="about:blank"
-                    title="Game Window">
+                    src="about:blank">
                 </iframe>
+                <div class="controls-bar">
+                    <button class="action-btn" onclick="reloadGame()">🔄 Reload</button>
+                    <button class="action-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+                </div>
             </div>
 
             <!-- Title & Tags -->
             <div class="game-meta-box">
                 <div class="meta-header">
-                    <h1 class="game-title" id="game-title">Loading Game...</h1>
-                    <button class="like-btn" id="like-btn" onclick="toggleLike()" aria-label="Like this game">
+                    <h1 class="game-title" id="game-title">Real Car Parking Game</h1>
+                    
+                    <button class="like-btn" id="like-btn" onclick="toggleLike()">
                         <span id="like-icon">🤍</span> <span id="like-count">0</span>
                     </button>
                 </div>
                 
                 <div class="tags-row">
                     <span>🏷️ Categories & Tags:</span>
-                    <div id="game-tags" style="display: flex; gap: 6px; flex-wrap: wrap;"></div>
+                    <div id="game-tags" style="display: flex; gap: 6px; flex-wrap: wrap;">
+                        <span class="meta-tag">Puzzle</span>
+                        <span class="meta-tag">Casual</span>
+                        <span class="meta-tag">Find Object</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -531,6 +483,7 @@
                             <span class="key-cap">D</span>
                         </div>
                     </div>
+
                     <div class="control-item">
                         <span class="control-action">Arrow Controls</span>
                         <div class="key-group">
@@ -540,12 +493,14 @@
                             <span class="key-cap">→</span>
                         </div>
                     </div>
+
                     <div class="control-item">
                         <span class="control-action">Jump / Action</span>
                         <div class="key-group">
                             <span class="key-cap wide">Space</span>
                         </div>
                     </div>
+
                     <div class="control-item">
                         <span class="control-action">Click / Select</span>
                         <div class="key-group">
@@ -556,102 +511,61 @@
             </div>
 
             <div class="side-card" id="game-info-card">
-                <div class="card-h3 collapsible-header" id="info-header" onclick="toggleGameInfo()" role="button" aria-expanded="true" aria-label="Toggle Game Description">
+                <div class="card-h3 collapsible-header" onclick="toggleGameInfo()">
                     <span>📖 GAME INFO</span>
                     <span class="toggle-arrow" id="info-arrow">▾</span>
                 </div>
                 <div class="info-body" id="game-info-body">
-                    Use Arrow keys or WASD to control movement. Click target elements using your mouse. Enjoy gaming!
+                    Use Arrow keys or WASD to control movement. Click target elements using your mouse. Click the fullscreen button for an immersive gaming experience!
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Recommended Games Marquee -->
-    <section class="recommend-section" aria-label="Similar Games Recommendations">
+    <section class="recommend-section">
         <div class="rec-header">🎯 SIMILAR GAMES</div>
         <div class="marquee-wrapper">
             <div class="marquee-track" id="marquee-track"></div>
         </div>
     </section>
 
-    <!-- 🛡️ 安全化异步广告 SDK 加载，防止 AdBlocker 阻塞页面 -->
-    <script>
-        window.SDK_OPTIONS = {
-            gameId: "4kci7og3klgj0ivy2wz3gdvd9dth5e7n",
-            onEvent: function(a) {
-                switch (a.name) {
-                    case "SDK_GAME_START": console.log("Ad ended"); break;
-                    case "SDK_GAME_PAUSE": console.log("Ad started"); break;
-                }
-            }
-        };
-        (function() {
-            var s = document.createElement('script');
-            s.async = true;
-            s.src = "https://api.gamemonetize.com/sdk.js";
-            s.onerror = function() { console.warn("Ad SDK blocked by user browser extensions."); };
-            document.head.appendChild(s);
-        })();
-    </script>
-
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const gameUrl = urlParams.get('url') || 'https://html5.gamedistribution.com/rvvASAhfx001/';
-        const gameTitle = decodeURIComponent(urlParams.get('title') || 'Free Online Game').trim();
-        const tagsParam = urlParams.get('cat') || urlParams.get('tags') || 'Arcade,Casual,Action';
-        const descParam = urlParams.get('desc') || `Play ${gameTitle} online for free on LuluTap!`;
-        const imgParam = urlParams.get('img') || '';
+        const gameTitle = urlParams.get('title') || 'Real Car Parking Game';
+        const tagsParam = urlParams.get('cat') || urlParams.get('tags') || 'Puzzle,Casual,Find Object';
+        const descParam = urlParams.get('desc');
 
         const frame = document.getElementById('game-frame');
-        const loader = document.getElementById('game-loader');
         const titleEl = document.getElementById('game-title');
         const tagsContainer = document.getElementById('game-tags');
         const infoBody = document.getElementById('game-info-body');
 
         frame.src = gameUrl;
         titleEl.textContent = gameTitle;
-        document.title = `${gameTitle} - Play Free Online on LuluTap`;
-        infoBody.textContent = descParam;
+        document.title = `${gameTitle} - LuluTap`;
 
-        const MIN_LOADING_TIME = 4000;
-        const startTime = Date.now();
-
-        frame.onload = function() {
-            const elapsedTime = Date.now() - startTime;
-            const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
-            setTimeout(function() {
-                loader.classList.add('hidden');
-                focusGameFrame();
-            }, remainingTime);
-        };
-
-        function focusGameFrame() {
-            try { frame.contentWindow.focus(); } catch (e) {}
+        if (descParam) {
+            infoBody.textContent = descParam;
         }
 
-        // 点赞系统
+        let currentTags = tagsParam.split(',').map(t => t.trim()).filter(Boolean);
+        tagsContainer.innerHTML = currentTags.map(tag => `<span class="meta-tag">${tag}</span>`).join('');
+
+        // 点赞逻辑与 Storage 写入
         const likeBtn = document.getElementById('like-btn');
         const likeIconEl = document.getElementById('like-icon');
         const likeCountEl = document.getElementById('like-count');
 
-        function getSeedCount(title) {
-            let hash = 0;
-            for (let i = 0; i < title.length; i++) hash = title.charCodeAt(i) + ((hash << 5) - hash);
-            return (Math.abs(hash) % 380) + 120;
-        }
-
-        function getGameLikesRecord(title) {
-            const likesStore = JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
-            if (!likesStore[title]) {
-                likesStore[title] = { count: getSeedCount(title), userLiked: false };
-                localStorage.setItem('lulutap_likes', JSON.stringify(likesStore));
-            }
-            return likesStore[title];
+        function getLikesStore() {
+            return JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
         }
 
         function updateLikeUI() {
-            const record = getGameLikesRecord(gameTitle);
+            const likesStore = getLikesStore();
+            const record = likesStore[gameTitle] || { count: Math.floor(Math.random() * 500) + 120, userLiked: false };
+
             likeCountEl.textContent = record.count;
             if (record.userLiked) {
                 likeBtn.classList.add('liked');
@@ -663,8 +577,12 @@
         }
 
         function toggleLike() {
-            const likesStore = JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
-            let record = likesStore[gameTitle] || getGameLikesRecord(gameTitle);
+            const likesStore = getLikesStore();
+            let record = likesStore[gameTitle] || { 
+                count: parseInt(likeCountEl.textContent) || 100, 
+                userLiked: false 
+            };
+
             if (record.userLiked) {
                 record.count = Math.max(0, record.count - 1);
                 record.userLiked = false;
@@ -672,99 +590,108 @@
                 record.count += 1;
                 record.userLiked = true;
             }
+
             likesStore[gameTitle] = record;
             localStorage.setItem('lulutap_likes', JSON.stringify(likesStore));
             updateLikeUI();
         }
 
-        updateLikeUI();
+        // 监听其他页面修改 localStorage 时的实时更新
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'lulutap_likes') {
+                updateLikeUI();
+            }
+        });
 
-        let currentTags = tagsParam.split(',').map(t => t.trim()).filter(Boolean);
-        tagsContainer.innerHTML = currentTags.map(tag => `<span class="meta-tag">${tag}</span>`).join('');
+        // 初始化读取 UI
+        updateLikeUI();
 
         function toggleGameInfo() {
             const card = document.getElementById('game-info-card');
             const body = document.getElementById('game-info-body');
             const arrow = document.getElementById('info-arrow');
-            const header = document.getElementById('info-header');
+
             const isCollapsed = body.classList.contains('collapsed');
             if (isCollapsed) {
                 body.classList.remove('collapsed');
                 card.classList.remove('collapsed');
                 arrow.textContent = '▾';
-                header.setAttribute('aria-expanded', 'true');
             } else {
                 body.classList.add('collapsed');
                 card.classList.add('collapsed');
                 arrow.textContent = '▸';
-                header.setAttribute('aria-expanded', 'false');
             }
         }
 
-        function navigateToGame(game) {
-            if (!game) return;
-            let history = JSON.parse(localStorage.getItem('lulutap_recent') || '[]');
-            history = history.filter(item => item.title !== game.title);
-            history.unshift(game);
-            if (history.length > 20) history.pop();
-            localStorage.setItem('lulutap_recent', JSON.stringify(history));
-
-            const query = new URLSearchParams({
-                url: game.url || game.gameUrl || '',
-                title: game.title || 'Game',
-                img: game.thumb || game.img || '',
-                cat: game.category || game.tags || 'Arcade',
-                desc: game.description || ''
-            }).toString();
-
-            const currentPage = window.location.pathname.split('/').pop() || 'game';
-            window.location.href = `${currentPage}?${query}`;
+        function reloadGame() {
+            frame.src = frame.src;
         }
 
-        // 🚀 直接从 index 页面存储的本地缓存提取 10 个同标签游戏（零延迟、防拦截）
-        function loadSimilarGamesMarquee() {
+        function toggleFullscreen() {
+            const screenBox = document.getElementById('screen-box');
+            if (!document.fullscreenElement) {
+                if (screenBox.requestFullscreen) {
+                    screenBox.requestFullscreen();
+                } else if (screenBox.webkitRequestFullscreen) {
+                    screenBox.webkitRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        async function loadSimilarGamesMarquee() {
             const track = document.getElementById('marquee-track');
-            
-            // 1. 获取 index 存入的全局游戏，如果拿不到则提供优雅静态保底
-            let allGames = JSON.parse(localStorage.getItem('lulutap_all_games') || '[]');
-            
-            if (!Array.isArray(allGames) || allGames.length === 0) {
-                allGames = [
-                    { title: "Car Racing 3D", thumb: "https://img.gamemonetize.com/rvvASAhfx001/512x512.jpg", url: "https://html5.gamedistribution.com/rvvASAhfx001/", category: "Arcade" },
-                    { title: "Subway Surfers", thumb: "https://img.gamemonetize.com/4kci7og3klgj0ivy2wz3gdvd9dth5e7n/512x512.jpg", url: "https://html5.gamedistribution.com/rvvASAhfx001/", category: "Arcade" },
-                    { title: "Temple Run", thumb: "https://img.gamemonetize.com/rvvASAhfx001/512x512.jpg", url: "https://html5.gamedistribution.com/rvvASAhfx001/", category: "Action" },
-                    { title: "Bubble Shooter", thumb: "https://img.gamemonetize.com/4kci7og3klgj0ivy2wz3gdvd9dth5e7n/512x512.jpg", url: "https://html5.gamedistribution.com/rvvASAhfx001/", category: "Casual" },
-                    { title: "Stickman Combat", thumb: "https://img.gamemonetize.com/rvvASAhfx001/512x512.jpg", url: "https://html5.gamedistribution.com/rvvASAhfx001/", category: "Action" }
-                ];
-            }
+            try {
+                const res = await fetch('https://gamemonetize.com/feed.php?format=0&page=1');
+                const games = await res.json();
 
-            // 2. 排除当前正在玩的同名游戏，并进行相似度计分
-            const filteredGames = allGames.filter(g => g.title !== gameTitle).map(item => {
-                const itemTags = (item.category + ',' + (item.tags || '')).toLowerCase().split(',').map(t => t.trim());
-                let score = 0;
-                currentTags.forEach(tag => {
-                    const target = tag.toLowerCase();
-                    if (target && itemTags.some(t => t === target || t.includes(target))) score += 1;
+                const rankedGames = games.map(item => {
+                    // 修复问题 1：分割标签后使用 .filter(Boolean) 过滤空字符串，防止包含空串导致比对异常
+                    const itemTags = (item.tags || item.category || '')
+                        .toLowerCase()
+                        .split(',')
+                        .map(t => t.trim())
+                        .filter(Boolean);
+
+                    let score = 0;
+                    currentTags.forEach(tag => {
+                        const lowTag = tag.toLowerCase();
+                        if (lowTag && itemTags.some(t => t.includes(lowTag) || lowTag.includes(t))) {
+                            score += 1;
+                        }
+                    });
+                    return { ...item, score };
                 });
-                return { ...item, score };
-            });
 
-            filteredGames.sort((a, b) => b.score - a.score);
+                rankedGames.sort((a, b) => b.score - a.score);
+                const top10 = rankedGames.slice(0, 10);
 
-            // 3. 截取前 10 个最匹配游戏
-            const top10 = filteredGames.slice(0, 10);
-            window.similarGamesCache = top10;
+                const cardsHTML = top10.map(item => `
+                    <a href="game.html?url=${encodeURIComponent(item.url)}&title=${encodeURIComponent(item.title)}&cat=${encodeURIComponent(item.category || '')}&desc=${encodeURIComponent(item.description || '')}" class="rec-card">
+                        <img src="${item.thumb}" alt="${item.title}">
+                        <div class="rec-card-title">${item.title}</div>
+                    </a>
+                `).join('');
 
-            // 4. 生成双份 HTML 实现无缝向左循环滚动
-            const renderCards = (list) => list.map((item, idx) => `
-                <div class="rec-card" onclick="navigateToGame(window.similarGamesCache[${idx}])" role="button" aria-label="${item.title}">
-                    <img src="${item.thumb || item.img}" alt="${item.title}" loading="lazy">
-                    <div class="rec-card-title">${item.title}</div>
-                </div>
-            `).join('');
-
-            const cardsHTML = renderCards(top10);
-            track.innerHTML = cardsHTML + cardsHTML;
+                track.innerHTML = cardsHTML + cardsHTML;
+            } catch(e) {
+                // 修复问题 2：兜底逻辑补充 <a> 标签跳转与完整参数传递
+                let fallback = '';
+                for(let i = 1; i <= 10; i++) {
+                    const title = `Similar Game ${i}`;
+                    const url = 'https://html5.gamedistribution.com/rvvASAhfx001/';
+                    fallback += `
+                        <a href="game.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&cat=Casual" class="rec-card">
+                            <img src="https://picsum.photos/200/200?random=${i}" alt="${title}">
+                            <div class="rec-card-title">${title}</div>
+                        </a>
+                    `;
+                }
+                track.innerHTML = fallback + fallback;
+            }
         }
 
         window.addEventListener('DOMContentLoaded', loadSimilarGamesMarquee);
