@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuluTap - Play Game</title>
+    <title>LuluTap - Discover Fun Games</title>
     <style>
+        /* === Global Base Styles === */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -20,740 +21,882 @@
             flex-direction: column;
         }
 
-        /* Header */
+        /* === 1. Top Header === */
         header {
-            height: 60px;
+            height: 64px;
             background: #161926;
             border-bottom: 1px solid #262b3d;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 24px;
+            padding: 0 20px;
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
         .logo {
-            font-size: 20px;
-            font-weight: 800;
-            color: #00f2fe;
-            text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 8px;
+            text-decoration: none;
+            transition: opacity 0.2s ease;
         }
 
-        .back-btn {
+        .logo:hover {
+            opacity: 0.9;
+        }
+
+        .logo svg {
+            display: block;
+            max-height: 48px;
+            width: auto;
+        }
+
+        .mode-btn {
             background: #222738;
             border: 1px solid #323950;
             color: #a0aec0;
             padding: 6px 16px;
             border-radius: 20px;
-            text-decoration: none;
+            cursor: pointer;
             font-size: 13px;
             font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .back-btn:hover {
-            color: #fff;
-            border-color: #00f2fe;
-        }
-
-        /* Main Container */
-        .play-container {
-            max-width: 1500px;
-            width: 100%;
-            margin: 20px auto;
-            padding: 0 24px;
-            display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: 24px;
-            flex: 1;
-        }
-
-        /* Left Panel */
-        .left-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .screen-box {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #262b3d;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .game-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .controls-bar {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            display: flex;
-            gap: 8px;
-            z-index: 10;
-        }
-
-        .action-btn {
-            background: rgba(22, 25, 38, 0.85);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
-            padding: 8px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        .action-btn:hover {
-            background: #00f2fe;
-            color: #000;
-            font-weight: bold;
+        .mode-btn:hover {
+            color: #fff;
+            border-color: #00f2fe;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
         }
 
-        /* Game Metadata */
-        .game-meta-box {
+        /* === 2. Sticky Multi-Tag Dropdown Bar === */
+        .filter-wrapper {
+            position: sticky;
+            top: 64px;
+            z-index: 90;
+            background: rgba(15, 17, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #222738;
+            padding: 12px 24px;
+        }
+
+        .filter-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .tags-dropdown-btn {
             background: #161926;
             border: 1px solid #262b3d;
-            border-radius: 12px;
-            padding: 16px 20px;
+            color: #00f2fe;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
             display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .meta-header {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
         }
 
-        .game-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: #fff;
+        .tags-dropdown-btn:hover {
+            border-color: #00f2fe;
+            box-shadow: 0 0 12px rgba(0, 242, 254, 0.25);
         }
 
-        /* 交互式点赞按钮 */
-        .like-btn {
-            background: rgba(255, 71, 87, 0.15);
-            border: 1px solid rgba(255, 71, 87, 0.3);
-            color: #ff4757;
-            padding: 6px 16px;
+        .tags-dropdown-panel {
+            position: absolute;
+            top: 48px;
+            left: 0;
+            background: #161926;
+            border: 1px solid #2a3146;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+            display: none;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-width: 600px;
+            width: 90vw;
+            z-index: 95;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .tags-dropdown-panel.show {
+            display: flex;
+            animation: fadeInDown 0.2s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tag-chip {
+            background: #222738;
+            border: 1px solid #323950;
+            color: #a0aec0;
+            padding: 6px 14px;
             border-radius: 20px;
             font-size: 13px;
-            font-weight: bold;
             cursor: pointer;
-            display: inline-flex;
+            user-select: none;
+            display: flex;
             align-items: center;
             gap: 6px;
-            transition: all 0.2s ease;
-            user-select: none;
+            transition: all 0.2s;
         }
 
-        .like-btn:hover {
-            transform: scale(1.05);
-            background: rgba(255, 71, 87, 0.25);
-        }
-
-        .like-btn.liked {
-            background: #ff4757;
-            color: #ffffff;
-            border-color: #ff4757;
-            box-shadow: 0 0 12px rgba(255, 71, 87, 0.4);
-        }
-
-        .tags-row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: wrap;
-            font-size: 13px;
-            color: #a0aec0;
-            border-top: 1px solid #222738;
-            padding-top: 12px;
-        }
-
-        .meta-tag {
-            background: rgba(0, 242, 254, 0.12);
-            border: 1px solid rgba(0, 242, 254, 0.3);
-            color: #00f2fe;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-        }
-
-        /* Right Panel */
-        .right-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .side-card {
-            background: #161926;
-            border: 1px solid #262b3d;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .card-h3 {
-            font-size: 14px;
-            font-weight: bold;
-            color: #00f2fe;
-            padding: 14px 16px;
-            background: #1c2030;
-            border-bottom: 1px solid #262b3d;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .controls-list {
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .control-item {
-            background: #111420;
-            border: 1px solid #222738;
-            border-radius: 8px;
-            padding: 10px 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .control-action {
-            font-size: 13px;
-            color: #cbd5e0;
-            font-weight: 500;
-        }
-
-        .key-group {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-        }
-
-        .key-cap {
-            min-width: 28px;
-            height: 28px;
-            padding: 0 6px;
-            background: linear-gradient(180deg, #2d3448 0%, #1e2332 100%);
-            border: 1px solid #4a5568;
-            border-bottom: 3px solid #1a202c;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 12px;
-            color: #fff;
-            font-family: monospace;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-        }
-
-        .key-cap.wide {
-            min-width: 70px;
-        }
-
-        .key-cap.mouse-btn {
-            background: linear-gradient(180deg, #00f2fe 0%, #0099ff 100%);
-            color: #000;
+        .tag-chip:hover, .tag-chip:focus {
             border-color: #00f2fe;
-            border-bottom-color: #0077cc;
-            min-width: 80px;
+            color: #fff;
+            outline: none;
         }
 
-        .collapsible-header {
-            cursor: pointer;
-            user-select: none;
-            transition: background 0.2s;
+        .tag-chip.active {
+            background: rgba(0, 242, 254, 0.15);
+            border-color: #00f2fe;
+            color: #00f2fe;
+            font-weight: 600;
         }
 
-        .collapsible-header:hover {
-            background: #222738;
+        .tag-chip .close-icon {
+            font-size: 11px;
+            opacity: 0.7;
         }
 
-        .toggle-arrow {
+        .clear-all-btn {
+            background: rgba(255, 71, 87, 0.15);
+            color: #ff4757;
+            border: 1px solid #ff4757;
+            padding: 6px 14px;
+            border-radius: 20px;
             font-size: 12px;
-            transition: transform 0.3s ease;
-        }
-
-        .info-body {
-            padding: 16px;
-            font-size: 13px;
-            color: #a0aec0;
-            line-height: 1.6;
-            display: block;
-            border-top: 1px solid #262b3d;
-        }
-
-        .info-body.collapsed {
+            font-weight: bold;
+            cursor: pointer;
             display: none;
+            transition: all 0.2s;
         }
 
-        .side-card.collapsed .toggle-arrow {
-            transform: rotate(-90deg);
+        .clear-all-btn:hover {
+            background: #ff4757;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(255, 71, 87, 0.4);
         }
 
-        .recommend-section {
+        /* === 3. Top 10 Infinite Ticker Carousel === */
+        .ticker-section {
             max-width: 1500px;
             width: 100%;
-            margin: 0 auto 30px auto;
+            margin: 20px auto 10px auto;
             padding: 0 24px;
         }
 
-        .rec-header {
-            font-size: 16px;
+        .ticker-header {
+            font-size: 14px;
             font-weight: bold;
-            color: #fff;
-            margin-bottom: 12px;
+            color: #ff4757;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .marquee-wrapper {
+        .ticker-container {
             width: 100%;
             overflow: hidden;
-            position: relative;
             background: #161926;
+            border: 1px solid #222738;
             border-radius: 12px;
-            border: 1px solid #262b3d;
-            padding: 16px 0;
+            padding: 12px 0;
+            position: relative;
         }
 
-        .marquee-track {
+        .ticker-track {
             display: flex;
             gap: 16px;
             width: max-content;
-            animation: scrollMarquee 25s linear infinite;
+            animation: marqueeScroll 25s linear infinite;
         }
 
-        .marquee-track:hover {
+        .ticker-container:hover .ticker-track,
+        .ticker-container:focus-within .ticker-track {
             animation-play-state: paused;
         }
 
-        .rec-card {
-            width: 140px;
-            height: 140px;
-            background: #222738;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-            text-decoration: none;
+        @keyframes marqueeScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-card {
+            width: 200px;
+            height: 110px;
             flex-shrink: 0;
-            border: 1px solid #323950;
-            transition: border-color 0.2s, transform 0.2s;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #2b3248;
+            text-decoration: none;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            transition: transform 0.2s, border-color 0.2s;
             cursor: pointer;
         }
 
-        .rec-card:hover {
-            border-color: #00f2fe;
+        .ticker-card:hover, .ticker-card:focus {
             transform: scale(1.03);
+            border-color: #00f2fe;
+            z-index: 2;
+            outline: none;
         }
 
-        .rec-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .rec-card-title {
+        .ticker-card-cover {
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
             width: 100%;
-            background: rgba(15, 17, 26, 0.85);
-            color: #fff;
-            font-size: 11px;
-            padding: 6px;
-            text-align: center;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .ticker-card-overlay {
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(0deg, rgba(15,17,26,0.95) 0%, rgba(15,17,26,0.2) 80%);
+            padding: 8px;
+        }
+
+        .ticker-card-title {
+            font-size: 12px;
+            font-weight: bold;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        @keyframes scrollMarquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+        /* === 4. Bento Grid Layout === */
+        .main-content {
+            max-width: 1500px;
+            width: 100%;
+            margin: 10px auto 20px auto;
+            padding: 0 24px;
+            flex: 1;
+            transition: max-width 0.3s ease;
         }
 
-        /* 响应式适配微调 */
+        body.mobile-mode .main-content,
+        body.mobile-mode .ticker-section {
+            max-width: 480px;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 16px;
+            grid-auto-flow: dense;
+        }
+
+        body.mobile-mode .bento-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .game-card {
+            position: relative;
+            background: #161926;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #222738;
+            text-decoration: none;
+            color: #fff;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+            cursor: pointer;
+        }
+
+        .game-card:hover, .game-card:focus {
+            transform: translateY(-5px);
+            border-color: #00f2fe;
+            box-shadow: 0 8px 25px rgba(0, 242, 254, 0.25);
+            z-index: 2;
+            outline: none;
+        }
+
+        .game-card.featured {
+            grid-column: span 2;
+            grid-row: span 2;
+            aspect-ratio: 1 / 1;
+            border: 1px solid rgba(0, 242, 254, 0.5);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+        }
+
+        body.mobile-mode .game-card.featured {
+            grid-column: span 2;
+            grid-row: span 1;
+            aspect-ratio: 16 / 9;
+        }
+
+        .card-cover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.3s;
+        }
+
+        .game-card:hover .card-cover,
+        .game-card:focus .card-cover {
+            transform: scale(1.05);
+        }
+
+        .card-overlay {
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(0deg, rgba(15,17,26,0.95) 0%, rgba(15,17,26,0.4) 70%, rgba(15,17,26,0) 100%);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .featured .card-title {
+            font-size: 18px;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #a0aec0;
+            margin-top: 2px;
+        }
+
+        .card-tag {
+            background: rgba(0, 242, 254, 0.15);
+            color: #00f2fe;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .card-like-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #a0aec0;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 2px 6px;
+            border-radius: 10px;
+            backdrop-filter: blur(4px);
+        }
+
+        .card-like-badge.liked {
+            color: #ff4757;
+        }
+
+        .loading-status {
+            text-align: center;
+            padding: 30px 0;
+            color: #a0aec0;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #323950;
+            border-top: 2px solid #00f2fe;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         @media (max-width: 1024px) {
-            .play-container {
-                grid-template-columns: 1fr;
+            .bento-grid {
+                grid-template-columns: repeat(4, 1fr);
             }
         }
 
-        @media (max-width: 640px) {
-            .play-container {
+        @media (max-width: 768px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .game-card.featured {
+                grid-column: span 2;
+                grid-row: span 1;
+                aspect-ratio: 16 / 9;
+            }
+
+            .filter-wrapper, .ticker-section, .main-content {
                 padding: 0 12px;
-                margin: 10px auto;
             }
-            .game-title {
-                font-size: 16px;
-            }
-            .action-btn {
-                padding: 6px 10px;
-                font-size: 11px;
-            }
-            .recommend-section {
-                padding: 0 12px;
+
+            .logo svg {
+                max-height: 40px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
+    <!-- 1. Top Header with SVG Logo -->
     <header>
-        <a href="index.html" class="logo" aria-label="LuluTap Homepage">🕹️ LuluTap</a>
-        <a href="index.html" class="back-btn" aria-label="Return to Homepage">🏠 Home</a>
+        <a href="index.html" class="logo" aria-label="LuluTap Homepage">
+            <svg width="220" height="60" viewBox="0 0 220 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="lulutap-main" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#00F2FE" />
+                        <stop offset="100%" stop-color="#9B51E0" />
+                    </linearGradient>
+                    <linearGradient id="cat-warm" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#FF9472" />
+                        <stop offset="100%" stop-color="#F2709C" />
+                    </linearGradient>
+                    <filter id="glow-effect" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="2.5" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                </defs>
+                <g transform="translate(6, 4)">
+                    <circle cx="26" cy="26" r="24" stroke="url(#lulutap-main)" stroke-width="1.5" stroke-dasharray="6 3" opacity="0.4" />
+                    <path d="M10 38 C10 32, 14 30, 26 30 C38 30, 42 32, 42 38 L44 42 C44 44, 42 45, 40 45 L12 45 C10 45, 8 44, 8 42 Z" fill="#1E2332" stroke="url(#lulutap-main)" stroke-width="1.5" stroke-linejoin="round"/>
+                    <path d="M21 16 C21 12, 31 12, 31 16 C32 19, 31 23, 26 23 C21 23, 20 19, 21 16 Z" fill="#0F111A"/>
+                    <path d="M22 13 C23 10, 29 10, 30 13 C31 15, 29 16, 26 16 C23 16, 21 15, 22 13 Z" fill="url(#lulutap-main)"/>
+                    <path d="M19 16 C19 10, 33 10, 33 16" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" fill="none"/>
+                    <rect x="17" y="15" width="4" height="7" rx="2" fill="url(#lulutap-main)" filter="url(#glow-effect)"/>
+                    <rect x="31" y="15" width="4" height="7" rx="2" fill="url(#lulutap-main)" filter="url(#glow-effect)"/>
+                    <path d="M20 24 C23 23, 29 23, 32 24 L34 33 L18 33 Z" fill="#292D3E"/>
+                    <g transform="translate(13, 28)">
+                        <rect x="0" y="2" width="12" height="8" rx="3" fill="url(#lulutap-main)"/>
+                        <circle cx="3" cy="5" r="1" fill="#0F111A"/>
+                        <circle cx="9" cy="5" r="1" fill="#FFFFFF"/>
+                    </g>
+                    <g transform="translate(31, 27)">
+                        <path d="M3 7 C3 4, 7 3, 9 5 C11 7, 10 12, 8 13 C6 13, 3 11, 3 7 Z" fill="url(#cat-warm)"/>
+                        <path d="M4 4 L6 1 L7 4 Z" fill="url(#cat-warm)"/>
+                        <path d="M7 4 L9 1 L10 4 Z" fill="url(#cat-warm)"/>
+                        <path d="M9 11 C12 11, 13 8, 12 7" stroke="url(#cat-warm)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                    </g>
+                    <path d="M30 27 Q33 26 34 28" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                </g>
+                <text x="64" y="37" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="24" letter-spacing="0.8">
+                    <tspan fill="url(#lulutap-main)" filter="url(#glow-effect)">Lulu</tspan>
+                    <tspan fill="#FFFFFF">Tap</tspan>
+                </text>
+                <circle cx="205" cy="18" r="2" fill="url(#cat-warm)" />
+                <circle cx="211" cy="23" r="1" fill="#00F2FE" />
+            </svg>
+        </a>
+        <button class="mode-btn" id="mode-btn" onclick="toggleDeviceMode()" aria-label="Switch Device View Mode">💻 PC Mode</button>
     </header>
 
-    <!-- Main Game Container -->
-    <div class="play-container">
-        
-        <!-- Left Panel -->
-        <div class="left-panel">
-            <div class="screen-box" id="screen-box">
-                <iframe 
-                    class="game-iframe" 
-                    id="game-frame" 
-                    allowfullscreen 
-                    allow="autoplay; gamepad; keyboard-map; accelerated-2d; pointer-lock"
-                    sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-                    src="about:blank"
-                    title="Game Window">
-                </iframe>
-                <div class="controls-bar">
-                    <button class="action-btn" onclick="reloadGame()" aria-label="Reload Game">🔄 Reload</button>
-                    <button class="action-btn" id="fullscreen-btn" onclick="toggleFullscreen()" aria-label="Toggle Fullscreen">⛶ Fullscreen</button>
-                </div>
+    <!-- 2. Sticky Multi-Tag Dropdown Bar -->
+    <div class="filter-wrapper">
+        <div class="filter-container">
+            <div>
+                <button class="tags-dropdown-btn" id="tags-btn" onclick="toggleTagsDropdown(event)" aria-expanded="false" aria-label="Toggle Tags Filter Menu">
+                    <span>🏷️ Tags</span>
+                    <span id="dropdown-arrow">▾</span>
+                </button>
+                <div class="tags-dropdown-panel" id="tags-panel" role="region" aria-label="Tag Filter Panel"></div>
             </div>
-
-            <!-- Title & Tags -->
-            <div class="game-meta-box">
-                <div class="meta-header">
-                    <h1 class="game-title" id="game-title">Loading Game...</h1>
-                    
-                    <button class="like-btn" id="like-btn" onclick="toggleLike()" aria-label="Like this game">
-                        <span id="like-icon">🤍</span> <span id="like-count">0</span>
-                    </button>
-                </div>
-                
-                <div class="tags-row">
-                    <span>🏷️ Categories & Tags:</span>
-                    <div id="game-tags" style="display: flex; gap: 6px; flex-wrap: wrap;"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Right Panel -->
-        <div class="right-panel">
-            <div class="side-card">
-                <div class="card-h3">🎮 CONTROLS</div>
-                <div class="controls-list">
-                    <div class="control-item">
-                        <span class="control-action">Movement / WASD</span>
-                        <div class="key-group">
-                            <span class="key-cap">W</span>
-                            <span class="key-cap">A</span>
-                            <span class="key-cap">S</span>
-                            <span class="key-cap">D</span>
-                        </div>
-                    </div>
-
-                    <div class="control-item">
-                        <span class="control-action">Arrow Controls</span>
-                        <div class="key-group">
-                            <span class="key-cap">↑</span>
-                            <span class="key-cap">←</span>
-                            <span class="key-cap">↓</span>
-                            <span class="key-cap">→</span>
-                        </div>
-                    </div>
-
-                    <div class="control-item">
-                        <span class="control-action">Jump / Action</span>
-                        <div class="key-group">
-                            <span class="key-cap wide">Space</span>
-                        </div>
-                    </div>
-
-                    <div class="control-item">
-                        <span class="control-action">Click / Select</span>
-                        <div class="key-group">
-                            <span class="key-cap mouse-btn">🖱️ Left Click</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="side-card" id="game-info-card">
-                <div class="card-h3 collapsible-header" id="info-header" onclick="toggleGameInfo()" role="button" aria-expanded="true" aria-label="Toggle Game Description">
-                    <span>📖 GAME INFO</span>
-                    <span class="toggle-arrow" id="info-arrow">▾</span>
-                </div>
-                <div class="info-body" id="game-info-body">
-                    Use Arrow keys or WASD to control movement. Click target elements using your mouse. Click the fullscreen button for an immersive gaming experience!
-                </div>
-            </div>
+            
+            <button class="clear-all-btn" id="clear-all-btn" onclick="clearAllFilters()" aria-label="Clear All Selected Filters">✕ Clear All</button>
         </div>
     </div>
 
-    <!-- Recommended Games Marquee -->
-    <section class="recommend-section" aria-label="Similar Games Recommendations">
-        <div class="rec-header">🎯 SIMILAR GAMES</div>
-        <div class="marquee-wrapper">
-            <div class="marquee-track" id="marquee-track"></div>
+    <!-- 3. Top 10 Trending Games Infinite Ticker Carousel -->
+    <section class="ticker-section" aria-label="Trending Games Carousel">
+        <div class="ticker-header">🔥 Top 10 Trending Games</div>
+        <div class="ticker-container">
+            <div class="ticker-track" id="ticker-track"></div>
         </div>
     </section>
 
+    <!-- 4. Main Bento Game Grid -->
+    <main class="main-content">
+        <div class="bento-grid" id="game-grid" role="region" aria-label="Game Grid">
+            <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #a0aec0;">
+                <div class="spinner" style="margin: 0 auto 12px auto; width: 24px; height: 24px;"></div>
+                Loading games list...
+            </div>
+        </div>
+
+        <div class="loading-status" id="loading-status" style="display: none;">
+            <div class="spinner"></div>
+            <span>Auto-loading more games...</span>
+        </div>
+    </main>
+
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const gameUrl = urlParams.get('url') || 'https://html5.gamedistribution.com/rvvASAhfx001/';
-        const gameTitle = urlParams.get('title') || 'Real Car Parking Game';
-        const tagsParam = urlParams.get('cat') || urlParams.get('tags') || 'Puzzle,Casual,Find Object';
-        const descParam = urlParams.get('desc');
-        const imgParam = urlParams.get('img') || '';
+        let allCategories = ["🔥 All", "Action", "Arcade", "Puzzle", "Racing", "Shooting", "Casual", "Strategy", "Sports"];
+        let selectedTags = [];
+        let gamesData = []; 
+        let currentPage = 1;
+        let isLoading = false;
+        let hasMoreData = true;
+        let isMobileMode = false;
 
-        const frame = document.getElementById('game-frame');
-        const titleEl = document.getElementById('game-title');
-        const tagsContainer = document.getElementById('game-tags');
-        const infoBody = document.getElementById('game-info-body');
+        const extraTagsPool = ["🔥 Hot", "⚡ Fast", "🎮 3D", "🏆 Top", "⭐ Popular", "🕹️ Classic", "🎯 Skill"];
 
-        frame.src = gameUrl;
-        titleEl.textContent = gameTitle;
-        document.title = `${gameTitle} - LuluTap`;
+        const mockFallbackGames = Array.from({ length: 18 }).map((_, i) => ({
+            id: `fallback-${i}`,
+            title: `Popular Game ${i + 1}`,
+            category: ["Action", "Arcade", "Puzzle", "Racing", "Shooting"][i % 5],
+            thumb: `https://picsum.photos/seed/${i + 100}/400/400`,
+            url: "https://html5.gamedistribution.com/rvvAS30838184/",
+            description: "An exciting browser action game designed for ultimate fun and challenge."
+        }));
 
-        if (descParam) {
-            infoBody.textContent = descParam;
+        function getLikesData() {
+            return JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
         }
 
-        let currentTags = tagsParam.split(',').map(t => t.trim()).filter(Boolean);
-        tagsContainer.innerHTML = currentTags.map(tag => `<span class="meta-tag">${tag}</span>`).join('');
+        function getGameLikesInfo(title, baseLikes = 0) {
+            const likesStore = getLikesData();
+            const record = likesStore[title] || { count: baseLikes || Math.floor(Math.random() * 800) + 120, userLiked: false };
+            return record;
+        }
 
-        // 统一保存到浏览历史库
-        function saveToHistory(game) {
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function toggleDeviceMode() {
+            isMobileMode = !isMobileMode;
+            const btn = document.getElementById('mode-btn');
+            if (isMobileMode) {
+                document.body.classList.add('mobile-mode');
+                btn.innerHTML = '📱 Mobile Mode';
+            } else {
+                document.body.classList.remove('mobile-mode');
+                btn.innerHTML = '💻 PC Mode';
+            }
+        }
+
+        function toggleTagsDropdown(e) {
+            e.stopPropagation();
+            const panel = document.getElementById('tags-panel');
+            const btn = document.getElementById('tags-btn');
+            const arrow = document.getElementById('dropdown-arrow');
+            const isOpen = panel.classList.contains('show');
+
+            if (isOpen) {
+                panel.classList.remove('show');
+                arrow.innerText = '▾';
+                btn.setAttribute('aria-expanded', 'false');
+            } else {
+                panel.classList.add('show');
+                arrow.innerText = '▴';
+                btn.setAttribute('aria-expanded', 'true');
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            const panel = document.getElementById('tags-panel');
+            const btn = document.getElementById('tags-btn');
+            if (panel && !panel.contains(e.target) && !btn.contains(e.target)) {
+                panel.classList.remove('show');
+                document.getElementById('dropdown-arrow').innerText = '▾';
+                btn.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        function goToGame(game) {
+            if (!game) return;
             let history = JSON.parse(localStorage.getItem('lulutap_recent') || '[]');
             history = history.filter(item => item.title !== game.title);
             history.unshift(game);
             if (history.length > 20) history.pop();
             localStorage.setItem('lulutap_recent', JSON.stringify(history));
-        }
-
-        // 初始化时，自动将当前正在播放的游戏存入播放历史
-        saveToHistory({
-            title: gameTitle,
-            url: gameUrl,
-            gameUrl: gameUrl,
-            img: imgParam,
-            category: currentTags[0] || 'Arcade',
-            description: descParam || ''
-        });
-
-        // 点赞逻辑与 Storage 写入
-        const likeBtn = document.getElementById('like-btn');
-        const likeIconEl = document.getElementById('like-icon');
-        const likeCountEl = document.getElementById('like-count');
-
-        function getLikesStore() {
-            return JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
-        }
-
-        function updateLikeUI() {
-            const likesStore = getLikesStore();
-            const record = likesStore[gameTitle] || { count: Math.floor(Math.random() * 500) + 120, userLiked: false };
-
-            likeCountEl.textContent = record.count;
-            if (record.userLiked) {
-                likeBtn.classList.add('liked');
-                likeIconEl.textContent = '❤️';
-            } else {
-                likeBtn.classList.remove('liked');
-                likeIconEl.textContent = '🤍';
-            }
-        }
-
-        function toggleLike() {
-            const likesStore = getLikesStore();
-            let record = likesStore[gameTitle] || { 
-                count: parseInt(likeCountEl.textContent) || 100, 
-                userLiked: false 
-            };
-
-            if (record.userLiked) {
-                record.count = Math.max(0, record.count - 1);
-                record.userLiked = false;
-            } else {
-                record.count += 1;
-                record.userLiked = true;
-            }
-
-            likesStore[gameTitle] = record;
-            localStorage.setItem('lulutap_likes', JSON.stringify(likesStore));
-            updateLikeUI();
-        }
-
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'lulutap_likes') {
-                updateLikeUI();
-            }
-        });
-
-        updateLikeUI();
-
-        function toggleGameInfo() {
-            const card = document.getElementById('game-info-card');
-            const body = document.getElementById('game-info-body');
-            const arrow = document.getElementById('info-arrow');
-            const header = document.getElementById('info-header');
-
-            const isCollapsed = body.classList.contains('collapsed');
-            if (isCollapsed) {
-                body.classList.remove('collapsed');
-                card.classList.remove('collapsed');
-                arrow.textContent = '▾';
-                header.setAttribute('aria-expanded', 'true');
-            } else {
-                body.classList.add('collapsed');
-                card.classList.add('collapsed');
-                arrow.textContent = '▸';
-                header.setAttribute('aria-expanded', 'false');
-            }
-        }
-
-        function reloadGame() {
-            frame.src = frame.src;
-        }
-
-        function toggleFullscreen() {
-            const screenBox = document.getElementById('screen-box');
-            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                if (screenBox.requestFullscreen) {
-                    screenBox.requestFullscreen();
-                } else if (screenBox.webkitRequestFullscreen) {
-                    screenBox.webkitRequestFullscreen();
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
-            }
-        }
-
-        // 监听全屏状态变化，自动转换按钮提示语
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-
-        function handleFullscreenChange() {
-            const fsBtn = document.getElementById('fullscreen-btn');
-            if (document.fullscreenElement || document.webkitFullscreenElement) {
-                fsBtn.innerHTML = '🗗 Exit Fullscreen';
-            } else {
-                fsBtn.innerHTML = '⛶ Fullscreen';
-            }
-        }
-
-        // 点击推荐游戏跳转闭环逻辑
-        function navigateToGame(game) {
-            saveToHistory(game);
 
             const query = new URLSearchParams({
-                url: game.gameUrl || game.url,
+                url: game.gameUrl,
                 title: game.title,
-                img: game.img || game.thumb || '',
+                img: game.img || '',
                 cat: game.category || 'Arcade',
-                desc: game.description || ''
+                desc: game.description || 'Enjoy playing ' + game.title + ' on LuluTap!'
             }).toString();
 
             window.location.href = `game.html?${query}`;
         }
 
-        async function loadSimilarGamesMarquee() {
-            const track = document.getElementById('marquee-track');
-            try {
-                const res = await fetch('https://gamemonetize.com/feed.php?format=0&page=1');
-                if (!res.ok) throw new Error('API Error');
-                const games = await res.json();
-
-                const rankedGames = games.map(item => {
-                    const itemTags = (item.tags || item.category || '')
-                        .toLowerCase()
-                        .split(',')
-                        .map(t => t.trim())
-                        .filter(Boolean);
-
-                    let score = 0;
-                    currentTags.forEach(tag => {
-                        const lowTag = tag.toLowerCase();
-                        if (lowTag && itemTags.some(t => t === lowTag || t.includes(lowTag))) {
-                            score += 1;
-                        }
-                    });
-                    return { ...item, score };
-                });
-
-                rankedGames.sort((a, b) => b.score - a.score);
-                const top10 = rankedGames.slice(0, 10);
-
-                window.similarGamesCache = top10;
-
-                const cardsHTML = top10.map((item, idx) => `
-                    <div class="rec-card" onclick="navigateToGame(window.similarGamesCache[${idx}])" role="button" aria-label="${item.title}">
-                        <img src="${item.thumb}" alt="${item.title}">
-                        <div class="rec-card-title">${item.title}</div>
-                    </div>
-                `).join('');
-
-                track.innerHTML = cardsHTML + cardsHTML;
-            } catch(e) {
-                const fallbackData = Array.from({ length: 10 }).map((_, i) => ({
-                    title: `Similar Game ${i + 1}`,
-                    gameUrl: 'https://html5.gamedistribution.com/rvvASAhfx001/',
-                    img: `https://picsum.photos/200/200?random=${i + 10}`,
-                    category: 'Casual',
-                    description: 'Fun casual game to play anytime!'
-                }));
-
-                window.similarGamesCache = fallbackData;
-
-                const fallbackHTML = fallbackData.map((item, idx) => `
-                    <div class="rec-card" onclick="navigateToGame(window.similarGamesCache[${idx}])" role="button" aria-label="${item.title}">
-                        <img src="${item.img}" alt="${item.title}">
-                        <div class="rec-card-title">${item.title}</div>
-                    </div>
-                `).join('');
-
-                track.innerHTML = fallbackHTML + fallbackHTML;
+        function handleKeyPress(e, callback) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                callback();
             }
         }
 
-        window.addEventListener('DOMContentLoaded', loadSimilarGamesMarquee);
+        async function initGameData(page = 1) {
+            if (isLoading) return;
+            isLoading = true;
+
+            const grid = document.getElementById('game-grid');
+            const status = document.getElementById('loading-status');
+
+            if (page > 1) {
+                status.style.display = 'flex';
+            }
+
+            try {
+                let rawList = [];
+                try {
+                    const response = await fetch(`https://gamemonetize.com/feed.php?format=0&page=${page}`);
+                    if (!response.ok) throw new Error("HTTP error " + response.status);
+                    const data = await response.json();
+                    rawList = Array.isArray(data) ? data : [];
+                } catch (e) {
+                    console.warn("API Fetch Failed/CORS limit, fallbacking to simulated mock data.", e);
+                    rawList = mockFallbackGames;
+                }
+                
+                if (rawList.length === 0) {
+                    hasMoreData = false;
+                    status.style.display = 'flex';
+                    status.innerHTML = "✨ You've reached the end!";
+                    if (observer) observer.disconnect();
+                    return;
+                }
+
+                const shuffledList = shuffle([...rawList]);
+
+                const formattedGames = shuffledList.map((item) => {
+                    const catName = item.category || "Other";
+                    
+                    if (!allCategories.includes(catName)) {
+                        allCategories.push(catName);
+                    }
+
+                    const gameTags = [catName]; 
+                    const shuffledExtra = shuffle([...extraTagsPool]);
+                    gameTags.push(shuffledExtra[0]);
+                    if (Math.random() > 0.5) {
+                        gameTags.push(shuffledExtra[1]);
+                    }
+
+                    const baseLikes = Math.floor(Math.random() * 800) + 100;
+
+                    return {
+                        id: item.id || `game-${Math.random()}`,
+                        title: item.title || item.name || "Untitled Game",
+                        category: catName,
+                        tags: gameTags,
+                        img: item.thumb || 'https://via.placeholder.com/300',
+                        gameUrl: item.url || '#',
+                        description: item.description || '',
+                        baseLikes: baseLikes
+                    };
+                });
+
+                if (page === 1) {
+                    renderTop10Ticker(formattedGames.slice(0, 10));
+                    gamesData = formattedGames;
+                } else {
+                    gamesData = [...gamesData, ...formattedGames];
+                }
+
+                assignFeaturedCards();
+                renderTags();
+                renderGames();
+            } catch (err) {
+                console.error("Critical Execution Error:", err);
+            } finally {
+                isLoading = false;
+                status.style.display = 'none';
+            }
+        }
+
+        function assignFeaturedCards() {
+            let nextFeaturedIndex = 0;
+            
+            gamesData.forEach((game, idx) => {
+                if (idx === nextFeaturedIndex) {
+                    game.featured = true;
+                    nextFeaturedIndex += Math.floor(Math.random() * 3) + 7; 
+                } else {
+                    game.featured = false;
+                }
+            });
+        }
+
+        function renderTop10Ticker(top10List) {
+            const track = document.getElementById('ticker-track');
+            if (!top10List || top10List.length === 0) return;
+
+            const listToRender = [...top10List, ...top10List];
+
+            track.innerHTML = listToRender.map((game, index) => {
+                const originalIndex = index % top10List.length;
+                return `
+                <div class="ticker-card" tabindex="0" role="button" aria-label="${game.title}" onclick="goToGame(gamesData[${originalIndex}])" onkeydown="handleKeyPress(event, () => goToGame(gamesData[${originalIndex}]))">
+                    <div class="ticker-card-cover" style="background-image: url('${game.img}');"></div>
+                    <div class="ticker-card-overlay">
+                        <div class="ticker-card-title">${game.title}</div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function renderTags() {
+            const container = document.getElementById('tags-panel');
+            const clearBtn = document.getElementById('clear-all-btn');
+            const btnText = document.querySelector('.tags-dropdown-btn span');
+
+            container.innerHTML = allCategories.map(cat => {
+                const isAll = cat === "🔥 All";
+                const isSelected = isAll ? selectedTags.length === 0 : selectedTags.includes(cat);
+                
+                return `
+                    <div class="tag-chip ${isSelected ? 'active' : ''}" tabindex="0" role="button" aria-label="Filter tag ${cat}" onclick="toggleTag('${cat}')" onkeydown="handleKeyPress(event, () => toggleTag('${cat}'))">
+                        <span>${cat}</span>
+                        ${!isAll && isSelected ? '<span class="close-icon">✕</span>' : ''}
+                    </div>
+                `;
+            }).join('');
+
+            if (selectedTags.length > 0) {
+                btnText.innerText = `🏷️ Tags (${selectedTags.length})`;
+            } else {
+                btnText.innerText = `🏷️ Tags`;
+            }
+
+            clearBtn.style.display = selectedTags.length >= 1 ? 'block' : 'none';
+        }
+
+        function toggleTag(cat) {
+            if (cat === "🔥 All") {
+                selectedTags = [];
+            } else {
+                if (selectedTags.includes(cat)) {
+                    selectedTags = selectedTags.filter(t => t !== cat);
+                } else {
+                    selectedTags.push(cat);
+                }
+            }
+            renderTags();
+            renderGames();
+        }
+
+        function clearAllFilters() {
+            selectedTags = [];
+            renderTags();
+            renderGames();
+        }
+
+        function renderGames() {
+            const grid = document.getElementById('game-grid');
+            
+            const filtered = gamesData.filter(game => {
+                if (selectedTags.length === 0) return true;
+                return selectedTags.every(tag => game.tags.includes(tag));
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #a0aec0;">No matching games found. Try resetting filters!</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map((game) => {
+                const realIndex = gamesData.indexOf(game);
+                const likeInfo = getGameLikesInfo(game.title, game.baseLikes);
+
+                return `
+                <div tabindex="0" onclick="goToGame(gamesData[${realIndex}])" onkeydown="handleKeyPress(event, () => goToGame(gamesData[${realIndex}]))" class="game-card ${game.featured ? 'featured' : ''}" role="button" aria-label="${game.title}">
+                    <div class="card-cover" style="background-image: url('${game.img}');"></div>
+                    <div class="card-overlay">
+                        <div class="card-title">${game.title}</div>
+                        <div class="card-meta">
+                            <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                                ${game.tags.map(t => `<span class="card-tag">${t}</span>`).join('')}
+                            </div>
+                            <div class="card-like-badge ${likeInfo.userLiked ? 'liked' : ''}">
+                                ${likeInfo.userLiked ? '❤️' : '🤍'} ${likeInfo.count}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        window.addEventListener('pageshow', () => {
+            if (gamesData.length > 0) {
+                renderGames();
+            }
+        });
+
+        /* === IntersectionObserver 预加载 === */
+        let observer = null;
+        function setupIntersectionObserver() {
+            const statusTarget = document.getElementById('loading-status');
+            
+            observer = new IntersectionObserver((entries) => {
+                const target = entries[0];
+                if (target.isIntersecting && !isLoading && hasMoreData) {
+                    currentPage++;
+                    initGameData(currentPage);
+                }
+            }, {
+                root: null,
+                rootMargin: '300px',
+                threshold: 0
+            });
+
+            observer.observe(statusTarget);
+        }
+
+        // 初始化
+        renderTags();
+        initGameData();
+        setupIntersectionObserver();
     </script>
 </body>
 </html>
