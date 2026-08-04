@@ -560,13 +560,25 @@
         const likeIconEl = document.getElementById('like-icon');
         const likeCountEl = document.getElementById('like-count');
 
-        function getLikesStore() {
-            return JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
+        // 统一获取点赞数据的函数：若不存在则创建并即时保存
+        function getGameLikesRecord(title) {
+            const likesStore = JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
+            
+            // 如果本地没有记录，初始化一个固定的随机数并【立刻存入 localStorage】
+            if (!likesStore[title]) {
+                likesStore[title] = {
+                    count: Math.floor(Math.random() * 500) + 120,
+                    userLiked: false
+                };
+                localStorage.setItem('lulutap_likes', JSON.stringify(likesStore));
+            }
+            
+            return likesStore[title];
         }
 
         function updateLikeUI() {
-            const likesStore = getLikesStore();
-            const record = likesStore[gameTitle] || { count: Math.floor(Math.random() * 500) + 120, userLiked: false };
+            // 使用统一的数据读取函数
+            const record = getGameLikesRecord(gameTitle);
 
             likeCountEl.textContent = record.count;
             if (record.userLiked) {
@@ -579,11 +591,9 @@
         }
 
         function toggleLike() {
-            const likesStore = getLikesStore();
-            let record = likesStore[gameTitle] || { 
-                count: parseInt(likeCountEl.textContent) || 100, 
-                userLiked: false 
-            };
+            const likesStore = JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
+            // 确保拿到真实记录
+            let record = likesStore[gameTitle] || getGameLikesRecord(gameTitle);
 
             if (record.userLiked) {
                 record.count = Math.max(0, record.count - 1);
