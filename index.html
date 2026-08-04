@@ -444,6 +444,52 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* === 5. Footer Styles === */
+        .site-footer {
+            background: #161926;
+            border-top: 1px solid #222738;
+            padding: 28px 0;
+            margin-top: auto;
+            text-align: center;
+            color: #a0aec0;
+            font-size: 13px;
+        }
+
+        .footer-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer-links a {
+            color: #a0aec0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: #00f2fe;
+            text-decoration: underline;
+        }
+
+        .footer-links .divider {
+            color: #323950;
+            font-size: 10px;
+        }
+
         @media (max-width: 1024px) {
             .bento-grid {
                 grid-template-columns: repeat(4, 1fr);
@@ -558,12 +604,28 @@
         </div>
     </main>
 
+    <!-- 5. Footer 页脚区域 -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <p>© 2026 LuluTap. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="contact.html">Contact Us</a>
+                <span class="divider">•</span>
+                <a href="privacy.html">Privacy Policy</a>
+                <span class="divider">•</span>
+                <a href="terms.html">Terms of Service</a>
+                <span class="divider">•</span>
+                <a href="dmca.html">DMCA Policy</a>
+            </div>
+        </div>
+    </footer>
+
     <script>
         let allCategories = ["🔥 All", "Action", "Arcade", "Puzzle", "Racing", "Shooting", "Casual", "Strategy", "Sports"];
         let selectedTags = [];
         let gamesData = []; 
         let isMobileMode = false;
-        const TARGET_GAME_COUNT = 100; // 目标获取 100 款游戏
+        const TARGET_GAME_COUNT = 100; 
 
         const extraTagsPool = ["🔥 Hot", "⚡ Fast", "🎮 3D", "🏆 Top", "⭐ Popular", "🕹️ Classic", "🎯 Skill"];
 
@@ -693,12 +755,10 @@
                 console.warn("API Fetch Failed/CORS limit, fallbacking to simulated mock data.", e);
             }
 
-            // 如果接口拉取不够 100 款，则补充 mockFallbackGames
             if (fetchedList.length < TARGET_GAME_COUNT) {
                 fetchedList = fetchedList.concat(mockFallbackGames.slice(0, TARGET_GAME_COUNT - fetchedList.length));
             }
 
-            // 精确截取前 100 款
             return shuffle(fetchedList.slice(0, TARGET_GAME_COUNT));
         }
 
@@ -731,9 +791,7 @@
                     };
                 });
 
-                // Top 10 区域取前 10 款，不受后续影响
                 renderTop10Ticker(gamesData.slice(0, 10));
-
                 assignFeaturedCards();
                 renderTags();
                 renderGames();
