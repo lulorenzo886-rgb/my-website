@@ -1,218 +1,436 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="referrer" content="no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuluTap - Play Instant Free HTML5 Games</title>
+    <title>LuluTap - 发现好玩的游戏</title>
     <style>
-        :root {
-            --bg-dark: #07090e;
-            --card-bg: #1A1C29;
-            --primary-cyan: #00f2fe;
-            --primary-purple: #6C5CE7;
-            --accent-pink: #ff2a85;
-            --text-muted: #A0A5BA;
+        /* === 全局基础样式 === */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--bg-dark); 
-            color: #ffffff; padding: 20px; min-height: 100vh;
+        body {
+            background-color: #0f111a;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        header { text-align: center; padding: 20px 0; }
-        .logo { font-size: 2.5rem; font-weight: 900; background: linear-gradient(135deg, #ff2a85, #00f2fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        /* 分类控制栏 */
-        .category-bar { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 20px 0; }
-        .btn-tag { 
-            background: #1A1C29; color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1); 
-            padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; transition: all 0.2s;
-        }
-        .btn-tag:hover { border-color: var(--primary-cyan); color: #fff; }
-        .btn-tag.active { background: linear-gradient(135deg, var(--primary-cyan), #00b4d8); color: #000; font-weight: bold; border-color: transparent; }
-        
-        .btn-reset { background: var(--accent-pink); color: #fff; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; }
-
-        /* 已选标签显示区 */
-        .selected-bar { max-width: 800px; margin: 0 auto 20px; text-align: center; font-size: 13px; color: var(--text-muted); }
-        .chip { display: inline-flex; align-items: center; gap: 4px; background: var(--primary-purple); color: #fff; padding: 4px 10px; border-radius: 12px; margin: 2px; font-weight: bold; }
-        .chip span { cursor: pointer; margin-left: 4px; }
-
-        /* 游戏网格 */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
-        .card { 
-            background: var(--card-bg); border-radius: 12px; overflow: hidden; 
-            text-decoration: none; color: inherit; transition: transform 0.2s; 
-            border: 1px solid rgba(255,255,255,0.05); position: relative;
-            display: flex; flex-direction: column;
-        }
-        .card:hover { transform: translateY(-5px); border-color: var(--primary-cyan); }
-        
-        /* 封面图容器 */
-        .card-img-wrapper { position: relative; width: 100%; height: 160px; background: #121522; }
-        .card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        
-        /* ✨ 右上角设备角标样式 ✨ */
-        .device-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: rgba(7, 9, 14, 0.75);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            padding: 3px 6px;
-            font-size: 11px;
+        /* === 1. 顶部 Header === */
+        header {
+            height: 60px;
+            background: #161926;
+            border-bottom: 1px solid #262b3d;
             display: flex;
             align-items: center;
-            gap: 4px;
-            z-index: 2;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            justify-content: space-between;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .card-info { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .card-title { font-size: 14px; font-weight: bold; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-cat { font-size: 11px; color: var(--primary-cyan); text-transform: uppercase; font-weight: 600; }
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: #00f2fe;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .logo:hover {
+            opacity: 0.9;
+        }
+
+        .mode-btn {
+            background: #222738;
+            border: 1px solid #323950;
+            color: #a0aec0;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .mode-btn:hover {
+            color: #fff;
+            border-color: #00f2fe;
+        }
+
+        /* === 2. 多标签吸顶筛选栏 === */
+        .filter-wrapper {
+            position: sticky;
+            top: 60px;
+            z-index: 90;
+            background: rgba(15, 17, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #222738;
+            padding: 12px 24px;
+        }
+
+        .filter-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .tags-scroll-group {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+            padding-bottom: 2px;
+        }
+
+        .tags-scroll-group::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tag-chip {
+            background: #161926;
+            border: 1px solid #262b3d;
+            color: #a0aec0;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .tag-chip:hover {
+            border-color: #00f2fe;
+            color: #fff;
+        }
+
+        /* 多选高亮状态 */
+        .tag-chip.active {
+            background: rgba(0, 242, 254, 0.15);
+            border-color: #00f2fe;
+            color: #00f2fe;
+            font-weight: 600;
+        }
+
+        .tag-chip .close-icon {
+            font-size: 11px;
+            opacity: 0.7;
+        }
+
+        .tag-chip .close-icon:hover {
+            opacity: 1;
+        }
+
+        /* 一键清除全部按钮 */
+        .clear-all-btn {
+            background: #ff4757;
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            display: none;
+            box-shadow: 0 0 10px rgba(255, 71, 87, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .clear-all-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* === 3. Bento 极简网格布局 === */
+        .main-content {
+            max-width: 1500px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 0 24px;
+            flex: 1;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 16px;
+            grid-auto-flow: dense;
+        }
+
+        .game-card {
+            position: relative;
+            background: #161926;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #222738;
+            text-decoration: none;
+            color: #fff;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            border-color: #00f2fe;
+            box-shadow: 0 8px 25px rgba(0, 242, 254, 0.2);
+            z-index: 2;
+        }
+
+        /* Bento 放大卡片（2x2 大卡片 - 主推游戏） */
+        .game-card.featured {
+            grid-column: span 2;
+            grid-row: span 2;
+            aspect-ratio: 1 / 1;
+        }
+
+        .card-cover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.3s;
+        }
+
+        .game-card:hover .card-cover {
+            transform: scale(1.05);
+        }
+
+        .card-overlay {
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(0deg, rgba(15,17,26,0.95) 0%, rgba(15,17,26,0.4) 70%, rgba(15,17,26,0) 100%);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .featured .card-title {
+            font-size: 18px;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #a0aec0;
+        }
+
+        .card-tag {
+            background: rgba(0, 242, 254, 0.15);
+            color: #00f2fe;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+
+        .card-likes {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            color: #ff4757;
+            font-weight: bold;
+        }
+
+        .load-more-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .load-more-btn {
+            background: #222738;
+            border: 1px solid #323950;
+            color: #00f2fe;
+            padding: 10px 28px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .load-more-btn:hover {
+            background: #00f2fe;
+            color: #000;
+        }
+
+        /* === 4. 响应式移动端适配 === */
+        @media (max-width: 1024px) {
+            .bento-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .game-card.featured {
+                grid-column: span 2;
+                grid-row: span 1;
+                aspect-ratio: 16 / 9;
+            }
+
+            .filter-wrapper {
+                padding: 10px 12px;
+            }
+
+            .main-content {
+                padding: 0 12px;
+            }
+        }
     </style>
 </head>
 <body>
 
+    <!-- 1. 顶部 Header -->
     <header>
-        <h1 class="logo">👆 LuluTap</h1>
-        <p style="color:var(--text-muted); margin-top:5px;">Instant Free HTML5 Games for PC & Mobile 🚀</p>
+        <a href="index.html" class="logo">🕹️ LuluTap</a>
+        <button class="mode-btn" id="mode-btn">💻 PC Mode</button>
     </header>
 
-    <!-- 标签选择栏 -->
-    <div class="category-bar">
-        <button class="btn-reset" onclick="resetFilters()">🔥 Reset All</button>
-        <button class="btn-tag" data-tag="Action" onclick="toggleTag('Action', this)">Action</button>
-        <button class="btn-tag" data-tag="Racing" onclick="toggleTag('Racing', this)">Racing</button>
-        <button class="btn-tag" data-tag="Shooting" onclick="toggleTag('Shooting', this)">Shooting</button>
-        <button class="btn-tag" data-tag="Puzzle" onclick="toggleTag('Puzzle', this)">Puzzle</button>
-        <button class="btn-tag" data-tag="Arcade" onclick="toggleTag('Arcade', this)">Arcade</button>
-        <button class="btn-tag" data-tag="Casual" onclick="toggleTag('Casual', this)">Casual</button>
-        <button class="btn-tag" data-tag="3D" onclick="toggleTag('3D', this)">3D</button>
-        <button class="btn-tag" data-tag="Girls" onclick="toggleTag('Girls', this)">Girls</button>
-        <button class="btn-tag" data-tag="Boys" onclick="toggleTag('Boys', this)">Boys</button>
+    <!-- 2. 多标签吸顶筛选栏 -->
+    <div class="filter-wrapper">
+        <div class="filter-container">
+            <div class="tags-scroll-group" id="tags-group"></div>
+            <button class="clear-all-btn" id="clear-all-btn" onclick="clearAllFilters()">✕ 清除全部</button>
+        </div>
     </div>
 
-    <!-- 已选标签区 -->
-    <div class="selected-bar" id="selected-bar" style="display: none;">
-        Active Filters: <span id="chip-container"></span>
-    </div>
+    <!-- 3. Bento 主页游戏网格 -->
+    <main class="main-content">
+        <div class="bento-grid" id="game-grid"></div>
 
-    <div class="grid" id="game-grid">
-        <p style="text-align:center; grid-column:1/-1; color:var(--primary-cyan);">Loading games...</p>
-    </div>
+        <div class="load-more-container">
+            <button class="load-more-btn" onclick="loadMoreGames()">🔄 触底加载更多游戏</button>
+        </div>
+    </main>
 
     <script>
-        let allGames = [];
-        let activeTags = new Set();
+        const allCategories = ["🔥 全部", "🏎️ 赛车", "🎯 动作", "🧩 益智", "3D", "⚡ 射击", "👭 双人", "💄 换装", "⚽ 体育"];
+        let selectedTags = [];
 
-        const feedUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://gamemonetize.com/feed.php?format=0&page=1');
+        // 模拟游戏数据（可替换为读取 static/games.json）
+        const mockGames = [
+            { id: 101, title: "Extreme Racing 3D", category: "🏎️ 赛车", tags: ["🏎️ 赛车", "3D"], likes: "1.2k", img: "https://picsum.photos/400/400?random=1", featured: true },
+            { id: 102, title: "Cyber Strike", category: "🎯 动作", tags: ["🎯 动作", "⚡ 射击"], likes: "2.8k", img: "https://picsum.photos/300/300?random=2", featured: false },
+            { id: 103, title: "Puzzle Master 3D", category: "🧩 益智", tags: ["🧩 益智", "3D"], likes: "950", img: "https://picsum.photos/300/300?random=3", featured: false },
+            { id: 104, title: "Drift King", category: "🏎️ 赛车", tags: ["🏎️ 赛车"], likes: "3.1k", img: "https://picsum.photos/300/300?random=4", featured: false },
+            { id: 105, title: "Fashion Queen", category: "💄 换装", tags: ["💄 换装", "👭 双人"], likes: "1.8k", img: "https://picsum.photos/300/300?random=5", featured: false },
+            { id: 106, title: "Football Star", category: "⚽ 体育", tags: ["⚽ 体育", "3D"], likes: "890", img: "https://picsum.photos/300/300?random=6", featured: false },
+            { id: 107, title: "Space Shooter", category: "⚡ 射击", tags: ["⚡ 射击", "🎯 动作"], likes: "1.5k", img: "https://picsum.photos/300/300?random=7", featured: false },
+            { id: 108, title: "Dual Tanks", category: "👭 双人", tags: ["👭 双人", "🎯 动作"], likes: "2.2k", img: "https://picsum.photos/300/300?random=8", featured: false },
+            { id: 109, title: "Highway Moto 3D", category: "🏎️ 赛车", tags: ["🏎️ 赛车", "3D"], likes: "1.7k", img: "https://picsum.photos/300/300?random=9", featured: false },
+            { id: 110, title: "Brain Out 3D", category: "🧩 益智", tags: ["🧩 益智", "3D"], likes: "670", img: "https://picsum.photos/300/300?random=10", featured: false }
+        ];
 
-        fetch(feedUrl)
-            .then(res => res.json())
-            .then(data => {
-                allGames = data.map(item => ({
-                    id: item.id,
-                    title: item.title,
-                    categories: item.category ? item.category.toLowerCase().split(/[\s,/]+/) : [],
-                    rawCategory: item.category,
-                    cover: 'https://images.weserv.nl/?url=' + encodeURIComponent(item.thumb),
-                    url: item.url,
-                    // HTML5 游戏基本都兼顾 PC 和 Mobile，这里可以统一标注，或者根据规则自定义
-                    isMobile: true,
-                    isPC: true
-                }));
-                renderGames(allGames);
-            });
+        // 渲染标签栏
+        function renderTags() {
+            const container = document.getElementById('tags-group');
+            const clearBtn = document.getElementById('clear-all-btn');
 
-        function toggleTag(tag, btn) {
-            const tagLower = tag.toLowerCase();
-            if (activeTags.has(tagLower)) {
-                activeTags.delete(tagLower);
-                btn.classList.remove('active');
-            } else {
-                activeTags.add(tagLower);
-                btn.classList.add('active');
-            }
-            applyFilters();
-        }
-
-        function removeSingleTag(tagLower) {
-            activeTags.delete(tagLower);
-            const btn = Array.from(document.querySelectorAll('.btn-tag')).find(b => b.dataset.tag.toLowerCase() === tagLower);
-            if(btn) btn.classList.remove('active');
-            applyFilters();
-        }
-
-        function resetFilters() {
-            activeTags.clear();
-            document.querySelectorAll('.btn-tag').forEach(b => b.classList.remove('active'));
-            applyFilters();
-        }
-
-        function applyFilters() {
-            const bar = document.getElementById('selected-bar');
-            const container = document.getElementById('chip-container');
-            
-            if (activeTags.size === 0) {
-                bar.style.display = 'none';
-                renderGames(allGames);
-                return;
-            }
-
-            bar.style.display = 'block';
-            container.innerHTML = Array.from(activeTags).map(t => 
-                `<span class="chip">${t.toUpperCase()} <span onclick="removeSingleTag('${t}')">✕</span></span>`
-            ).join('');
-
-            const filtered = allGames.filter(game => {
-                return Array.from(activeTags).every(tag => game.categories.includes(tag));
-            });
-
-            renderGames(filtered);
-        }
-
-        function renderGames(list) {
-            const grid = document.getElementById('game-grid');
-            grid.innerHTML = '';
-
-            if (list.length === 0) {
-                grid.innerHTML = '<p style="text-align:center; grid-column:1/-1; color:var(--text-muted); padding:40px 0;">No games found.</p>';
-                return;
-            }
-
-            list.forEach(game => {
-                const a = document.createElement('a');
-                a.className = 'card';
-                a.href = game.url;
-                a.target = '_blank';
+            container.innerHTML = allCategories.map(cat => {
+                const isAll = cat === "🔥 全部";
+                const isSelected = isAll ? selectedTags.length === 0 : selectedTags.includes(cat);
                 
-                // 根据游戏属性决定是否渲染 PC/Mobile 标记（默认二者皆支持）
-                const deviceBadges = `
-                    <div class="device-badge" title="Supported Devices">
-                        ${game.isPC ? '💻' : ''} ${game.isMobile ? '📱' : ''}
+                return `
+                    <div class="tag-chip ${isSelected ? 'active' : ''}" onclick="toggleTag('${cat}')">
+                        <span>${cat}</span>
+                        ${!isAll && isSelected ? '<span class="close-icon">✕</span>' : ''}
                     </div>
                 `;
+            }).join('');
 
-                a.innerHTML = `
-                    <div class="card-img-wrapper">
-                        ${deviceBadges}
-                        <img src="${game.cover}" alt="${game.title}" loading="lazy">
-                    </div>
-                    <div class="card-info">
-                        <div class="card-title">${game.title}</div>
-                        <div class="card-cat">${game.rawCategory || 'Game'}</div>
-                    </div>
-                `;
-                grid.appendChild(a);
-            });
+            clearBtn.style.display = selectedTags.length >= 2 ? 'block' : 'none';
         }
+
+        // 多选逻辑
+        function toggleTag(cat) {
+            if (cat === "🔥 全部") {
+                selectedTags = [];
+            } else {
+                if (selectedTags.includes(cat)) {
+                    selectedTags = selectedTags.filter(t => t !== cat);
+                } else {
+                    selectedTags.push(cat);
+                }
+            }
+            renderTags();
+            renderGames();
+        }
+
+        // 重置多选
+        function clearAllFilters() {
+            selectedTags = [];
+            renderTags();
+            renderGames();
+        }
+
+        // 渲染游戏网格（链接指向你的 game.html）
+        function renderGames() {
+            const grid = document.getElementById('game-grid');
+            
+            const filtered = mockGames.filter(game => {
+                if (selectedTags.length === 0) return true;
+                return selectedTags.every(tag => game.tags.includes(tag));
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #a0aec0;">未找到匹配的游戏，试试重置筛选条件吧~</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(game => `
+                <a href="game.html?id=${game.id}" class="game-card ${game.featured ? 'featured' : ''}">
+                    <div class="card-cover" style="background-image: url('${game.img}');"></div>
+                    <div class="card-overlay">
+                        <div class="card-title">${game.title}</div>
+                        <div class="card-meta">
+                            <span class="card-tag">${game.category}</span>
+                            <span class="card-likes">👍 ${game.likes}</span>
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        function loadMoreGames() {
+            alert("正在加载更多游戏...");
+        }
+
+        renderTags();
+        renderGames();
     </script>
 </body>
 </html>
