@@ -399,7 +399,6 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* 响应式适配微调 */
         @media (max-width: 1024px) {
             .play-container {
                 grid-template-columns: 1fr;
@@ -534,7 +533,8 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const gameUrl = urlParams.get('url') || 'https://html5.gamedistribution.com/rvvASAhfx001/';
-        const gameTitle = urlParams.get('title') || 'Real Car Parking Game';
+        // 确保解码，去除URL中的转义符与空格差异
+        const gameTitle = decodeURIComponent(urlParams.get('title') || 'Real Car Parking Game').trim();
         const tagsParam = urlParams.get('cat') || urlParams.get('tags') || 'Puzzle,Casual,Find Object';
         const descParam = urlParams.get('desc');
         const imgParam = urlParams.get('img') || '';
@@ -555,29 +555,33 @@
         let currentTags = tagsParam.split(',').map(t => t.trim()).filter(Boolean);
         tagsContainer.innerHTML = currentTags.map(tag => `<span class="meta-tag">${tag}</span>`).join('');
 
-        // 点赞逻辑与 Storage 写入
+        // 点赞逻辑
         const likeBtn = document.getElementById('like-btn');
         const likeIconEl = document.getElementById('like-icon');
         const likeCountEl = document.getElementById('like-count');
 
-        // 统一获取点赞数据的函数：若不存在则创建并即时保存
+        // 哈希种子算法：针对同一个游戏标题永远生成相同的初始随机数
+        function getSeedCount(title) {
+            let hash = 0;
+            for (let i = 0; i < title.length; i++) {
+                hash = title.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return (Math.abs(hash) % 380) + 120;
+        }
+
         function getGameLikesRecord(title) {
             const likesStore = JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
-            
-            // 如果本地没有记录，初始化一个固定的随机数并【立刻存入 localStorage】
             if (!likesStore[title]) {
                 likesStore[title] = {
-                    count: Math.floor(Math.random() * 500) + 120,
+                    count: getSeedCount(title),
                     userLiked: false
                 };
                 localStorage.setItem('lulutap_likes', JSON.stringify(likesStore));
             }
-            
             return likesStore[title];
         }
 
         function updateLikeUI() {
-            // 使用统一的数据读取函数
             const record = getGameLikesRecord(gameTitle);
 
             likeCountEl.textContent = record.count;
@@ -592,7 +596,6 @@
 
         function toggleLike() {
             const likesStore = JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
-            // 确保拿到真实记录
             let record = likesStore[gameTitle] || getGameLikesRecord(gameTitle);
 
             if (record.userLiked) {
@@ -657,7 +660,6 @@
             }
         }
 
-        // 监听全屏状态变化，自动转换按钮提示语
         document.addEventListener('fullscreenchange', handleFullscreenChange);
         document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 
@@ -670,7 +672,6 @@
             }
         }
 
-        // 写入浏览历史闭环逻辑
         function navigateToGame(game) {
             let history = JSON.parse(localStorage.getItem('lulutap_recent') || '[]');
             history = history.filter(item => item.title !== game.title);
