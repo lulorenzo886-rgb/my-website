@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuluTap - 游戏中...</title>
+    <title>LuluTap - Playing Game...</title>
     <style>
         * {
             box-sizing: border-box;
@@ -20,7 +20,7 @@
             flex-direction: column;
         }
 
-        /* 顶部 Header */
+        /* Top Header */
         header {
             height: 60px;
             background: #161926;
@@ -57,7 +57,7 @@
             border-color: #00f2fe;
         }
 
-        /* 页面主要区域（左右两栏） */
+        /* Main Section (2-Column Layout) */
         .play-container {
             max-width: 1500px;
             width: 100%;
@@ -69,7 +69,7 @@
             flex: 1;
         }
 
-        /* 左侧：游戏主画面及信息 */
+        /* Left Column: Game Viewport & Metadata */
         .left-panel {
             display: flex;
             flex-direction: column;
@@ -93,7 +93,7 @@
             border: none;
         }
 
-        /* 屏幕下方控制按键 */
+        /* Bottom Controls Bar inside Game Viewport */
         .controls-bar {
             position: absolute;
             bottom: 12px;
@@ -124,7 +124,7 @@
             font-weight: bold;
         }
 
-        /* 游戏信息栏 */
+        /* Game Metadata Box */
         .game-meta-box {
             background: #161926;
             border: 1px solid #262b3d;
@@ -172,7 +172,7 @@
             font-size: 12px;
         }
 
-        /* 右侧：操作指南与信息面板 */
+        /* Right Column: Controls & Info Sidebar */
         .right-panel {
             display: flex;
             flex-direction: column;
@@ -196,7 +196,7 @@
             gap: 6px;
         }
 
-        /* WASD 按键提示示意 */
+        /* WASD Layout Preview */
         .keys-layout {
             display: flex;
             flex-direction: column;
@@ -231,7 +231,7 @@
             line-height: 1.6;
         }
 
-        /* 底部：横向无缝推荐跑马灯 (方案A) */
+        /* Bottom Section: Seamless Horizontal Marquee */
         .recommend-section {
             max-width: 1500px;
             width: 100%;
@@ -264,7 +264,7 @@
         }
 
         .marquee-track:hover {
-            animation-play-state: paused; /* 鼠标悬停停止滚动 */
+            animation-play-state: paused;
         }
 
         .rec-card {
@@ -305,7 +305,7 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* 响应式调整 */
+        /* Responsive Design */
         @media (max-width: 1024px) {
             .play-container {
                 grid-template-columns: 1fr;
@@ -318,33 +318,33 @@
     <!-- Header -->
     <header>
         <a href="index.html" class="logo">🕹️ LuluTap</a>
-        <a href="index.html" class="back-btn">🏠 返回首页</a>
+        <a href="index.html" class="back-btn">🏠 Home</a>
     </header>
 
-    <!-- 游戏主容器 -->
+    <!-- Main Game Container -->
     <div class="play-container">
         
-        <!-- 左侧：游戏窗口与元信息 -->
+        <!-- Left Panel: Game Screen and Metadata -->
         <div class="left-panel">
             <div class="screen-box" id="screen-box">
-                <!-- 真实游戏窗口 -->
+                <!-- Game Frame -->
                 <iframe class="game-iframe" id="game-frame" allowfullscreen src="about:blank"></iframe>
                 
-                <!-- 控制功能按钮 -->
+                <!-- Screen Controls -->
                 <div class="controls-bar">
-                    <button class="action-btn" onclick="reloadGame()">🔄 重载</button>
-                    <button class="action-btn" onclick="toggleFullscreen()">⛶ 全屏</button>
+                    <button class="action-btn" onclick="reloadGame()">🔄 Reload</button>
+                    <button class="action-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
                 </div>
             </div>
 
-            <!-- 标题和标签 -->
+            <!-- Title & Tags -->
             <div class="game-meta-box">
                 <div class="meta-header">
-                    <h1 class="game-title" id="game-title">加载中...</h1>
+                    <h1 class="game-title" id="game-title">Loading...</h1>
                     <span class="like-badge" id="game-likes">👍 2.8k</span>
                 </div>
                 <div class="tags-row">
-                    <span>🏷️ 分类与标签：</span>
+                    <span>🏷️ Categories & Tags:</span>
                     <span id="game-tags">
                         <span class="meta-tag">HTML5</span>
                     </span>
@@ -352,7 +352,7 @@
             </div>
         </div>
 
-        <!-- 右侧：按键与说明 -->
+        <!-- Right Panel: Controls & Description -->
         <div class="right-panel">
             <div class="side-card">
                 <div class="card-h3">🎮 CONTROLS</div>
@@ -369,27 +369,27 @@
             <div class="side-card">
                 <div class="card-h3">📖 GAME INFO</div>
                 <p class="info-desc" id="game-desc">
-                    使用键盘方向键或 WASD 进行移动操作，按下全屏按钮可以获得极佳的沉浸式游戏体验。
+                    Use Arrow keys or WASD to control movement. Click the fullscreen button for an immersive gaming experience.
                 </p>
             </div>
         </div>
     </div>
 
-    <!-- 底部：10个同类推荐跑马灯 (方案A) -->
+    <!-- Bottom Section: Recommended Games Marquee -->
     <section class="recommend-section">
-        <div class="rec-header">🔥 SIMILAR GAMES (热门推荐)</div>
+        <div class="rec-header">🔥 SIMILAR GAMES</div>
         <div class="marquee-wrapper">
             <div class="marquee-track" id="marquee-track">
-                <!-- 跑马灯卡片将由 JS 自动渲染和复制 -->
+                <!-- Marquee cards rendered dynamically via JS -->
             </div>
         </div>
     </section>
 
     <script>
-        // 1. 获取 URL 里的游戏参数 (兼容直接传入 url 或 id)
+        // 1. Get URL parameters (Supports directly passed URL or Title)
         const urlParams = new URLSearchParams(window.location.search);
         const gameUrl = urlParams.get('url');
-        const gameTitle = urlParams.get('title') || '精彩 HTML5 游戏';
+        const gameTitle = urlParams.get('title') || 'Awesome HTML5 Game';
 
         const frame = document.getElementById('game-frame');
         const titleEl = document.getElementById('game-title');
@@ -398,17 +398,17 @@
             frame.src = decodeURIComponent(gameUrl);
             titleEl.textContent = decodeURIComponent(gameTitle);
         } else {
-            // 如果是没有传入 url 的测试防错
-            titleEl.textContent = "示例游戏 (未检测到链接)";
+            // Fallback for testing without URL parameters
+            titleEl.textContent = "Demo Game (No link detected)";
             frame.src = "https://gamemonetize.com/feed.php"; 
         }
 
-        // 2. 重新加载游戏
+        // 2. Reload Game
         function reloadGame() {
             frame.src = frame.src;
         }
 
-        // 3. 全屏播放
+        // 3. Fullscreen Toggle
         function toggleFullscreen() {
             const screenBox = document.getElementById('screen-box');
             if (!document.fullscreenElement) {
@@ -424,12 +424,12 @@
             }
         }
 
-        // 4. 渲染方案 A 横向无缝流动跑马灯卡片
+        // 4. Render Endless Marquee Cards
         async function loadRecommendations() {
             const track = document.getElementById('marquee-track');
             
             try {
-                // 实时拉取 10 个 API 游戏做推荐
+                // Fetch recommended games from API
                 const res = await fetch('https://gamemonetize.com/feed.php?format=0&page=1');
                 const data = await res.json();
                 const list = data.slice(0, 10);
@@ -441,16 +441,16 @@
                     </a>
                 `).join('');
 
-                // 复制一份实现无缝首尾相连循环
+                // Duplicate cards array to achieve seamless infinite loop
                 track.innerHTML = cardsHTML + cardsHTML;
             } catch(e) {
-                // 网络失败时的兜底静态推荐卡片
+                // Fallback static cards when network fails
                 let fallback = '';
                 for(let i=1; i<=10; i++) {
                     fallback += `
                         <div class="rec-card">
                             <img src="https://picsum.photos/200/200?random=${i}">
-                            <div class="rec-card-title">推荐游戏 ${i}</div>
+                            <div class="rec-card-title">Recommended ${i}</div>
                         </div>
                     `;
                 }
@@ -458,7 +458,8 @@
             }
         }
 
-        loadRecommendations();
+        // Initialize recommendations on window load
+        window.addEventListener('DOMContentLoaded', loadRecommendations);
     </script>
 </body>
 </html>
