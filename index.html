@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <title>LuluTap - Play Game</title>
+    <title>LuluTap - Play Game</title>
     <!-- 标签页 Favicon 图标（与首页 LOGO 保持一致） -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cdefs%3E%3ClinearGradient id='lulutap-main' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300F2FE'/%3E%3Cstop offset='100%25' stop-color='%239B51E0'/%3E%3C/linearGradient%3E%3ClinearGradient id='cat-warm' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23FF9472'/%3E%3Cstop offset='100%25' stop-color='%23F2709C'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg transform='translate(6, 4)'%3E%3Ccircle cx='26' cy='26' r='24' stroke='url(%23lulutap-main)' stroke-width='1.5' stroke-dasharray='6 3' opacity='0.4'/%3E%3Cpath d='M10 38 C10 32, 14 30, 26 30 C38 30, 42 32, 42 38 L44 42 C44 44, 42 45, 40 45 L12 45 C10 45, 8 44, 8 42 Z' fill='%231E2332' stroke='url(%23lulutap-main)' stroke-width='1.5' stroke-linejoin='round'/%3E%3Cpath d='M21 16 C21 12, 31 12, 31 16 C32 19, 31 23, 26 23 C21 23, 20 19, 21 16 Z' fill='%230F111A'/%3E%3Cpath d='M22 13 C23 10, 29 10, 30 13 C31 15, 29 16, 26 16 C23 16, 21 15, 22 13 Z' fill='url(%23lulutap-main)'/%3E%3Cpath d='M19 16 C19 10, 33 10, 33 16' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3Crect x='17' y='15' width='4' height='7' rx='2' fill='url(%23lulutap-main)'/%3E%3Crect x='31' y='15' width='4' height='7' rx='2' fill='url(%23lulutap-main)'/%3E%3Cpath d='M20 24 C23 23, 29 23, 32 24 L34 33 L18 33 Z' fill='%23292D3E'/%3E%3Cg transform='translate(13, 28)'%3E%3Crect x='0' y='2' width='12' height='8' rx='3' fill='url(%23lulutap-main)'/%3E%3Ccircle cx='3' cy='5' r='1' fill='%230F111A'/%3E%3Ccircle cx='9' cy='5' r='1' fill='%23FFFFFF'/%3E%3C/g%3E%3Cg transform='translate(31, 27)'%3E%3Cpath d='M3 7 C3 4, 7 3, 9 5 C11 7, 10 12, 8 13 C6 13, 3 11, 3 7 Z' fill='url(%23cat-warm)'/%3E%3Cpath d='M4 4 L6 1 L7 4 Z' fill='url(%23cat-warm)'/%3E%3Cpath d='M7 4 L9 1 L10 4 Z' fill='url(%23cat-warm)'/%3E%3Cpath d='M9 11 C12 11, 13 8, 12 7' stroke='url(%23cat-warm)' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/g%3E%3Cpath d='M30 27 Q33 26 34 28' stroke='%23FFFFFF' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/g%3E%3C/svg%3E">
     <style>
@@ -430,17 +430,6 @@
             color: #ff4757;
         }
 
-        .loading-status {
-            text-align: center;
-            padding: 30px 0;
-            color: #a0aec0;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
         .spinner {
             width: 16px;
             height: 16px;
@@ -564,13 +553,8 @@
         <div class="bento-grid" id="game-grid" role="region" aria-label="Game Grid">
             <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #a0aec0;">
                 <div class="spinner" style="margin: 0 auto 12px auto; width: 24px; height: 24px;"></div>
-                Loading games list...
+                Loading 100 games...
             </div>
-        </div>
-
-        <div class="loading-status" id="loading-status" style="display: none;">
-            <div class="spinner"></div>
-            <span>Auto-loading more games...</span>
         </div>
     </main>
 
@@ -578,14 +562,12 @@
         let allCategories = ["🔥 All", "Action", "Arcade", "Puzzle", "Racing", "Shooting", "Casual", "Strategy", "Sports"];
         let selectedTags = [];
         let gamesData = []; 
-        let currentPage = 1;
-        let isLoading = false;
-        let hasMoreData = true;
         let isMobileMode = false;
+        const TARGET_GAME_COUNT = 100; // 目标获取 100 款游戏
 
         const extraTagsPool = ["🔥 Hot", "⚡ Fast", "🎮 3D", "🏆 Top", "⭐ Popular", "🕹️ Classic", "🎯 Skill"];
 
-        const mockFallbackGames = Array.from({ length: 18 }).map((_, i) => ({
+        const mockFallbackGames = Array.from({ length: 100 }).map((_, i) => ({
             id: `fallback-${i}`,
             title: `Popular Game ${i + 1}`,
             category: ["Action", "Arcade", "Puzzle", "Racing", "Shooting"][i % 5],
@@ -594,9 +576,7 @@
             description: "An exciting browser action game designed for ultimate fun and challenge."
         }));
 
-        /* ==================== 点赞核心算法与获取（与 game.html 完全一致） ==================== */
-        
-        // 哈希种子算法：针对同一个游戏标题永远生成相同的初始随机数
+        /* ==================== 点赞核心算法与获取 ==================== */
         function getSeedCount(title) {
             let hash = 0;
             for (let i = 0; i < title.length; i++) {
@@ -605,9 +585,7 @@
             return (Math.abs(hash) % 380) + 120;
         }
 
-        // 统一获取某个游戏的点赞信息
         function getGameLikesRecord(title) {
-            // 确保去除前后空格，避免空格导致的 Key 不匹配
             const cleanTitle = (title || '').trim();
             const likesStore = JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
             
@@ -620,8 +598,7 @@
             }
             return likesStore[cleanTitle];
         }
-
-        /* ==================================================================================== */
+        /* ========================================================== */
 
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -697,40 +674,39 @@
             }
         }
 
-        async function initGameData(page = 1) {
-            if (isLoading) return;
-            isLoading = true;
-
-            const grid = document.getElementById('game-grid');
-            const status = document.getElementById('loading-status');
-
-            if (page > 1) {
-                status.style.display = 'flex';
-            }
+        // 一次性抓取/汇总 100 款游戏数据
+        async function fetch100Games() {
+            let fetchedList = [];
+            let page = 1;
 
             try {
-                let rawList = [];
-                try {
+                while (fetchedList.length < TARGET_GAME_COUNT && page <= 5) {
                     const response = await fetch(`https://gamemonetize.com/feed.php?format=0&page=${page}`);
-                    if (!response.ok) throw new Error("HTTP error " + response.status);
+                    if (!response.ok) break;
                     const data = await response.json();
-                    rawList = Array.isArray(data) ? data : [];
-                } catch (e) {
-                    console.warn("API Fetch Failed/CORS limit, fallbacking to simulated mock data.", e);
-                    rawList = mockFallbackGames;
+                    if (!Array.isArray(data) || data.length === 0) break;
+                    
+                    fetchedList = fetchedList.concat(data);
+                    page++;
                 }
-                
-                if (rawList.length === 0) {
-                    hasMoreData = false;
-                    status.style.display = 'flex';
-                    status.innerHTML = "✨ You've reached the end!";
-                    if (observer) observer.disconnect();
-                    return;
-                }
+            } catch (e) {
+                console.warn("API Fetch Failed/CORS limit, fallbacking to simulated mock data.", e);
+            }
 
-                const shuffledList = shuffle([...rawList]);
+            // 如果接口拉取不够 100 款，则补充 mockFallbackGames
+            if (fetchedList.length < TARGET_GAME_COUNT) {
+                fetchedList = fetchedList.concat(mockFallbackGames.slice(0, TARGET_GAME_COUNT - fetchedList.length));
+            }
 
-                const formattedGames = shuffledList.map((item) => {
+            // 精确截取前 100 款
+            return shuffle(fetchedList.slice(0, TARGET_GAME_COUNT));
+        }
+
+        async function initGameData() {
+            try {
+                const rawList = await fetch100Games();
+
+                gamesData = rawList.map((item) => {
                     const catName = item.category || "Other";
                     
                     if (!allCategories.includes(catName)) {
@@ -755,21 +731,14 @@
                     };
                 });
 
-                if (page === 1) {
-                    renderTop10Ticker(formattedGames.slice(0, 10));
-                    gamesData = formattedGames;
-                } else {
-                    gamesData = [...gamesData, ...formattedGames];
-                }
+                // Top 10 区域取前 10 款，不受后续影响
+                renderTop10Ticker(gamesData.slice(0, 10));
 
                 assignFeaturedCards();
                 renderTags();
                 renderGames();
             } catch (err) {
                 console.error("Critical Execution Error:", err);
-            } finally {
-                isLoading = false;
-                status.style.display = 'none';
             }
         }
 
@@ -853,7 +822,6 @@
         function renderGames() {
             const grid = document.getElementById('game-grid');
             
-            // 筛选逻辑 (OR 算法)
             const filtered = gamesData.filter(game => {
                 if (selectedTags.length === 0) return true;
                 return selectedTags.some(tag => game.tags.includes(tag));
@@ -866,8 +834,6 @@
 
             grid.innerHTML = filtered.map((game) => {
                 const realIndex = gamesData.indexOf(game);
-                
-                // 调用统一的 getGameLikesRecord 获取点赞数据
                 const likeRecord = getGameLikesRecord(game.title);
 
                 return `
@@ -902,30 +868,9 @@
             }
         });
 
-        /* === IntersectionObserver 无限加载 === */
-        let observer = null;
-        function setupIntersectionObserver() {
-            const statusTarget = document.getElementById('loading-status');
-            
-            observer = new IntersectionObserver((entries) => {
-                const target = entries[0];
-                if (target.isIntersecting && !isLoading && hasMoreData) {
-                    currentPage++;
-                    initGameData(currentPage);
-                }
-            }, {
-                root: null,
-                rootMargin: '300px',
-                threshold: 0
-            });
-
-            observer.observe(statusTarget);
-        }
-
         // 初始化执行
         renderTags();
         initGameData();
-        setupIntersectionObserver();
     </script>
 </body>
 </html>
