@@ -97,7 +97,7 @@
             border: none;
         }
 
-        /* 🟢 移动到游戏画面右上角 */
+        /* 🟢 控制按钮移至游戏画面右上角 */
         .controls-bar {
             position: absolute;
             top: 12px;
@@ -300,7 +300,7 @@
             transform: rotate(-90deg);
         }
 
-        /* 🔴 推荐区域：改成标签高度相关的静态网格（不再滑动） */
+        /* 🔴 推荐区域：保持无限循环滚动 */
         .recommend-section {
             max-width: 1500px;
             width: 100%;
@@ -315,29 +315,41 @@
             margin-bottom: 12px;
         }
 
-        .similar-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 16px;
+        .marquee-wrapper {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
             background: #161926;
             border-radius: 12px;
             border: 1px solid #262b3d;
-            padding: 16px;
+            padding: 16px 0;
+        }
+
+        .marquee-track {
+            display: flex;
+            gap: 16px;
+            width: max-content;
+            animation: scrollMarquee 25s linear infinite;
+        }
+
+        .marquee-track:hover {
+            animation-play-state: paused;
         }
 
         .rec-card {
-            aspect-ratio: 1;
+            width: 140px;
+            height: 140px;
             background: #222738;
             border-radius: 10px;
             overflow: hidden;
             position: relative;
             text-decoration: none;
+            flex-shrink: 0;
             border: 1px solid #323950;
-            transition: transform 0.2s, border-color 0.2s;
+            transition: border-color 0.2s;
         }
 
         .rec-card:hover {
-            transform: translateY(-4px);
             border-color: #00f2fe;
         }
 
@@ -362,6 +374,11 @@
             text-overflow: ellipsis;
         }
 
+        @keyframes scrollMarquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
         @media (max-width: 1024px) {
             .play-container {
                 grid-template-columns: 1fr;
@@ -384,7 +401,7 @@
         <div class="left-panel">
             <div class="screen-box" id="screen-box">
                 <iframe class="game-iframe" id="game-frame" allowfullscreen src="about:blank"></iframe>
-                <!-- 🟢 绿色圈：已移至右上角 -->
+                <!-- 🟢 按钮维持在右上角 -->
                 <div class="controls-bar">
                     <button class="action-btn" onclick="reloadGame()">🔄 Reload</button>
                     <button class="action-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
@@ -463,10 +480,12 @@
         </div>
     </div>
 
-    <!-- 🔴 红色圈：10款高相关度相似游戏（不滚动） -->
+    <!-- 🔴 保持无限循环滚动，同时加载最匹配标签的 10 款游戏 -->
     <section class="recommend-section">
-        <div class="rec-header">🎯 MOST SIMILAR GAMES</div>
-        <div class="similar-grid" id="similar-grid"></div>
+        <div class="rec-header">🎯 SIMILAR GAMES</div>
+        <div class="marquee-wrapper">
+            <div class="marquee-track" id="marquee-track"></div>
+        </div>
     </section>
 
     <script>
@@ -523,9 +542,9 @@
             }
         }
 
-        // 🔴 算标签相似度并取出最匹配的 10 款游戏
-        async function loadSimilarGames() {
-            const grid = document.getElementById('similar-grid');
+        // 🔴 算标签相似度，筛选出最匹配的10款进行无缝无缝无限循环滚动
+        async function loadSimilarGamesMarquee() {
+            const track = document.getElementById('marquee-track');
             try {
                 const res = await fetch('https://gamemonetize.com/feed.php?format=0&page=1');
                 const games = await res.json();
@@ -542,16 +561,19 @@
                     return { ...item, score };
                 });
 
-                // 优先按标签相关度降序排序，取前 10 款
+                // 按标签相关度降序排序，选出前 10 款最相似的游戏
                 rankedGames.sort((a, b) => b.score - a.score);
                 const top10 = rankedGames.slice(0, 10);
 
-                grid.innerHTML = top10.map(item => `
+                const cardsHTML = top10.map(item => `
                     <a href="game.html?url=${encodeURIComponent(item.url)}&title=${encodeURIComponent(item.title)}&tags=${encodeURIComponent(item.tags || item.category || '')}" class="rec-card">
                         <img src="${item.thumb}" alt="${item.title}">
                         <div class="rec-card-title">${item.title}</div>
                     </a>
                 `).join('');
+
+                // 复制一份节点（cardsHTML + cardsHTML）实现 CSS 无缝死循环无缝无缝无缝滚动
+                track.innerHTML = cardsHTML + cardsHTML;
             } catch(e) {
                 let fallback = '';
                 for(let i = 1; i <= 10; i++) {
@@ -562,11 +584,11 @@
                         </div>
                     `;
                 }
-                grid.innerHTML = fallback;
+                track.innerHTML = fallback + fallback;
             }
         }
 
-        window.addEventListener('DOMContentLoaded', loadSimilarGames);
+        window.addEventListener('DOMContentLoaded', loadSimilarGamesMarquee);
     </script>
 </body>
 </html>
