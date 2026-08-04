@@ -485,9 +485,18 @@
                 title: item.title || item.name || "Untitled Game",
                 category: item.category || "Casual",
                 img: item.thumb || 'https://via.placeholder.com/300',
+                thumb: item.thumb || 'https://via.placeholder.com/300',
                 gameUrl: item.url || '#',
+                url: item.url || '#',
                 description: item.description || ''
             }));
+
+            // 💾 注入离线本地存储，确保 game.html 无缝读取全量推荐数据
+            try {
+                localStorage.setItem('lulutap_all_games', JSON.stringify(allGamesData));
+            } catch (e) {
+                console.warn("LocalStorage quota limited:", e);
+            }
 
             renderCategoryBar();
             renderPokiHome();
