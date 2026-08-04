@@ -91,7 +91,6 @@
             position: relative;
         }
 
-        /* Dropdown Trigger Button */
         .tags-dropdown-btn {
             background: #161926;
             border: 1px solid #262b3d;
@@ -112,7 +111,6 @@
             box-shadow: 0 0 12px rgba(0, 242, 254, 0.25);
         }
 
-        /* Collapsible Tags Panel */
         .tags-dropdown-panel {
             position: absolute;
             top: 48px;
@@ -253,6 +251,7 @@
             flex-direction: column;
             justify-content: flex-end;
             transition: transform 0.2s, border-color 0.2s;
+            cursor: pointer;
         }
 
         .ticker-card:hover {
@@ -326,6 +325,7 @@
             flex-direction: column;
             justify-content: flex-end;
             transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+            cursor: pointer;
         }
 
         .game-card:hover {
@@ -514,7 +514,8 @@
             title: `Popular Game ${i + 1}`,
             category: ["Action", "Arcade", "Puzzle", "Racing", "Shooting"][i % 5],
             thumb: `https://picsum.photos/seed/${i + 100}/400/400`,
-            url: "#"
+            url: "https://html5.gamedistribution.com/rvvAS30838184/",
+            description: "An exciting browser action game designed for ultimate fun and challenge."
         }));
 
         function shuffle(array) {
@@ -561,6 +562,25 @@
             }
         });
 
+        // 统一控制跳转并同步 LocalStorage 最近游玩
+        function goToGame(game) {
+            let history = JSON.parse(localStorage.getItem('lulutap_recent') || '[]');
+            history = history.filter(item => item.title !== game.title);
+            history.unshift(game);
+            if (history.length > 20) history.pop();
+            localStorage.setItem('lulutap_recent', JSON.stringify(history));
+
+            const query = new URLSearchParams({
+                url: game.gameUrl,
+                title: game.title,
+                img: game.img || '',
+                cat: game.category || 'Arcade',
+                desc: game.description || 'Enjoy playing ' + game.title + ' on LuluTap!'
+            }).toString();
+
+            window.location.href = `game.html?${query}`;
+        }
+
         async function initGameData(page = 1) {
             if (isLoading) return;
             isLoading = true;
@@ -590,10 +610,6 @@
                     return;
                 }
 
-                if (page === 1) {
-                    renderTop10Ticker(rawList.slice(0, 10));
-                }
-
                 const shuffledList = shuffle([...rawList]);
 
                 const formattedGames = shuffledList.map((item) => {
@@ -611,16 +627,18 @@
                     }
 
                     return {
-                        id: item.id,
+                        id: item.id || `game-${Math.random()}`,
                         title: item.title || item.name || "Untitled Game",
                         category: catName,
                         tags: gameTags,
-                        img: item.thumb,
-                        gameUrl: item.url || '#'
+                        img: item.thumb || 'https://via.placeholder.com/300',
+                        gameUrl: item.url || '#',
+                        description: item.description || ''
                     };
                 });
 
                 if (page === 1) {
+                    renderTop10Ticker(formattedGames.slice(0, 10));
                     gamesData = formattedGames;
                 } else {
                     gamesData = [...gamesData, ...formattedGames];
@@ -654,21 +672,15 @@
             const track = document.getElementById('ticker-track');
             if (!top10List || top10List.length === 0) return;
 
-            const formattedTop10 = top10List.map(item => ({
-                title: item.title || item.name || "Untitled Game",
-                img: item.thumb,
-                gameUrl: item.url || '#'
-            }));
+            const listToRender = [...top10List, ...top10List];
 
-            const listToRender = [...formattedTop10, ...formattedTop10];
-
-            track.innerHTML = listToRender.map(game => `
-                <a href="game.html?url=${encodeURIComponent(game.gameUrl)}&title=${encodeURIComponent(game.title)}" class="ticker-card">
+            track.innerHTML = listToRender.map((game, index) => `
+                <div class="ticker-card" onclick="goToGame(gamesData[${index % top10List.length}])">
                     <div class="ticker-card-cover" style="background-image: url('${game.img}');"></div>
                     <div class="ticker-card-overlay">
                         <div class="ticker-card-title">${game.title}</div>
                     </div>
-                </a>
+                </div>
             `).join('');
         }
 
@@ -731,8 +743,8 @@
                 return;
             }
 
-            grid.innerHTML = filtered.map(game => `
-                <a href="game.html?url=${encodeURIComponent(game.gameUrl)}&title=${encodeURIComponent(game.title)}" class="game-card ${game.featured ? 'featured' : ''}">
+            grid.innerHTML = filtered.map((game, idx) => `
+                <div onclick="goToGame(gamesData[${gamesData.indexOf(game)}])" class="game-card ${game.featured ? 'featured' : ''}">
                     <div class="card-cover" style="background-image: url('${game.img}');"></div>
                     <div class="card-overlay">
                         <div class="card-title">${game.title}</div>
@@ -742,7 +754,7 @@
                             </div>
                         </div>
                     </div>
-                </a>
+                </div>
             `).join('');
         }
 
