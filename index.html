@@ -23,31 +23,33 @@
 
         /* === 1. Top Header === */
         header {
-            height: 60px;
+            height: 64px;
             background: #161926;
             border-bottom: 1px solid #262b3d;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 24px;
+            padding: 0 20px;
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
         .logo {
-            font-size: 22px;
-            font-weight: 800;
-            color: #00f2fe;
-            text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 8px;
-            letter-spacing: 0.5px;
+            text-decoration: none;
+            transition: opacity 0.2s ease;
         }
 
         .logo:hover {
             opacity: 0.9;
+        }
+
+        .logo svg {
+            display: block;
+            max-height: 48px;
+            width: auto;
         }
 
         .mode-btn {
@@ -74,7 +76,7 @@
         /* === 2. Sticky Multi-Tag Dropdown Bar === */
         .filter-wrapper {
             position: sticky;
-            top: 60px;
+            top: 64px;
             z-index: 90;
             background: rgba(15, 17, 26, 0.95);
             backdrop-filter: blur(10px);
@@ -155,9 +157,10 @@
             transition: all 0.2s;
         }
 
-        .tag-chip:hover {
+        .tag-chip:hover, .tag-chip:focus {
             border-color: #00f2fe;
             color: #fff;
+            outline: none;
         }
 
         .tag-chip.active {
@@ -228,7 +231,8 @@
             animation: marqueeScroll 25s linear infinite;
         }
 
-        .ticker-container:hover .ticker-track {
+        .ticker-container:hover .ticker-track,
+        .ticker-container:focus-within .ticker-track {
             animation-play-state: paused;
         }
 
@@ -254,10 +258,11 @@
             cursor: pointer;
         }
 
-        .ticker-card:hover {
+        .ticker-card:hover, .ticker-card:focus {
             transform: scale(1.03);
             border-color: #00f2fe;
             z-index: 2;
+            outline: none;
         }
 
         .ticker-card-cover {
@@ -328,11 +333,12 @@
             cursor: pointer;
         }
 
-        .game-card:hover {
+        .game-card:hover, .game-card:focus {
             transform: translateY(-5px);
             border-color: #00f2fe;
             box-shadow: 0 8px 25px rgba(0, 242, 254, 0.25);
             z-index: 2;
+            outline: none;
         }
 
         .game-card.featured {
@@ -360,7 +366,8 @@
             transition: transform 0.3s;
         }
 
-        .game-card:hover .card-cover {
+        .game-card:hover .card-cover,
+        .game-card:focus .card-cover {
             transform: scale(1.05);
         }
 
@@ -467,18 +474,67 @@
             .filter-wrapper, .ticker-section, .main-content {
                 padding: 0 12px;
             }
+
+            .logo svg {
+                max-height: 40px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- 1. Header (加入了优化四：无障碍 aria-label) -->
+    <!-- 1. Top Header with SVG Logo -->
     <header>
-        <a href="index.html" class="logo" aria-label="LuluTap Home Page">🕹️ LuluTap</a>
+        <a href="index.html" class="logo" aria-label="LuluTap Homepage">
+            <svg width="220" height="60" viewBox="0 0 220 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="lulutap-main" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#00F2FE" />
+                        <stop offset="100%" stop-color="#9B51E0" />
+                    </linearGradient>
+                    <linearGradient id="cat-warm" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#FF9472" />
+                        <stop offset="100%" stop-color="#F2709C" />
+                    </linearGradient>
+                    <filter id="glow-effect" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="2.5" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                </defs>
+                <g transform="translate(6, 4)">
+                    <circle cx="26" cy="26" r="24" stroke="url(#lulutap-main)" stroke-width="1.5" stroke-dasharray="6 3" opacity="0.4" />
+                    <path d="M10 38 C10 32, 14 30, 26 30 C38 30, 42 32, 42 38 L44 42 C44 44, 42 45, 40 45 L12 45 C10 45, 8 44, 8 42 Z" fill="#1E2332" stroke="url(#lulutap-main)" stroke-width="1.5" stroke-linejoin="round"/>
+                    <path d="M21 16 C21 12, 31 12, 31 16 C32 19, 31 23, 26 23 C21 23, 20 19, 21 16 Z" fill="#0F111A"/>
+                    <path d="M22 13 C23 10, 29 10, 30 13 C31 15, 29 16, 26 16 C23 16, 21 15, 22 13 Z" fill="url(#lulutap-main)"/>
+                    <path d="M19 16 C19 10, 33 10, 33 16" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" fill="none"/>
+                    <rect x="17" y="15" width="4" height="7" rx="2" fill="url(#lulutap-main)" filter="url(#glow-effect)"/>
+                    <rect x="31" y="15" width="4" height="7" rx="2" fill="url(#lulutap-main)" filter="url(#glow-effect)"/>
+                    <path d="M20 24 C23 23, 29 23, 32 24 L34 33 L18 33 Z" fill="#292D3E"/>
+                    <g transform="translate(13, 28)">
+                        <rect x="0" y="2" width="12" height="8" rx="3" fill="url(#lulutap-main)"/>
+                        <circle cx="3" cy="5" r="1" fill="#0F111A"/>
+                        <circle cx="9" cy="5" r="1" fill="#FFFFFF"/>
+                    </g>
+                    <g transform="translate(31, 27)">
+                        <path d="M3 7 C3 4, 7 3, 9 5 C11 7, 10 12, 8 13 C6 13, 3 11, 3 7 Z" fill="url(#cat-warm)"/>
+                        <path d="M4 4 L6 1 L7 4 Z" fill="url(#cat-warm)"/>
+                        <path d="M7 4 L9 1 L10 4 Z" fill="url(#cat-warm)"/>
+                        <path d="M9 11 C12 11, 13 8, 12 7" stroke="url(#cat-warm)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                    </g>
+                    <path d="M30 27 Q33 26 34 28" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                </g>
+                <text x="64" y="37" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="24" letter-spacing="0.8">
+                    <tspan fill="url(#lulutap-main)" filter="url(#glow-effect)">Lulu</tspan>
+                    <tspan fill="#FFFFFF">Tap</tspan>
+                </text>
+                <circle cx="205" cy="18" r="2" fill="url(#cat-warm)" />
+                <circle cx="211" cy="23" r="1" fill="#00F2FE" />
+            </svg>
+        </a>
         <button class="mode-btn" id="mode-btn" onclick="toggleDeviceMode()" aria-label="Switch Device View Mode">💻 PC Mode</button>
     </header>
 
-    <!-- 2. Sticky Filter Bar with Tags Dropdown (加入了优化四：无障碍 aria-label / role / aria-expanded) -->
+    <!-- 2. Sticky Multi-Tag Dropdown Bar -->
     <div class="filter-wrapper">
         <div class="filter-container">
             <div>
@@ -595,6 +651,7 @@
         });
 
         function goToGame(game) {
+            if (!game) return;
             let history = JSON.parse(localStorage.getItem('lulutap_recent') || '[]');
             history = history.filter(item => item.title !== game.title);
             history.unshift(game);
@@ -610,6 +667,13 @@
             }).toString();
 
             window.location.href = `game.html?${query}`;
+        }
+
+        function handleKeyPress(e, callback) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                callback();
+            }
         }
 
         async function initGameData(page = 1) {
@@ -710,14 +774,16 @@
 
             const listToRender = [...top10List, ...top10List];
 
-            track.innerHTML = listToRender.map((game, index) => `
-                <div class="ticker-card" role="button" aria-label="${game.title}" onclick="goToGame(gamesData[${index % top10List.length}])">
+            track.innerHTML = listToRender.map((game, index) => {
+                const originalIndex = index % top10List.length;
+                return `
+                <div class="ticker-card" tabindex="0" role="button" aria-label="${game.title}" onclick="goToGame(gamesData[${originalIndex}])" onkeydown="handleKeyPress(event, () => goToGame(gamesData[${originalIndex}]))">
                     <div class="ticker-card-cover" style="background-image: url('${game.img}');"></div>
                     <div class="ticker-card-overlay">
                         <div class="ticker-card-title">${game.title}</div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         function renderTags() {
@@ -730,7 +796,7 @@
                 const isSelected = isAll ? selectedTags.length === 0 : selectedTags.includes(cat);
                 
                 return `
-                    <div class="tag-chip ${isSelected ? 'active' : ''}" role="button" aria-label="Filter tag ${cat}" onclick="toggleTag('${cat}')">
+                    <div class="tag-chip ${isSelected ? 'active' : ''}" tabindex="0" role="button" aria-label="Filter tag ${cat}" onclick="toggleTag('${cat}')" onkeydown="handleKeyPress(event, () => toggleTag('${cat}'))">
                         <span>${cat}</span>
                         ${!isAll && isSelected ? '<span class="close-icon">✕</span>' : ''}
                     </div>
@@ -780,10 +846,11 @@
             }
 
             grid.innerHTML = filtered.map((game) => {
+                const realIndex = gamesData.indexOf(game);
                 const likeInfo = getGameLikesInfo(game.title, game.baseLikes);
 
                 return `
-                <div onclick="goToGame(gamesData[${gamesData.indexOf(game)}])" class="game-card ${game.featured ? 'featured' : ''}" role="button" aria-label="${game.title}">
+                <div tabindex="0" onclick="goToGame(gamesData[${realIndex}])" onkeydown="handleKeyPress(event, () => goToGame(gamesData[${realIndex}]))" class="game-card ${game.featured ? 'featured' : ''}" role="button" aria-label="${game.title}">
                     <div class="card-cover" style="background-image: url('${game.img}');"></div>
                     <div class="card-overlay">
                         <div class="card-title">${game.title}</div>
@@ -806,7 +873,7 @@
             }
         });
 
-        /* === 优化点二：使用 IntersectionObserver 代替 scroll 事件监听，提高性能并防止频繁触发 === */
+        /* === IntersectionObserver 预加载 === */
         let observer = null;
         function setupIntersectionObserver() {
             const statusTarget = document.getElementById('loading-status');
@@ -819,14 +886,14 @@
                 }
             }, {
                 root: null,
-                rootMargin: '300px', // 提前 300px 预加载，体验更流畅
+                rootMargin: '300px',
                 threshold: 0
             });
 
             observer.observe(statusTarget);
         }
 
-        // 初始化运行
+        // 初始化
         renderTags();
         initGameData();
         setupIntersectionObserver();
