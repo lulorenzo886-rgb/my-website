@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuluTap - 发现好玩的游戏</title>
+    <title>LuluTap - Discover Fun Games</title>
     <style>
-        /* === 全局基础样式 === */
+        /* === Global Base Styles === */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -21,7 +21,7 @@
             flex-direction: column;
         }
 
-        /* === 1. 顶部 Header === */
+        /* === 1. Top Header === */
         header {
             height: 60px;
             background: #161926;
@@ -66,7 +66,7 @@
             border-color: #00f2fe;
         }
 
-        /* === 2. 多标签吸顶筛选栏 === */
+        /* === 2. Sticky Multi-Tag Filter Bar === */
         .filter-wrapper {
             position: sticky;
             top: 60px;
@@ -119,7 +119,7 @@
             color: #fff;
         }
 
-        /* 多选高亮状态 */
+        /* Active Tag Highlight */
         .tag-chip.active {
             background: rgba(0, 242, 254, 0.15);
             border-color: #00f2fe;
@@ -136,7 +136,7 @@
             opacity: 1;
         }
 
-        /* 一键清除全部按钮 */
+        /* Clear All Button */
         .clear-all-btn {
             background: #ff4757;
             color: #fff;
@@ -156,7 +156,7 @@
             transform: scale(1.05);
         }
 
-        /* === 3. Bento 极简网格布局 === */
+        /* === 3. Bento Grid Layout === */
         .main-content {
             max-width: 1500px;
             width: 100%;
@@ -194,7 +194,7 @@
             z-index: 2;
         }
 
-        /* Bento 放大卡片（2x2 大卡片 - 主推游戏） */
+        /* Bento Featured Card (2x2 Grid Span) */
         .game-card.featured {
             grid-column: span 2;
             grid-row: span 2;
@@ -283,7 +283,7 @@
             color: #000;
         }
 
-        /* === 4. 响应式移动端适配 === */
+        /* === 4. Responsive Mobile Adaptation === */
         @media (max-width: 1024px) {
             .bento-grid {
                 grid-template-columns: repeat(4, 1fr);
@@ -314,59 +314,59 @@
 </head>
 <body>
 
-    <!-- 1. 顶部 Header -->
+    <!-- 1. Top Header -->
     <header>
         <a href="index.html" class="logo">🕹️ LuluTap</a>
         <button class="mode-btn" id="mode-btn">💻 PC Mode</button>
     </header>
 
-    <!-- 2. 多标签吸顶筛选栏 -->
+    <!-- 2. Sticky Multi-Tag Filter Bar -->
     <div class="filter-wrapper">
         <div class="filter-container">
             <div class="tags-scroll-group" id="tags-group"></div>
-            <button class="clear-all-btn" id="clear-all-btn" onclick="clearAllFilters()">✕ 清除全部</button>
+            <button class="clear-all-btn" id="clear-all-btn" onclick="clearAllFilters()">✕ Clear All</button>
         </div>
     </div>
 
-    <!-- 3. Bento 主页游戏网格 -->
+    <!-- 3. Main Bento Game Grid -->
     <main class="main-content">
         <div class="bento-grid" id="game-grid">
             <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #a0aec0;">
-                ⏳ 正在读取 GameMonetize 游戏列表中...
+                ⏳ Loading games list from GameMonetize...
             </div>
         </div>
 
         <div class="load-more-container">
-            <button class="load-more-btn" onclick="loadMoreGames()">🔄 触底加载更多游戏</button>
+            <button class="load-more-btn" onclick="loadMoreGames()">🔄 Load More Games</button>
         </div>
     </main>
 
     <script>
-        let allCategories = ["🔥 全部"];
+        let allCategories = ["🔥 All"];
         let selectedTags = [];
         let gamesData = []; 
         let currentPage = 1;
 
-        // 直接请求 GameMonetize API 数据
+        // Fetch data from GameMonetize API
         async function initGameData(page = 1) {
             const grid = document.getElementById('game-grid');
             if (page === 1) {
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #a0aec0;">⏳ 正在加载 GameMonetize 游戏...</div>`;
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #a0aec0;">⏳ Loading GameMonetize games...</div>`;
             }
 
             try {
-                // 请求 GameMonetize API
+                // Request GameMonetize API
                 const response = await fetch(`https://gamemonetize.com/feed.php?format=0&page=${page}`);
                 if (!response.ok) throw new Error("HTTP error " + response.status);
                 const data = await response.json();
 
-                // 解析并转换 GameMonetize 的数据结构
+                // Parse and format data structure
                 const rawList = Array.isArray(data) ? data : [];
                 
                 const formattedGames = rawList.map((item, idx) => {
                     const catName = item.category || "Other";
                     
-                    // 动态收集分类列表
+                    // Collect categories dynamically
                     if (!allCategories.includes(catName)) {
                         allCategories.push(catName);
                     }
@@ -376,10 +376,10 @@
                         title: item.title || item.name || "Untitled Game",
                         category: catName,
                         tags: [catName],
-                        likes: (Math.floor(Math.random() * 20) / 10 + 3.0).toFixed(1) + "k", // 随机模拟高点赞量
-                        img: item.thumb, // API 封面图字段
-                        gameUrl: item.url, // 游戏地址
-                        featured: (page === 1 && idx === 0) // 第一页第一个展示 Bento 2x2 大卡片
+                        likes: (Math.floor(Math.random() * 20) / 10 + 3.0).toFixed(1) + "k", // Random simulated likes
+                        img: item.thumb, // API Cover Thumbnail
+                        gameUrl: item.url, // Game Frame URL
+                        featured: (page === 1 && idx === 0) // First card on page 1 featured as 2x2 Bento card
                     };
                 });
 
@@ -392,22 +392,22 @@
                 renderTags();
                 renderGames();
             } catch (err) {
-                console.error("API 读取失败:", err);
+                console.error("API Fetch Error:", err);
                 grid.innerHTML = `
                     <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #ff4757;">
-                        ⚠️ 游戏加载失败！如果是本地直接运行，可能是浏览器拦截了跨域请求（CORS）。<br>
-                        请使用 VSCode 的 <b>Live Server</b> 预览，或提交到 <b>GitHub Pages</b> 上查看。
+                        ⚠️ Failed to load games! If running locally, your browser might be blocking cross-origin requests (CORS).<br>
+                        Please preview via VSCode <b>Live Server</b>, or deploy directly to <b>GitHub Pages</b>.
                     </div>`;
             }
         }
 
-        // 渲染标签栏
+        // Render Tag Bar
         function renderTags() {
             const container = document.getElementById('tags-group');
             const clearBtn = document.getElementById('clear-all-btn');
 
             container.innerHTML = allCategories.map(cat => {
-                const isAll = cat === "🔥 全部";
+                const isAll = cat === "🔥 All";
                 const isSelected = isAll ? selectedTags.length === 0 : selectedTags.includes(cat);
                 
                 return `
@@ -421,9 +421,9 @@
             clearBtn.style.display = selectedTags.length >= 2 ? 'block' : 'none';
         }
 
-        // 多选逻辑
+        // Tag Toggle Logic
         function toggleTag(cat) {
-            if (cat === "🔥 全部") {
+            if (cat === "🔥 All") {
                 selectedTags = [];
             } else {
                 if (selectedTags.includes(cat)) {
@@ -436,14 +436,14 @@
             renderGames();
         }
 
-        // 重置多选
+        // Reset Filter Tags
         function clearAllFilters() {
             selectedTags = [];
             renderTags();
             renderGames();
         }
 
-        // 渲染游戏网格
+        // Render Game Grid
         function renderGames() {
             const grid = document.getElementById('game-grid');
             
@@ -453,11 +453,11 @@
             });
 
             if (filtered.length === 0) {
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #a0aec0;">未找到匹配的游戏，试试重置筛选条件吧~</div>`;
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #a0aec0;">No matching games found. Try resetting the filters!</div>`;
                 return;
             }
 
-            // 点击卡片后，把游戏真正的 URL 传给 game.html
+            // Pass encoded game URL and Title to game.html
             grid.innerHTML = filtered.map(game => `
                 <a href="game.html?url=${encodeURIComponent(game.gameUrl)}&title=${encodeURIComponent(game.title)}" class="game-card ${game.featured ? 'featured' : ''}">
                     <div class="card-cover" style="background-image: url('${game.img}');"></div>
@@ -472,13 +472,13 @@
             `).join('');
         }
 
-        // 加载下一页 API 游戏
+        // Load Next Page of API Games
         function loadMoreGames() {
             currentPage++;
             initGameData(currentPage);
         }
 
-        // 页面初始化调用 API
+        // Initialize Page Data
         initGameData();
     </script>
 </body>
