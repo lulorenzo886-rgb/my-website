@@ -404,7 +404,6 @@
             font-weight: 600;
         }
 
-        /* === 新增：点赞徽章与样式 === */
         .card-like-badge {
             display: inline-flex;
             align-items: center;
@@ -518,7 +517,8 @@
     </main>
 
     <script>
-        let allCategories = ["🔥 All"];
+        // 预设核心分类标签，保障数据加载前也有完整标签列表
+        let allCategories = ["🔥 All", "Action", "Arcade", "Puzzle", "Racing", "Shooting", "Casual", "Strategy", "Sports"];
         let selectedTags = [];
         let gamesData = []; 
         let currentPage = 1;
@@ -537,7 +537,6 @@
             description: "An exciting browser action game designed for ultimate fun and challenge."
         }));
 
-        // 点赞数据本地读取与保存
         function getLikesData() {
             return JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
         }
@@ -592,7 +591,6 @@
             }
         });
 
-        // 统一控制跳转并同步 LocalStorage 最近游玩
         function goToGame(game) {
             let history = JSON.parse(localStorage.getItem('lulutap_recent') || '[]');
             history = history.filter(item => item.title !== game.title);
@@ -797,7 +795,6 @@
             `}).join('');
         }
 
-        // 当页面重新获取焦点或从详情页后退回来时，重新刷新渲染点赞数
         window.addEventListener('pageshow', () => {
             if (gamesData.length > 0) {
                 renderGames();
@@ -812,6 +809,8 @@
             }
         });
 
+        // 初始化运行
+        renderTags();
         initGameData();
     </script>
 </body>
