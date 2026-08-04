@@ -602,7 +602,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const gameUrl = urlParams.get('url') || 'https://html5.gamedistribution.com/rvvASAhfx001/';
         const gameTitle = decodeURIComponent(urlParams.get('title') || 'Free Online Game').trim();
-        const tagsParam = urlParams.get('cat') || urlParams.get('tags') || 'Puzzle,Casual,Arcade';
+        const tagsParam = urlParams.get('cat') || urlParams.get('tags') || 'Arcade,Casual,Action';
         const descParam = urlParams.get('desc') || `Play ${gameTitle} online for free on LuluTap! No installation required.`;
         const imgParam = urlParams.get('img') || '';
 
@@ -761,10 +761,10 @@
             localStorage.setItem('lulutap_recent', JSON.stringify(history));
 
             const query = new URLSearchParams({
-                url: game.gameUrl || game.url || '#',
+                url: game.url || game.gameUrl || '',
                 title: game.title || 'Game',
-                img: game.img || game.thumb || '',
-                cat: game.category || 'Arcade',
+                img: game.thumb || game.img || '',
+                cat: game.category || game.tags || 'Arcade',
                 desc: game.description || ''
             }).toString();
 
@@ -772,53 +772,57 @@
             window.location.href = `${currentPage}?${query}`;
         }
 
+        // 🚀 精准提取 10 个与当前标签完全一致的游戏并无缝滚动
         async function loadSimilarGamesMarquee() {
             const track = document.getElementById('marquee-track');
-            try {
-                const res = await fetch('https://gamemonetize.com/feed.php?format=0&page=1');
-                if (!res.ok) throw new Error('API Error');
-                const games = await res.json();
+            const primaryTag = (currentTags[0] || 'Arcade').toLowerCase();
 
-                const rankedGames = games.map(item => {
-                    const itemTags = (item.tags || item.category || '').toLowerCase().split(',').map(t => t.trim()).filter(Boolean);
+            try {
+                // 请求数据源
+                const res = await fetch(`https://gamemonetize.com/feed.php?format=0&category=${encodeURIComponent(primaryTag)}&page=1`);
+                let games = [];
+                if (res.ok) {
+                    games = await res.json();
+                }
+
+                // 如果按类别请求返回空，尝试请求大列表
+                if (!Array.isArray(games) || games.length === 0) {
+                    const fallbackRes = await fetch('https://gamemonetize.com/feed.php?format=0&page=1');
+                    if (fallbackRes.ok) games = await fallbackRes.json();
+                }
+
+                // 算法打分：优先匹配具有相同标签/分类的游戏，并剔除当前正在玩的游戏
+                const filteredGames = games.filter(g => g.title !== gameTitle).map(item => {
+                    const itemTags = (item.category + ',' + (item.tags || '')).toLowerCase().split(',').map(t => t.trim());
                     let score = 0;
                     currentTags.forEach(tag => {
-                        const lowTag = tag.toLowerCase();
-                        if (lowTag && itemTags.some(t => t === lowTag || t.includes(lowTag))) score += 1;
+                        const target = tag.toLowerCase();
+                        if (target && itemTags.some(t => t === target || t.includes(target))) {
+                            score += 1;
+                        }
                     });
                     return { ...item, score };
                 });
 
-                rankedGames.sort((a, b) => b.score - a.score);
-                const top10 = rankedGames.slice(0, 10);
+                // 按匹配度降序排列
+                filteredGames.sort((a, b) => b.score - a.score);
+
+                // 取前 10 个同标签游戏
+                const top10 = filteredGames.slice(0, 10);
                 window.similarGamesCache = top10;
 
-                const cardsHTML = top10.map((item, idx) => `
+                const renderCards = (list) => list.map((item, idx) => `
                     <div class="rec-card" onclick="navigateToGame(window.similarGamesCache[${idx}])" role="button" aria-label="${item.title}">
-                        <img src="${item.thumb}" alt="${item.title}" onerror="this.src='https://picsum.photos/200/200?random=${idx}'">
+                        <img src="${item.thumb}" alt="${item.title}" loading="lazy">
                         <div class="rec-card-title">${item.title}</div>
                     </div>
                 `).join('');
 
+                const cardsHTML = renderCards(top10);
+                // 复制一份实现无缝首尾相接滚动
                 track.innerHTML = cardsHTML + cardsHTML;
-            } catch(e) {
-                const fallbackData = Array.from({ length: 10 }).map((_, i) => ({
-                    title: `Similar Game ${i + 1}`,
-                    url: 'https://html5.gamedistribution.com/rvvASAhfx001/',
-                    thumb: `https://picsum.photos/200/200?random=${i + 10}`,
-                    category: 'Sports',
-                    description: 'Fun online sports game to play anytime!'
-                }));
-                window.similarGamesCache = fallbackData;
-
-                const fallbackHTML = fallbackData.map((item, idx) => `
-                    <div class="rec-card" onclick="navigateToGame(window.similarGamesCache[${idx}])" role="button" aria-label="${item.title}">
-                        <img src="${item.thumb}" alt="${item.title}">
-                        <div class="rec-card-title">${item.title}</div>
-                    </div>
-                `).join('');
-
-                track.innerHTML = fallbackHTML + fallbackHTML;
+            } catch (e) {
+                console.warn('Failed to fetch API similar games:', e);
             }
         }
 
