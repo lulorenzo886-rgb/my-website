@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuluTap - Playing Game...</title>
+    <title>LuluTap - Play Game</title>
     <style>
         * {
             box-sizing: border-box;
@@ -20,7 +20,7 @@
             flex-direction: column;
         }
 
-        /* Top Header */
+        /* Header */
         header {
             height: 60px;
             background: #161926;
@@ -29,6 +29,9 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .logo {
@@ -49,6 +52,7 @@
             border-radius: 20px;
             text-decoration: none;
             font-size: 13px;
+            font-weight: 600;
             transition: all 0.2s;
         }
 
@@ -57,19 +61,19 @@
             border-color: #00f2fe;
         }
 
-        /* Main Section (2-Column Layout) */
+        /* Main Container */
         .play-container {
             max-width: 1500px;
             width: 100%;
             margin: 20px auto;
             padding: 0 24px;
             display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 20px;
+            grid-template-columns: 1fr 340px;
+            gap: 24px;
             flex: 1;
         }
 
-        /* Left Column: Game Viewport & Metadata */
+        /* Left Panel */
         .left-panel {
             display: flex;
             flex-direction: column;
@@ -93,7 +97,6 @@
             border: none;
         }
 
-        /* Bottom Controls Bar inside Game Viewport */
         .controls-bar {
             position: absolute;
             bottom: 12px;
@@ -124,7 +127,7 @@
             font-weight: bold;
         }
 
-        /* Game Metadata Box */
+        /* Game Metadata */
         .game-meta-box {
             background: #161926;
             border: 1px solid #262b3d;
@@ -132,7 +135,7 @@
             padding: 16px 20px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .meta-header {
@@ -156,23 +159,31 @@
             font-weight: bold;
         }
 
+        /* 🔴 红色圈：标签样式 */
         .tags-row {
             display: flex;
             gap: 8px;
             align-items: center;
+            flex-wrap: wrap;
             font-size: 13px;
             color: #a0aec0;
+            border-top: 1px solid #222738;
+            padding-top: 12px;
         }
 
         .meta-tag {
-            background: rgba(0, 242, 254, 0.15);
+            background: rgba(0, 242, 254, 0.12);
+            border: 1px solid rgba(0, 242, 254, 0.3);
             color: #00f2fe;
-            padding: 3px 8px;
-            border-radius: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
             font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
         }
 
-        /* Right Column: Controls & Info Sidebar */
+        /* Right Panel */
         .right-panel {
             display: flex;
             flex-direction: column;
@@ -183,55 +194,115 @@
             background: #161926;
             border: 1px solid #262b3d;
             border-radius: 12px;
-            padding: 16px;
+            overflow: hidden;
         }
 
         .card-h3 {
             font-size: 14px;
             font-weight: bold;
             color: #00f2fe;
-            margin-bottom: 12px;
+            padding: 14px 16px;
+            background: #1c2030;
+            border-bottom: 1px solid #262b3d;
             display: flex;
             align-items: center;
-            gap: 6px;
+            justify-content: space-between;
         }
 
-        /* WASD Layout Preview */
-        .keys-layout {
+        /* 🟢 绿色圈：绘制物理按键与详细说明 */
+        .controls-list {
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            margin: 10px 0;
+            gap: 14px;
         }
 
-        .key-row {
+        .control-item {
+            background: #111420;
+            border: 1px solid #222738;
+            border-radius: 8px;
+            padding: 10px 12px;
             display: flex;
-            gap: 6px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .control-action {
+            font-size: 13px;
+            color: #cbd5e0;
+            font-weight: 500;
+        }
+
+        .key-group {
+            display: flex;
+            gap: 4px;
+            align-items: center;
         }
 
         .key-cap {
-            width: 36px;
-            height: 36px;
-            background: #222738;
-            border: 1px solid #323950;
+            min-width: 28px;
+            height: 28px;
+            padding: 0 6px;
+            background: linear-gradient(180deg, #2d3448 0%, #1e2332 100%);
+            border: 1px solid #4a5568;
+            border-bottom: 3px solid #1a202c;
             border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 12px;
             color: #fff;
-            box-shadow: 0 3px 0 #161926;
+            font-family: monospace;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
 
-        .info-desc {
+        .key-cap.wide {
+            min-width: 70px;
+        }
+
+        .key-cap.mouse-btn {
+            background: linear-gradient(180deg, #00f2fe 0%, #0099ff 100%);
+            color: #000;
+            border-color: #00f2fe;
+            border-bottom-color: #0077cc;
+            min-width: 80px;
+        }
+
+        /* 🟡 黄色圈：展开/收起 GAME INFO */
+        .collapsible-header {
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .collapsible-header:hover {
+            background: #222738;
+        }
+
+        .toggle-arrow {
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .info-body {
+            padding: 16px;
             font-size: 13px;
             color: #a0aec0;
             line-height: 1.6;
+            display: block; /* 初始展开 */
+            border-top: 1px solid #262b3d;
         }
 
-        /* Bottom Section: Seamless Horizontal Marquee */
+        .info-body.collapsed {
+            display: none; /* 收起状态 */
+        }
+
+        .side-card.collapsed .toggle-arrow {
+            transform: rotate(-90deg);
+        }
+
+        /* Recommended Games Marquee */
         .recommend-section {
             max-width: 1500px;
             width: 100%;
@@ -305,7 +376,6 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* Responsive Design */
         @media (max-width: 1024px) {
             .play-container {
                 grid-template-columns: 1fr;
@@ -324,13 +394,10 @@
     <!-- Main Game Container -->
     <div class="play-container">
         
-        <!-- Left Panel: Game Screen and Metadata -->
+        <!-- Left Panel -->
         <div class="left-panel">
             <div class="screen-box" id="screen-box">
-                <!-- Game Frame -->
                 <iframe class="game-iframe" id="game-frame" allowfullscreen src="about:blank"></iframe>
-                
-                <!-- Screen Controls -->
                 <div class="controls-bar">
                     <button class="action-btn" onclick="reloadGame()">🔄 Reload</button>
                     <button class="action-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
@@ -340,75 +407,136 @@
             <!-- Title & Tags -->
             <div class="game-meta-box">
                 <div class="meta-header">
-                    <h1 class="game-title" id="game-title">Loading...</h1>
+                    <h1 class="game-title" id="game-title">Find the Kitten: Spot the Cat</h1>
                     <span class="like-badge" id="game-likes">👍 2.8k</span>
                 </div>
+                
+                <!-- 🔴 红色圈放置游戏标签的地方 -->
                 <div class="tags-row">
                     <span>🏷️ Categories & Tags:</span>
-                    <span id="game-tags">
+                    <div id="game-tags" style="display: flex; gap: 6px; flex-wrap: wrap;">
                         <span class="meta-tag">HTML5</span>
-                    </span>
+                        <span class="meta-tag">Puzzle</span>
+                        <span class="meta-tag">Casual</span>
+                        <span class="meta-tag">Find Object</span>
+                        <span class="meta-tag">🔥 Hot</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Right Panel: Controls & Description -->
+        <!-- Right Panel -->
         <div class="right-panel">
+            
+            <!-- 🟢 绿色圈：绘制物理按键与详细说明 -->
             <div class="side-card">
                 <div class="card-h3">🎮 CONTROLS</div>
-                <div class="keys-layout">
-                    <div class="key-cap">W</div>
-                    <div class="key-row">
-                        <div class="key-cap">A</div>
-                        <div class="key-cap">S</div>
-                        <div class="key-cap">D</div>
+                <div class="controls-list">
+                    <!-- WASD 方向键 -->
+                    <div class="control-item">
+                        <span class="control-action">Movement / WASD</span>
+                        <div class="key-group">
+                            <span class="key-cap">W</span>
+                            <span class="key-cap">A</span>
+                            <span class="key-cap">S</span>
+                            <span class="key-cap">D</span>
+                        </div>
+                    </div>
+
+                    <!-- 键盘方向键 -->
+                    <div class="control-item">
+                        <span class="control-action">Arrow Controls</span>
+                        <div class="key-group">
+                            <span class="key-cap">↑</span>
+                            <span class="key-cap">←</span>
+                            <span class="key-cap">↓</span>
+                            <span class="key-cap">→</span>
+                        </div>
+                    </div>
+
+                    <!-- 空格键 -->
+                    <div class="control-item">
+                        <span class="control-action">Jump / Action</span>
+                        <div class="key-group">
+                            <span class="key-cap wide">Space</span>
+                        </div>
+                    </div>
+
+                    <!-- 鼠标左键点击 -->
+                    <div class="control-item">
+                        <span class="control-action">Click / Select</span>
+                        <div class="key-group">
+                            <span class="key-cap mouse-btn">🖱️ Left Click</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="side-card">
-                <div class="card-h3">📖 GAME INFO</div>
-                <p class="info-desc" id="game-desc">
-                    Use Arrow keys or WASD to control movement. Click the fullscreen button for an immersive gaming experience.
-                </p>
+            <!-- 🟡 黄色圈：初始为展开状态，可点击收起/展开的 GAME INFO -->
+            <div class="side-card" id="game-info-card">
+                <div class="card-h3 collapsible-header" onclick="toggleGameInfo()">
+                    <span>📖 GAME INFO</span>
+                    <span class="toggle-arrow" id="info-arrow">▾</span>
+                </div>
+                <div class="info-body" id="game-info-body">
+                    Use Arrow keys or WASD to control movement. Click the target kittens using your mouse. Click the fullscreen button for an immersive gaming experience! Test your observation skills and spot all hidden cats to reach the next level.
+                </div>
             </div>
+
         </div>
     </div>
 
-    <!-- Bottom Section: Recommended Games Marquee -->
+    <!-- Bottom Section -->
     <section class="recommend-section">
         <div class="rec-header">🔥 SIMILAR GAMES</div>
         <div class="marquee-wrapper">
-            <div class="marquee-track" id="marquee-track">
-                <!-- Marquee cards rendered dynamically via JS -->
-            </div>
+            <div class="marquee-track" id="marquee-track"></div>
         </div>
     </section>
 
     <script>
-        // 1. Get URL parameters (Supports directly passed URL or Title)
         const urlParams = new URLSearchParams(window.location.search);
-        const gameUrl = urlParams.get('url');
-        const gameTitle = urlParams.get('title') || 'Awesome HTML5 Game';
+        const gameUrl = urlParams.get('url') || 'https://html5.gamedistribution.com/rvvASAhfx001/';
+        const gameTitle = urlParams.get('title') || 'Find the Kitten: Spot the Cat';
+        const tagsParam = urlParams.get('tags');
 
         const frame = document.getElementById('game-frame');
         const titleEl = document.getElementById('game-title');
+        const tagsContainer = document.getElementById('game-tags');
 
-        if (gameUrl) {
-            frame.src = decodeURIComponent(gameUrl);
-            titleEl.textContent = decodeURIComponent(gameTitle);
-        } else {
-            // Fallback for testing without URL parameters
-            titleEl.textContent = "Demo Game (No link detected)";
-            frame.src = "https://gamemonetize.com/feed.php"; 
+        frame.src = gameUrl;
+        titleEl.textContent = gameTitle;
+        document.title = `${gameTitle} - LuluTap`;
+
+        // 🔴 解析并更新标签
+        if (tagsParam) {
+            const tagsArr = tagsParam.split(',');
+            tagsContainer.innerHTML = tagsArr.map(tag => `<span class="meta-tag">${tag.trim()}</span>`).join('');
         }
 
-        // 2. Reload Game
+        // 🟡 折叠/展开 GAME INFO 交互（初始为展开状态）
+        function toggleGameInfo() {
+            const card = document.getElementById('game-info-card');
+            const body = document.getElementById('game-info-body');
+            const arrow = document.getElementById('info-arrow');
+
+            const isCollapsed = body.classList.contains('collapsed');
+
+            if (isCollapsed) {
+                body.classList.remove('collapsed');
+                card.classList.remove('collapsed');
+                arrow.textContent = '▾';
+            } else {
+                body.classList.add('collapsed');
+                card.classList.add('collapsed');
+                arrow.textContent = '▸';
+            }
+        }
+
         function reloadGame() {
             frame.src = frame.src;
         }
 
-        // 3. Fullscreen Toggle
         function toggleFullscreen() {
             const screenBox = document.getElementById('screen-box');
             if (!document.fullscreenElement) {
@@ -424,12 +552,9 @@
             }
         }
 
-        // 4. Render Endless Marquee Cards
         async function loadRecommendations() {
             const track = document.getElementById('marquee-track');
-            
             try {
-                // Fetch recommended games from API
                 const res = await fetch('https://gamemonetize.com/feed.php?format=0&page=1');
                 const data = await res.json();
                 const list = data.slice(0, 10);
@@ -441,10 +566,8 @@
                     </a>
                 `).join('');
 
-                // Duplicate cards array to achieve seamless infinite loop
                 track.innerHTML = cardsHTML + cardsHTML;
             } catch(e) {
-                // Fallback static cards when network fails
                 let fallback = '';
                 for(let i=1; i<=10; i++) {
                     fallback += `
@@ -458,7 +581,6 @@
             }
         }
 
-        // Initialize recommendations on window load
         window.addEventListener('DOMContentLoaded', loadRecommendations);
     </script>
 </body>
