@@ -177,36 +177,6 @@
             50% { opacity: 1; }
         }
 
-        .controls-bar {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            display: flex;
-            gap: 8px;
-            z-index: 10;
-        }
-
-        .action-btn {
-            background: rgba(22, 25, 38, 0.85);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
-            padding: 8px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .action-btn:hover {
-            background: #00f2fe;
-            color: #000;
-            font-weight: bold;
-        }
-
         /* Game Metadata */
         .game-meta-box {
             background: #161926;
@@ -473,7 +443,6 @@
         @media (max-width: 640px) {
             .play-container { padding: 0 12px; margin: 10px auto; }
             .game-title { font-size: 16px; }
-            .action-btn { padding: 6px 10px; font-size: 11px; }
             .recommend-section { padding: 0 12px; }
         }
     </style>
@@ -552,11 +521,6 @@
                     src="about:blank"
                     title="Game Window">
                 </iframe>
-
-                <div class="controls-bar">
-                    <button class="action-btn" onclick="reloadGame()" aria-label="Reload Game">🔄 Reload</button>
-                    <button class="action-btn" id="fullscreen-btn" onclick="toggleFullscreen()" aria-label="Toggle Fullscreen">⛶ Fullscreen</button>
-                </div>
             </div>
 
             <!-- Title & Tags -->
@@ -620,7 +584,7 @@
                     <span class="toggle-arrow" id="info-arrow">▾</span>
                 </div>
                 <div class="info-body" id="game-info-body">
-                    Use Arrow keys or WASD to control movement. Click target elements using your mouse. Click the fullscreen button for an immersive gaming experience!
+                    Use Arrow keys or WASD to control movement. Click target elements using your mouse. Enjoy gaming!
                 </div>
             </div>
         </div>
@@ -784,45 +748,6 @@
                 card.classList.add('collapsed');
                 arrow.textContent = '▸';
                 header.setAttribute('aria-expanded', 'false');
-            }
-        }
-
-        function reloadGame() {
-            loader.classList.remove('hidden');
-            const startReloadTime = Date.now();
-            frame.src = frame.src;
-
-            frame.onload = function() {
-                const elapsedTime = Date.now() - startReloadTime;
-                const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
-
-                setTimeout(function() {
-                    loader.classList.add('hidden');
-                    focusGameFrame();
-                }, remainingTime);
-            };
-        }
-
-        function toggleFullscreen() {
-            const screenBox = document.getElementById('screen-box');
-            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                if (screenBox.requestFullscreen) screenBox.requestFullscreen();
-                else if (screenBox.webkitRequestFullscreen) screenBox.webkitRequestFullscreen();
-            } else {
-                if (document.exitFullscreen) document.exitFullscreen();
-                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-            }
-        }
-
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-
-        function handleFullscreenChange() {
-            const fsBtn = document.getElementById('fullscreen-btn');
-            if (document.fullscreenElement || document.webkitFullscreenElement) {
-                fsBtn.innerHTML = '🗗 Exit Fullscreen';
-            } else {
-                fsBtn.innerHTML = '⛶ Fullscreen';
             }
         }
 
