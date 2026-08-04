@@ -286,12 +286,6 @@
             text-overflow: ellipsis;
         }
 
-        .ticker-card-likes {
-            font-size: 10px;
-            color: #ff4757;
-            font-weight: bold;
-        }
-
         /* === 4. Bento Grid Layout === */
         .main-content {
             max-width: 1500px;
@@ -341,7 +335,6 @@
             z-index: 2;
         }
 
-        /* 大卡片样式（跨两行两列） */
         .game-card.featured {
             grid-column: span 2;
             grid-row: span 2;
@@ -408,15 +401,6 @@
             border-radius: 4px;
             font-size: 10px;
             font-weight: 600;
-        }
-
-        .card-likes {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            color: #ff4757;
-            font-weight: bold;
-            margin-left: auto;
         }
 
         .loading-status {
@@ -523,10 +507,8 @@
         let hasMoreData = true;
         let isMobileMode = false;
 
-        // 预设一些常见的游戏热门副标签
         const extraTagsPool = ["🔥 Hot", "⚡ Fast", "🎮 3D", "🏆 Top", "⭐ Popular", "🕹️ Classic", "🎯 Skill"];
 
-        // 本地降级备用数据（解决离线或 CORS 拦截）
         const mockFallbackGames = Array.from({ length: 18 }).map((_, i) => ({
             id: `fallback-${i}`,
             title: `Popular Game ${i + 1}`,
@@ -535,7 +517,6 @@
             url: "#"
         }));
 
-        // 洗牌函数（数组随机打乱）
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -544,7 +525,6 @@
             return array;
         }
 
-        // Toggle PC/Mobile Simulation Mode
         function toggleDeviceMode() {
             isMobileMode = !isMobileMode;
             const btn = document.getElementById('mode-btn');
@@ -557,7 +537,6 @@
             }
         }
 
-        // Toggle Tags Dropdown Menu
         function toggleTagsDropdown(e) {
             e.stopPropagation();
             const panel = document.getElementById('tags-panel');
@@ -573,7 +552,6 @@
             }
         }
 
-        // Close dropdown when clicking outside
         document.addEventListener('click', (e) => {
             const panel = document.getElementById('tags-panel');
             const btn = document.getElementById('tags-btn');
@@ -583,7 +561,6 @@
             }
         });
 
-        // Fetch Data from GameMonetize API (with fallback support)
         async function initGameData(page = 1) {
             if (isLoading) return;
             isLoading = true;
@@ -613,12 +590,10 @@
                     return;
                 }
 
-                // 第一页提取前10作为 Top 10
                 if (page === 1) {
                     renderTop10Ticker(rawList.slice(0, 10));
                 }
 
-                // 打乱当前加载进来的数据
                 const shuffledList = shuffle([...rawList]);
 
                 const formattedGames = shuffledList.map((item) => {
@@ -628,7 +603,6 @@
                         allCategories.push(catName);
                     }
 
-                    // 为每个游戏生成 2~3 个标签
                     const gameTags = [catName]; 
                     const shuffledExtra = shuffle([...extraTagsPool]);
                     gameTags.push(shuffledExtra[0]);
@@ -641,7 +615,6 @@
                         title: item.title || item.name || "Untitled Game",
                         category: catName,
                         tags: gameTags,
-                        likes: (Math.floor(Math.random() * 20) / 10 + 3.0).toFixed(1) + "k",
                         img: item.thumb,
                         gameUrl: item.url || '#'
                     };
@@ -653,7 +626,7 @@
                     gamesData = [...gamesData, ...formattedGames];
                 }
 
-                assignFeaturedCards(); // 动态计算大尺寸卡片位置
+                assignFeaturedCards();
                 renderTags();
                 renderGames();
             } catch (err) {
@@ -664,7 +637,6 @@
             }
         }
 
-        // 动态分配大卡片（Featured）位置
         function assignFeaturedCards() {
             let nextFeaturedIndex = 0;
             
@@ -678,7 +650,6 @@
             });
         }
 
-        // Render Top 10 Carousel
         function renderTop10Ticker(top10List) {
             const track = document.getElementById('ticker-track');
             if (!top10List || top10List.length === 0) return;
@@ -686,8 +657,7 @@
             const formattedTop10 = top10List.map(item => ({
                 title: item.title || item.name || "Untitled Game",
                 img: item.thumb,
-                gameUrl: item.url || '#',
-                likes: (Math.floor(Math.random() * 20) / 10 + 3.0).toFixed(1) + "k"
+                gameUrl: item.url || '#'
             }));
 
             const listToRender = [...formattedTop10, ...formattedTop10];
@@ -697,13 +667,11 @@
                     <div class="ticker-card-cover" style="background-image: url('${game.img}');"></div>
                     <div class="ticker-card-overlay">
                         <div class="ticker-card-title">${game.title}</div>
-                        <div class="ticker-card-likes">🔥 👍 ${game.likes}</div>
                     </div>
                 </a>
             `).join('');
         }
 
-        // Render Dropdown Tag Items
         function renderTags() {
             const container = document.getElementById('tags-panel');
             const clearBtn = document.getElementById('clear-all-btn');
@@ -730,7 +698,6 @@
             clearBtn.style.display = selectedTags.length >= 1 ? 'block' : 'none';
         }
 
-        // Multi-Tag Selection Logic
         function toggleTag(cat) {
             if (cat === "🔥 All") {
                 selectedTags = [];
@@ -745,14 +712,12 @@
             renderGames();
         }
 
-        // Clear All Active Filter Tags
         function clearAllFilters() {
             selectedTags = [];
             renderTags();
             renderGames();
         }
 
-        // Render Games Grid with Multiple Tags
         function renderGames() {
             const grid = document.getElementById('game-grid');
             
@@ -775,14 +740,12 @@
                             <div style="display: flex; gap: 4px; flex-wrap: wrap;">
                                 ${game.tags.map(t => `<span class="card-tag">${t}</span>`).join('')}
                             </div>
-                            <span class="card-likes">👍 ${game.likes}</span>
                         </div>
                     </div>
                 </a>
             `).join('');
         }
 
-        // Infinite Scroll
         window.addEventListener('scroll', () => {
             if (isLoading || !hasMoreData) return;
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
@@ -791,7 +754,6 @@
             }
         });
 
-        // Initialize App
         initGameData();
     </script>
 </body>
