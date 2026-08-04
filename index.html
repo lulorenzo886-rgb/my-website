@@ -592,15 +592,34 @@
             description: "An exciting browser action game designed for ultimate fun and challenge."
         }));
 
-        function getLikesData() {
-            return JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
+        /* ==================== 点赞核心算法与获取（与 game.html 完全一致） ==================== */
+        
+        // 哈希种子算法：针对同一个游戏标题永远生成相同的初始随机数
+        function getSeedCount(title) {
+            let hash = 0;
+            for (let i = 0; i < title.length; i++) {
+                hash = title.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return (Math.abs(hash) % 380) + 120;
         }
 
-        function getGameLikesInfo(title, baseLikes = 0) {
-            const likesStore = getLikesData();
-            const record = likesStore[title] || { count: baseLikes || Math.floor(Math.random() * 800) + 120, userLiked: false };
-            return record;
+        // 统一获取某个游戏的点赞信息
+        function getGameLikesRecord(title) {
+            // 确保去除前后空格，避免空格导致的 Key 不匹配
+            const cleanTitle = (title || '').trim();
+            const likesStore = JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
+            
+            if (!likesStore[cleanTitle]) {
+                likesStore[cleanTitle] = {
+                    count: getSeedCount(cleanTitle),
+                    userLiked: false
+                };
+                localStorage.setItem('lulutap_likes', JSON.stringify(likesStore));
+            }
+            return likesStore[cleanTitle];
         }
+
+        /* ==================================================================================== */
 
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -723,8 +742,6 @@
                         gameTags.push(shuffledExtra[1]);
                     }
 
-                    const baseLikes = Math.floor(Math.random() * 800) + 100;
-
                     return {
                         id: item.id || `game-${Math.random()}`,
                         title: item.title || item.name || "Untitled Game",
@@ -732,8 +749,7 @@
                         tags: gameTags,
                         img: item.thumb || 'https://via.placeholder.com/300',
                         gameUrl: item.url || '#',
-                        description: item.description || '',
-                        baseLikes: baseLikes
+                        description: item.description || ''
                     };
                 });
 
@@ -835,9 +851,10 @@
         function renderGames() {
             const grid = document.getElementById('game-grid');
             
+            // 筛选逻辑 (OR 算法)
             const filtered = gamesData.filter(game => {
                 if (selectedTags.length === 0) return true;
-                return selectedTags.every(tag => game.tags.includes(tag));
+                return selectedTags.some(tag => game.tags.includes(tag));
             });
 
             if (filtered.length === 0) {
@@ -847,7 +864,9 @@
 
             grid.innerHTML = filtered.map((game) => {
                 const realIndex = gamesData.indexOf(game);
-                const likeInfo = getGameLikesInfo(game.title, game.baseLikes);
+                
+                // 调用统一的 getGameLikesRecord 获取点赞数据
+                const likeRecord = getGameLikesRecord(game.title);
 
                 return `
                 <div tabindex="0" onclick="goToGame(gamesData[${realIndex}])" onkeydown="handleKeyPress(event, () => goToGame(gamesData[${realIndex}]))" class="game-card ${game.featured ? 'featured' : ''}" role="button" aria-label="${game.title}">
@@ -858,8 +877,8 @@
                             <div style="display: flex; gap: 4px; flex-wrap: wrap;">
                                 ${game.tags.map(t => `<span class="card-tag">${t}</span>`).join('')}
                             </div>
-                            <div class="card-like-badge ${likeInfo.userLiked ? 'liked' : ''}">
-                                ${likeInfo.userLiked ? '❤️' : '🤍'} ${likeInfo.count}
+                            <div class="card-like-badge ${likeRecord.userLiked ? 'liked' : ''}">
+                                ${likeRecord.userLiked ? '❤️' : '🤍'} ${likeRecord.count}
                             </div>
                         </div>
                     </div>
@@ -867,6 +886,7 @@
             `}).join('');
         }
 
+        /* === 主页返回/获取焦点时强制刷新 UI === */
         window.addEventListener('pageshow', () => {
             if (gamesData.length > 0) {
                 renderGames();
@@ -880,7 +900,7 @@
             }
         });
 
-        /* === IntersectionObserver 预加载 === */
+        /* === IntersectionObserver 无限加载 === */
         let observer = null;
         function setupIntersectionObserver() {
             const statusTarget = document.getElementById('loading-status');
@@ -900,7 +920,7 @@
             observer.observe(statusTarget);
         }
 
-        // 初始化
+        // 初始化执行
         renderTags();
         initGameData();
         setupIntersectionObserver();
