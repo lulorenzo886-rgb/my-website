@@ -721,48 +721,50 @@
             window.location.href = `${currentPage}?${query}`;
         }
 
-        // 精准 10 个同标签滚动推荐
-        async function loadSimilarGamesMarquee() {
+        // 🚀 直接从 index 页面存储的本地缓存提取 10 个同标签游戏（零延迟、防拦截）
+        function loadSimilarGamesMarquee() {
             const track = document.getElementById('marquee-track');
-            const primaryTag = (currentTags[0] || 'Arcade').toLowerCase();
-
-            try {
-                const res = await fetch(`https://gamemonetize.com/feed.php?format=0&category=${encodeURIComponent(primaryTag)}&page=1`);
-                let games = [];
-                if (res.ok) games = await res.json();
-
-                if (!Array.isArray(games) || games.length === 0) {
-                    const fallbackRes = await fetch('https://gamemonetize.com/feed.php?format=0&page=1');
-                    if (fallbackRes.ok) games = await fallbackRes.json();
-                }
-
-                const filteredGames = games.filter(g => g.title !== gameTitle).map(item => {
-                    const itemTags = (item.category + ',' + (item.tags || '')).toLowerCase().split(',').map(t => t.trim());
-                    let score = 0;
-                    currentTags.forEach(tag => {
-                        const target = tag.toLowerCase();
-                        if (target && itemTags.some(t => t === target || t.includes(target))) score += 1;
-                    });
-                    return { ...item, score };
-                });
-
-                filteredGames.sort((a, b) => b.score - a.score);
-
-                const top10 = filteredGames.slice(0, 10);
-                window.similarGamesCache = top10;
-
-                const renderCards = (list) => list.map((item, idx) => `
-                    <div class="rec-card" onclick="navigateToGame(window.similarGamesCache[${idx}])" role="button" aria-label="${item.title}">
-                        <img src="${item.thumb}" alt="${item.title}" loading="lazy">
-                        <div class="rec-card-title">${item.title}</div>
-                    </div>
-                `).join('');
-
-                const cardsHTML = renderCards(top10);
-                track.innerHTML = cardsHTML + cardsHTML;
-            } catch (e) {
-                console.warn('Similar games fetch error:', e);
+            
+            // 1. 获取 index 存入的全局游戏，如果拿不到则提供优雅静态保底
+            let allGames = JSON.parse(localStorage.getItem('lulutap_all_games') || '[]');
+            
+            if (!Array.isArray(allGames) || allGames.length === 0) {
+                allGames = [
+                    { title: "Car Racing 3D", thumb: "https://img.gamemonetize.com/rvvASAhfx001/512x512.jpg", url: "https://html5.gamedistribution.com/rvvASAhfx001/", category: "Arcade" },
+                    { title: "Subway Surfers", thumb: "https://img.gamemonetize.com/4kci7og3klgj0ivy2wz3gdvd9dth5e7n/512x512.jpg", url: "https://html5.gamedistribution.com/rvvASAhfx001/", category: "Arcade" },
+                    { title: "Temple Run", thumb: "https://img.gamemonetize.com/rvvASAhfx001/512x512.jpg", url: "https://html5.gamedistribution.com/rvvASAhfx001/", category: "Action" },
+                    { title: "Bubble Shooter", thumb: "https://img.gamemonetize.com/4kci7og3klgj0ivy2wz3gdvd9dth5e7n/512x512.jpg", url: "https://html5.gamedistribution.com/rvvASAhfx001/", category: "Casual" },
+                    { title: "Stickman Combat", thumb: "https://img.gamemonetize.com/rvvASAhfx001/512x512.jpg", url: "https://html5.gamedistribution.com/rvvASAhfx001/", category: "Action" }
+                ];
             }
+
+            // 2. 排除当前正在玩的同名游戏，并进行相似度计分
+            const filteredGames = allGames.filter(g => g.title !== gameTitle).map(item => {
+                const itemTags = (item.category + ',' + (item.tags || '')).toLowerCase().split(',').map(t => t.trim());
+                let score = 0;
+                currentTags.forEach(tag => {
+                    const target = tag.toLowerCase();
+                    if (target && itemTags.some(t => t === target || t.includes(target))) score += 1;
+                });
+                return { ...item, score };
+            });
+
+            filteredGames.sort((a, b) => b.score - a.score);
+
+            // 3. 截取前 10 个最匹配游戏
+            const top10 = filteredGames.slice(0, 10);
+            window.similarGamesCache = top10;
+
+            // 4. 生成双份 HTML 实现无缝向左循环滚动
+            const renderCards = (list) => list.map((item, idx) => `
+                <div class="rec-card" onclick="navigateToGame(window.similarGamesCache[${idx}])" role="button" aria-label="${item.title}">
+                    <img src="${item.thumb || item.img}" alt="${item.title}" loading="lazy">
+                    <div class="rec-card-title">${item.title}</div>
+                </div>
+            `).join('');
+
+            const cardsHTML = renderCards(top10);
+            track.innerHTML = cardsHTML + cardsHTML;
         }
 
         window.addEventListener('DOMContentLoaded', loadSimilarGamesMarquee);
