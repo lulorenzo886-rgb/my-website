@@ -751,7 +751,9 @@
             }
         }
 
+        // 自动适配 Cloudflare Pages 干净 URL（支持无 .html 后缀）
         function navigateToGame(game) {
+            if (!game) return;
             let history = JSON.parse(localStorage.getItem('lulutap_recent') || '[]');
             history = history.filter(item => item.title !== game.title);
             history.unshift(game);
@@ -759,14 +761,15 @@
             localStorage.setItem('lulutap_recent', JSON.stringify(history));
 
             const query = new URLSearchParams({
-                url: game.gameUrl || game.url,
-                title: game.title,
+                url: game.gameUrl || game.url || '#',
+                title: game.title || 'Game',
                 img: game.img || game.thumb || '',
                 cat: game.category || 'Arcade',
                 desc: game.description || ''
             }).toString();
 
-            window.location.href = `game.html?${query}`;
+            const currentPage = window.location.pathname.split('/').pop() || 'game';
+            window.location.href = `${currentPage}?${query}`;
         }
 
         async function loadSimilarGamesMarquee() {
@@ -792,7 +795,7 @@
 
                 const cardsHTML = top10.map((item, idx) => `
                     <div class="rec-card" onclick="navigateToGame(window.similarGamesCache[${idx}])" role="button" aria-label="${item.title}">
-                        <img src="${item.thumb}" alt="${item.title}">
+                        <img src="${item.thumb}" alt="${item.title}" onerror="this.src='https://picsum.photos/200/200?random=${idx}'">
                         <div class="rec-card-title">${item.title}</div>
                     </div>
                 `).join('');
@@ -801,16 +804,16 @@
             } catch(e) {
                 const fallbackData = Array.from({ length: 10 }).map((_, i) => ({
                     title: `Similar Game ${i + 1}`,
-                    gameUrl: 'https://html5.gamedistribution.com/rvvASAhfx001/',
-                    img: `https://picsum.photos/200/200?random=${i + 10}`,
-                    category: 'Casual',
-                    description: 'Fun casual game to play anytime!'
+                    url: 'https://html5.gamedistribution.com/rvvASAhfx001/',
+                    thumb: `https://picsum.photos/200/200?random=${i + 10}`,
+                    category: 'Sports',
+                    description: 'Fun online sports game to play anytime!'
                 }));
                 window.similarGamesCache = fallbackData;
 
                 const fallbackHTML = fallbackData.map((item, idx) => `
                     <div class="rec-card" onclick="navigateToGame(window.similarGamesCache[${idx}])" role="button" aria-label="${item.title}">
-                        <img src="${item.img}" alt="${item.title}">
+                        <img src="${item.thumb}" alt="${item.title}">
                         <div class="rec-card-title">${item.title}</div>
                     </div>
                 `).join('');
