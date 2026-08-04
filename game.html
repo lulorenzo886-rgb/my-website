@@ -144,7 +144,7 @@
             justify-content: center;
             gap: 16px;
             z-index: 20;
-            transition: opacity 0.4s ease, visibility 0.4s;
+            transition: opacity 0.5s ease, visibility 0.5s;
         }
 
         .game-loader-overlay.hidden {
@@ -532,7 +532,7 @@
         <div class="left-panel">
             <div class="screen-box" id="screen-box" onclick="focusGameFrame()">
                 
-                <!-- 🚀 优化 1：加载动画遮罩 -->
+                <!-- 🚀 5 秒加载动画遮罩 -->
                 <div class="game-loader-overlay" id="game-loader">
                     <svg class="spinner-cat" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="30" cy="30" r="26" stroke="#00F2FE" stroke-width="2" stroke-dasharray="8 4"/>
@@ -635,7 +635,6 @@
     </section>
 
     <script>
-        // 获取 URL 参数
         const urlParams = new URLSearchParams(window.location.search);
         const gameUrl = urlParams.get('url') || 'https://html5.gamedistribution.com/rvvASAhfx001/';
         const gameTitle = decodeURIComponent(urlParams.get('title') || 'Free Online Game').trim();
@@ -649,29 +648,34 @@
         const tagsContainer = document.getElementById('game-tags');
         const infoBody = document.getElementById('game-info-body');
 
-        // 绑定数据到 UI
         frame.src = gameUrl;
         titleEl.textContent = gameTitle;
         document.title = `${gameTitle} - Play Free Online on LuluTap`;
         infoBody.textContent = descParam;
 
-        // 🚀 优化 1：键盘聚焦 + 加载遮罩淡出
+        // 🚀 保持 5 秒展示时间，优雅平滑过渡
+        const MIN_LOADING_TIME = 5000;
+        const startTime = Date.now();
+
         frame.onload = function() {
-            // 加载完成后淡出动画遮罩
-            loader.classList.add('hidden');
-            // 自动聚焦到游戏窗口
-            focusGameFrame();
+            const elapsedTime = Date.now() - startTime;
+            const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
+
+            setTimeout(function() {
+                loader.classList.add('hidden');
+                focusGameFrame();
+            }, remainingTime);
         };
 
         function focusGameFrame() {
             try {
                 frame.contentWindow.focus();
             } catch (e) {
-                // cross-origin 安全警告忽略
+                // Ignore cross-origin warnings
             }
         }
 
-        // 🚀 优化 2：动态 SEO & OG 社交分享卡片
+        // 动态 SEO & Open Graph
         function updateDynamicSEO() {
             const currentUrl = window.location.href;
             
@@ -687,7 +691,6 @@
                 document.getElementById('tw-image').setAttribute('content', imgParam);
             }
 
-            // Google 结构化数据 (JSON-LD VideoGame)
             const schemaData = {
                 "@context": "https://schema.org",
                 "@type": "VideoGame",
@@ -708,7 +711,6 @@
 
         updateDynamicSEO();
 
-        // 标签渲染
         let currentTags = tagsParam.split(',').map(t => t.trim()).filter(Boolean);
         tagsContainer.innerHTML = currentTags.map(tag => `<span class="meta-tag">${tag}</span>`).join('');
 
@@ -787,7 +789,18 @@
 
         function reloadGame() {
             loader.classList.remove('hidden');
+            const startReloadTime = Date.now();
             frame.src = frame.src;
+
+            frame.onload = function() {
+                const elapsedTime = Date.now() - startReloadTime;
+                const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
+
+                setTimeout(function() {
+                    loader.classList.add('hidden');
+                    focusGameFrame();
+                }, remainingTime);
+            };
         }
 
         function toggleFullscreen() {
