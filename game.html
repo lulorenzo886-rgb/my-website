@@ -150,12 +150,12 @@
             color: #fff;
         }
 
-        /* 🔴 交互式真实点赞按钮 */
+        /* 🔴 与首页同步样式的交互式点赞按钮 */
         .like-btn {
             background: rgba(255, 71, 87, 0.15);
             border: 1px solid rgba(255, 71, 87, 0.3);
             color: #ff4757;
-            padding: 6px 14px;
+            padding: 6px 16px;
             border-radius: 20px;
             font-size: 13px;
             font-weight: bold;
@@ -430,9 +430,9 @@
                 <div class="meta-header">
                     <h1 class="game-title" id="game-title">Real Car Parking Game</h1>
                     
-                    <!-- 🔴 将 2.8k 替换为真实可点的清零点赞按钮 -->
+                    <!-- 🔴 实时与首页双向同步的点赞按钮 -->
                     <button class="like-btn" id="like-btn" onclick="toggleLike()">
-                        👍 <span id="like-count">0</span>
+                        <span id="like-icon">🤍</span> <span id="like-count">0</span>
                     </button>
                 </div>
                 
@@ -494,7 +494,7 @@
                     <span class="toggle-arrow" id="info-arrow">▾</span>
                 </div>
                 <div class="info-body" id="game-info-body">
-                    Use Arrow keys or WASD to control movement. Click the target kittens using your mouse. Click the fullscreen button for an immersive gaming experience! Test your observation skills and spot all hidden cats to reach the next level.
+                    Use Arrow keys or WASD to control movement. Click target elements using your mouse. Click the fullscreen button for an immersive gaming experience!
                 </div>
             </div>
         </div>
@@ -512,54 +512,76 @@
         const urlParams = new URLSearchParams(window.location.search);
         const gameUrl = urlParams.get('url') || 'https://html5.gamedistribution.com/rvvASAhfx001/';
         const gameTitle = urlParams.get('title') || 'Real Car Parking Game';
-        const tagsParam = urlParams.get('tags') || 'puzzle,casual,find object';
+        const tagsParam = urlParams.get('cat') || urlParams.get('tags') || 'Puzzle,Casual,Find Object';
+        const descParam = urlParams.get('desc');
 
         const frame = document.getElementById('game-frame');
         const titleEl = document.getElementById('game-title');
         const tagsContainer = document.getElementById('game-tags');
+        const infoBody = document.getElementById('game-info-body');
 
         frame.src = gameUrl;
         titleEl.textContent = gameTitle;
         document.title = `${gameTitle} - LuluTap`;
 
-        let currentTags = tagsParam.split(',').map(t => t.trim().toLowerCase());
+        if (descParam) {
+            infoBody.textContent = descParam;
+        }
+
+        let currentTags = tagsParam.split(',').map(t => t.trim());
         tagsContainer.innerHTML = currentTags.map(tag => `<span class="meta-tag">${tag}</span>`).join('');
 
-        // 🔴 真实点赞计数与本地数据绑定逻辑
-        const gameId = encodeURIComponent(gameTitle); // 以游戏名作为独立唯一 key
+        // 🔴 全局统一的点赞逻辑与 Storage 写入
         const likeBtn = document.getElementById('like-btn');
+        const likeIconEl = document.getElementById('like-icon');
         const likeCountEl = document.getElementById('like-count');
 
-        // 从本地读取当前游戏的点赞数据（初始归零为 0）
-        let likeCount = parseInt(localStorage.getItem(`likes_${gameId}`) || '0', 10);
-        let isLiked = localStorage.getItem(`user_liked_${gameId}`) === 'true';
+        function getLikesStore() {
+            return JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
+        }
 
         function updateLikeUI() {
-            likeCountEl.textContent = likeCount;
-            if (isLiked) {
+            const likesStore = getLikesStore();
+            const record = likesStore[gameTitle] || { count: Math.floor(Math.random() * 500) + 120, userLiked: false };
+
+            likeCountEl.textContent = record.count;
+            if (record.userLiked) {
                 likeBtn.classList.add('liked');
+                likeIconEl.textContent = '❤️';
             } else {
                 likeBtn.classList.remove('liked');
+                likeIconEl.textContent = '🤍';
             }
         }
 
         function toggleLike() {
-            if (isLiked) {
-                likeCount = Math.max(0, likeCount - 1);
-                isLiked = false;
+            const likesStore = getLikesStore();
+            let record = likesStore[gameTitle] || { 
+                count: parseInt(likeCountEl.textContent) || 100, 
+                userLiked: false 
+            };
+
+            if (record.userLiked) {
+                record.count = Math.max(0, record.count - 1);
+                record.userLiked = false;
             } else {
-                likeCount += 1;
-                isLiked = true;
+                record.count += 1;
+                record.userLiked = true;
             }
-            
-            // 写入本地，保持状态
-            localStorage.setItem(`likes_${gameId}`, likeCount);
-            localStorage.setItem(`user_liked_${gameId}`, isLiked);
-            
+
+            likesStore[gameTitle] = record;
+            localStorage.setItem('lulutap_likes', JSON.stringify(likesStore));
             updateLikeUI();
         }
 
-        // 初始化加载点赞状态
+        // 监听其他页面修改 localStorage 时的实时更新
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'lulutap_likes') {
+                updateLikeUI();
+            }
+        });
+
+        // 初始化读取 UI
         updateLikeUI();
 
         function toggleGameInfo() {
@@ -608,7 +630,8 @@
                     const itemTags = (item.tags || item.category || '').toLowerCase().split(',').map(t => t.trim());
                     let score = 0;
                     currentTags.forEach(tag => {
-                        if (itemTags.some(t => t.includes(tag) || tag.includes(t))) {
+                        const lowTag = tag.toLowerCase();
+                        if (itemTags.some(t => t.includes(lowTag) || lowTag.includes(t))) {
                             score += 1;
                         }
                     });
@@ -619,7 +642,7 @@
                 const top10 = rankedGames.slice(0, 10);
 
                 const cardsHTML = top10.map(item => `
-                    <a href="game.html?url=${encodeURIComponent(item.url)}&title=${encodeURIComponent(item.title)}&tags=${encodeURIComponent(item.tags || item.category || '')}" class="rec-card">
+                    <a href="game.html?url=${encodeURIComponent(item.url)}&title=${encodeURIComponent(item.title)}&cat=${encodeURIComponent(item.category || '')}&desc=${encodeURIComponent(item.description || '')}" class="rec-card">
                         <img src="${item.thumb}" alt="${item.title}">
                         <div class="rec-card-title">${item.title}</div>
                     </a>
