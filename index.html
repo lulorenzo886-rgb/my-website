@@ -873,6 +873,13 @@
             }
         });
 
+        /* === 跨标签页实时同步点赞 === */
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'lulutap_likes') {
+                renderGames();
+            }
+        });
+
         /* === IntersectionObserver 预加载 === */
         let observer = null;
         function setupIntersectionObserver() {
