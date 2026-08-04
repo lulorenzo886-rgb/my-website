@@ -3,11 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuluTap - Play Game</title>
+    <title>Play Game - LuluTap</title>
+
+    <!-- 动态 SEO / Open Graph 占位符 -->
+    <meta name="description" id="meta-desc" content="Play free online HTML5 games on LuluTap!">
+    <meta property="og:type" content="website">
+    <meta property="og:title" id="og-title" content="Play Game - LuluTap">
+    <meta property="og:description" id="og-desc" content="Play free online HTML5 games on LuluTap!">
+    <meta property="og:image" id="og-image" content="">
+    <meta property="og:url" id="og-url" content="">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="tw-title" content="Play Game - LuluTap">
+    <meta name="twitter:description" id="tw-desc" content="Play free online HTML5 games on LuluTap!">
+    <meta name="twitter:image" id="tw-image" content="">
+
+    <!-- Google 结构化数据 (JSON-LD) 动态容器 -->
+    <script type="application/ld+json" id="ld-json-schema"></script>
+
     <!-- 标签页 Favicon 图标 -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cdefs%3E%3ClinearGradient id='lulutap-main' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300F2FE'/%3E%3Cstop offset='100%25' stop-color='%239B51E0'/%3E%3C/linearGradient%3E%3ClinearGradient id='cat-warm' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23FF9472'/%3E%3Cstop offset='100%25' stop-color='%23F2709C'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg transform='translate(6, 4)'%3E%3Ccircle cx='26' cy='26' r='24' stroke='url(%23lulutap-main)' stroke-width='1.5' stroke-dasharray='6 3' opacity='0.4'/%3E%3Cpath d='M10 38 C10 32, 14 30, 26 30 C38 30, 42 32, 42 38 L44 42 C44 44, 42 45, 40 45 L12 45 C10 45, 8 44, 8 42 Z' fill='%231E2332' stroke='url(%23lulutap-main)' stroke-width='1.5' stroke-linejoin='round'/%3E%3Cpath d='M21 16 C21 12, 31 12, 31 16 C32 19, 31 23, 26 23 C21 23, 20 19, 21 16 Z' fill='%230F111A'/%3E%3Cpath d='M22 13 C23 10, 29 10, 30 13 C31 15, 29 16, 26 16 C23 16, 21 15, 22 13 Z' fill='url(%23lulutap-main)'/%3E%3Cpath d='M19 16 C19 10, 33 10, 33 16' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3Crect x='17' y='15' width='4' height='7' rx='2' fill='url(%23lulutap-main)'/%3E%3Crect x='31' y='15' width='4' height='7' rx='2' fill='url(%23lulutap-main)'/%3E%3Cpath d='M20 24 C23 23, 29 23, 32 24 L34 33 L18 33 Z' fill='%23292D3E'/%3E%3Cg transform='translate(13, 28)'%3E%3Crect x='0' y='2' width='12' height='8' rx='3' fill='url(%23lulutap-main)'/%3E%3Ccircle cx='3' cy='5' r='1' fill='%230F111A'/%3E%3Ccircle cx='9' cy='5' r='1' fill='%23FFFFFF'/%3E%3C/g%3E%3Cg transform='translate(31, 27)'%3E%3Cpath d='M3 7 C3 4, 7 3, 9 5 C11 7, 10 12, 8 13 C6 13, 3 11, 3 7 Z' fill='url(%23cat-warm)'/%3E%3Cpath d='M4 4 L6 1 L7 4 Z' fill='url(%23cat-warm)'/%3E%3Cpath d='M7 4 L9 1 L10 4 Z' fill='url(%23cat-warm)'/%3E%3Cpath d='M9 11 C12 11, 13 8, 12 7' stroke='url(%23cat-warm)' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/g%3E%3Cpath d='M30 27 Q33 26 34 28' stroke='%23FFFFFF' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/g%3E%3C/svg%3E">
 
-    <!-- GameMonetize SDK 广告收益初始化 (已经嵌入你的专属 ID) -->
+    <!-- GameMonetize SDK 广告收益初始化 -->
     <script type="text/javascript">
         window.SDK_OPTIONS = {
             gameId: "4kci7og3klgj0ivy2wz3gdvd9dth5e7n",
@@ -93,13 +109,13 @@
             flex: 1;
         }
 
-        /* Left Panel */
         .left-panel {
             display: flex;
             flex-direction: column;
             gap: 16px;
         }
 
+        /* Screen Box & Loading Overlay */
         .screen-box {
             position: relative;
             width: 100%;
@@ -115,6 +131,50 @@
             width: 100%;
             height: 100%;
             border: none;
+        }
+
+        /* 游戏加载遮罩动画 */
+        .game-loader-overlay {
+            position: absolute;
+            inset: 0;
+            background: #111420;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            z-index: 20;
+            transition: opacity 0.4s ease, visibility 0.4s;
+        }
+
+        .game-loader-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .spinner-cat {
+            width: 60px;
+            height: 60px;
+            animation: pulseCat 1.5s ease-in-out infinite alternate;
+        }
+
+        .loader-text {
+            font-size: 14px;
+            color: #00f2fe;
+            font-weight: 600;
+            letter-spacing: 1px;
+            animation: blinkText 1.2s infinite;
+        }
+
+        @keyframes pulseCat {
+            0% { transform: scale(0.9); opacity: 0.7; }
+            100% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 12px #00f2fe); }
+        }
+
+        @keyframes blinkText {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
         }
 
         .controls-bar {
@@ -170,7 +230,6 @@
             color: #fff;
         }
 
-        /* 交互式点赞按钮 */
         .like-btn {
             background: rgba(255, 71, 87, 0.15);
             border: 1px solid rgba(255, 71, 87, 0.3);
@@ -295,10 +354,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
 
-        .key-cap.wide {
-            min-width: 70px;
-        }
-
+        .key-cap.wide { min-width: 70px; }
         .key-cap.mouse-btn {
             background: linear-gradient(180deg, #00f2fe 0%, #0099ff 100%);
             color: #000;
@@ -313,9 +369,7 @@
             transition: background 0.2s;
         }
 
-        .collapsible-header:hover {
-            background: #222738;
-        }
+        .collapsible-header:hover { background: #222738; }
 
         .toggle-arrow {
             font-size: 12px;
@@ -331,13 +385,8 @@
             border-top: 1px solid #262b3d;
         }
 
-        .info-body.collapsed {
-            display: none;
-        }
-
-        .side-card.collapsed .toggle-arrow {
-            transform: rotate(-90deg);
-        }
+        .info-body.collapsed { display: none; }
+        .side-card.collapsed .toggle-arrow { transform: rotate(-90deg); }
 
         .recommend-section {
             max-width: 1500px;
@@ -370,9 +419,7 @@
             animation: scrollMarquee 25s linear infinite;
         }
 
-        .marquee-track:hover {
-            animation-play-state: paused;
-        }
+        .marquee-track:hover { animation-play-state: paused; }
 
         .rec-card {
             width: 140px;
@@ -420,26 +467,14 @@
         }
 
         @media (max-width: 1024px) {
-            .play-container {
-                grid-template-columns: 1fr;
-            }
+            .play-container { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 640px) {
-            .play-container {
-                padding: 0 12px;
-                margin: 10px auto;
-            }
-            .game-title {
-                font-size: 16px;
-            }
-            .action-btn {
-                padding: 6px 10px;
-                font-size: 11px;
-            }
-            .recommend-section {
-                padding: 0 12px;
-            }
+            .play-container { padding: 0 12px; margin: 10px auto; }
+            .game-title { font-size: 16px; }
+            .action-btn { padding: 6px 10px; font-size: 11px; }
+            .recommend-section { padding: 0 12px; }
         }
     </style>
 </head>
@@ -458,10 +493,6 @@
                         <stop offset="0%" stop-color="#FF9472" />
                         <stop offset="100%" stop-color="#F2709C" />
                     </linearGradient>
-                    <filter id="glow-effect" x="-20%" y="-20%" width="140%" height="140%">
-                        <feGaussianBlur stdDeviation="2.5" result="blur" />
-                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                    </filter>
                 </defs>
                 <g transform="translate(6, 4)">
                     <circle cx="26" cy="26" r="24" stroke="url(#lulutap-main)" stroke-width="1.5" stroke-dasharray="6 3" opacity="0.4" />
@@ -469,8 +500,8 @@
                     <path d="M21 16 C21 12, 31 12, 31 16 C32 19, 31 23, 26 23 C21 23, 20 19, 21 16 Z" fill="#0F111A"/>
                     <path d="M22 13 C23 10, 29 10, 30 13 C31 15, 29 16, 26 16 C23 16, 21 15, 22 13 Z" fill="url(#lulutap-main)"/>
                     <path d="M19 16 C19 10, 33 10, 33 16" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" fill="none"/>
-                    <rect x="17" y="15" width="4" height="7" rx="2" fill="url(#lulutap-main)" filter="url(#glow-effect)"/>
-                    <rect x="31" y="15" width="4" height="7" rx="2" fill="url(#lulutap-main)" filter="url(#glow-effect)"/>
+                    <rect x="17" y="15" width="4" height="7" rx="2" fill="url(#lulutap-main)"/>
+                    <rect x="31" y="15" width="4" height="7" rx="2" fill="url(#lulutap-main)"/>
                     <path d="M20 24 C23 23, 29 23, 32 24 L34 33 L18 33 Z" fill="#292D3E"/>
                     <g transform="translate(13, 28)">
                         <rect x="0" y="2" width="12" height="8" rx="3" fill="url(#lulutap-main)"/>
@@ -486,11 +517,9 @@
                     <path d="M30 27 Q33 26 34 28" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" fill="none"/>
                 </g>
                 <text x="64" y="37" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="24" letter-spacing="0.8">
-                    <tspan fill="url(#lulutap-main)" filter="url(#glow-effect)">Lulu</tspan>
+                    <tspan fill="url(#lulutap-main)">Lulu</tspan>
                     <tspan fill="#FFFFFF">Tap</tspan>
                 </text>
-                <circle cx="205" cy="18" r="2" fill="url(#cat-warm)" />
-                <circle cx="211" cy="23" r="1" fill="#00F2FE" />
             </svg>
         </a>
         <a href="index.html" class="back-btn" aria-label="Return to Homepage">🏠 Home</a>
@@ -501,7 +530,19 @@
         
         <!-- Left Panel -->
         <div class="left-panel">
-            <div class="screen-box" id="screen-box">
+            <div class="screen-box" id="screen-box" onclick="focusGameFrame()">
+                
+                <!-- 🚀 优化 1：加载动画遮罩 -->
+                <div class="game-loader-overlay" id="game-loader">
+                    <svg class="spinner-cat" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="30" cy="30" r="26" stroke="#00F2FE" stroke-width="2" stroke-dasharray="8 4"/>
+                        <path d="M20 22 C20 18, 26 18, 30 22 C34 18, 40 18, 40 22" stroke="#FF9472" stroke-width="2" fill="none"/>
+                        <circle cx="23" cy="28" r="2" fill="#00F2FE"/>
+                        <circle cx="37" cy="28" r="2" fill="#00F2FE"/>
+                    </svg>
+                    <div class="loader-text">LOADING GAME...</div>
+                </div>
+
                 <iframe 
                     class="game-iframe" 
                     id="game-frame" 
@@ -511,6 +552,7 @@
                     src="about:blank"
                     title="Game Window">
                 </iframe>
+
                 <div class="controls-bar">
                     <button class="action-btn" onclick="reloadGame()" aria-label="Reload Game">🔄 Reload</button>
                     <button class="action-btn" id="fullscreen-btn" onclick="toggleFullscreen()" aria-label="Toggle Fullscreen">⛶ Fullscreen</button>
@@ -548,7 +590,6 @@
                             <span class="key-cap">D</span>
                         </div>
                     </div>
-
                     <div class="control-item">
                         <span class="control-action">Arrow Controls</span>
                         <div class="key-group">
@@ -558,14 +599,12 @@
                             <span class="key-cap">→</span>
                         </div>
                     </div>
-
                     <div class="control-item">
                         <span class="control-action">Jump / Action</span>
                         <div class="key-group">
                             <span class="key-cap wide">Space</span>
                         </div>
                     </div>
-
                     <div class="control-item">
                         <span class="control-action">Click / Select</span>
                         <div class="key-group">
@@ -596,26 +635,80 @@
     </section>
 
     <script>
+        // 获取 URL 参数
         const urlParams = new URLSearchParams(window.location.search);
         const gameUrl = urlParams.get('url') || 'https://html5.gamedistribution.com/rvvASAhfx001/';
-        const gameTitle = decodeURIComponent(urlParams.get('title') || 'Real Car Parking Game').trim();
-        const tagsParam = urlParams.get('cat') || urlParams.get('tags') || 'Puzzle,Casual,Find Object';
-        const descParam = urlParams.get('desc');
+        const gameTitle = decodeURIComponent(urlParams.get('title') || 'Free Online Game').trim();
+        const tagsParam = urlParams.get('cat') || urlParams.get('tags') || 'Puzzle,Casual,Arcade';
+        const descParam = urlParams.get('desc') || `Play ${gameTitle} online for free on LuluTap! No installation required.`;
         const imgParam = urlParams.get('img') || '';
 
         const frame = document.getElementById('game-frame');
+        const loader = document.getElementById('game-loader');
         const titleEl = document.getElementById('game-title');
         const tagsContainer = document.getElementById('game-tags');
         const infoBody = document.getElementById('game-info-body');
 
+        // 绑定数据到 UI
         frame.src = gameUrl;
         titleEl.textContent = gameTitle;
-        document.title = `${gameTitle} - LuluTap`;
+        document.title = `${gameTitle} - Play Free Online on LuluTap`;
+        infoBody.textContent = descParam;
 
-        if (descParam) {
-            infoBody.textContent = descParam;
+        // 🚀 优化 1：键盘聚焦 + 加载遮罩淡出
+        frame.onload = function() {
+            // 加载完成后淡出动画遮罩
+            loader.classList.add('hidden');
+            // 自动聚焦到游戏窗口
+            focusGameFrame();
+        };
+
+        function focusGameFrame() {
+            try {
+                frame.contentWindow.focus();
+            } catch (e) {
+                // cross-origin 安全警告忽略
+            }
         }
 
+        // 🚀 优化 2：动态 SEO & OG 社交分享卡片
+        function updateDynamicSEO() {
+            const currentUrl = window.location.href;
+            
+            document.getElementById('meta-desc').setAttribute('content', descParam);
+            document.getElementById('og-title').setAttribute('content', `${gameTitle} - LuluTap`);
+            document.getElementById('og-desc').setAttribute('content', descParam);
+            document.getElementById('og-url').setAttribute('content', currentUrl);
+            document.getElementById('tw-title').setAttribute('content', `${gameTitle} - LuluTap`);
+            document.getElementById('tw-desc').setAttribute('content', descParam);
+
+            if (imgParam) {
+                document.getElementById('og-image').setAttribute('content', imgParam);
+                document.getElementById('tw-image').setAttribute('content', imgParam);
+            }
+
+            // Google 结构化数据 (JSON-LD VideoGame)
+            const schemaData = {
+                "@context": "https://schema.org",
+                "@type": "VideoGame",
+                "name": gameTitle,
+                "description": descParam,
+                "image": imgParam,
+                "url": currentUrl,
+                "gamePlatform": "Web Browser",
+                "applicationCategory": "Game",
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                }
+            };
+            document.getElementById('ld-json-schema').textContent = JSON.stringify(schemaData);
+        }
+
+        updateDynamicSEO();
+
+        // 标签渲染
         let currentTags = tagsParam.split(',').map(t => t.trim()).filter(Boolean);
         tagsContainer.innerHTML = currentTags.map(tag => `<span class="meta-tag">${tag}</span>`).join('');
 
@@ -635,10 +728,7 @@
         function getGameLikesRecord(title) {
             const likesStore = JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
             if (!likesStore[title]) {
-                likesStore[title] = {
-                    count: getSeedCount(title),
-                    userLiked: false
-                };
+                likesStore[title] = { count: getSeedCount(title), userLiked: false };
                 localStorage.setItem('lulutap_likes', JSON.stringify(likesStore));
             }
             return likesStore[title];
@@ -646,7 +736,6 @@
 
         function updateLikeUI() {
             const record = getGameLikesRecord(gameTitle);
-
             likeCountEl.textContent = record.count;
             if (record.userLiked) {
                 likeBtn.classList.add('liked');
@@ -674,12 +763,6 @@
             updateLikeUI();
         }
 
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'lulutap_likes') {
-                updateLikeUI();
-            }
-        });
-
         updateLikeUI();
 
         function toggleGameInfo() {
@@ -703,23 +786,18 @@
         }
 
         function reloadGame() {
+            loader.classList.remove('hidden');
             frame.src = frame.src;
         }
 
         function toggleFullscreen() {
             const screenBox = document.getElementById('screen-box');
             if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                if (screenBox.requestFullscreen) {
-                    screenBox.requestFullscreen();
-                } else if (screenBox.webkitRequestFullscreen) {
-                    screenBox.webkitRequestFullscreen();
-                }
+                if (screenBox.requestFullscreen) screenBox.requestFullscreen();
+                else if (screenBox.webkitRequestFullscreen) screenBox.webkitRequestFullscreen();
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
             }
         }
 
@@ -761,25 +839,17 @@
                 const games = await res.json();
 
                 const rankedGames = games.map(item => {
-                    const itemTags = (item.tags || item.category || '')
-                        .toLowerCase()
-                        .split(',')
-                        .map(t => t.trim())
-                        .filter(Boolean);
-
+                    const itemTags = (item.tags || item.category || '').toLowerCase().split(',').map(t => t.trim()).filter(Boolean);
                     let score = 0;
                     currentTags.forEach(tag => {
                         const lowTag = tag.toLowerCase();
-                        if (lowTag && itemTags.some(t => t === lowTag || t.includes(lowTag))) {
-                            score += 1;
-                        }
+                        if (lowTag && itemTags.some(t => t === lowTag || t.includes(lowTag))) score += 1;
                     });
                     return { ...item, score };
                 });
 
                 rankedGames.sort((a, b) => b.score - a.score);
                 const top10 = rankedGames.slice(0, 10);
-
                 window.similarGamesCache = top10;
 
                 const cardsHTML = top10.map((item, idx) => `
@@ -798,7 +868,6 @@
                     category: 'Casual',
                     description: 'Fun casual game to play anytime!'
                 }));
-
                 window.similarGamesCache = fallbackData;
 
                 const fallbackHTML = fallbackData.map((item, idx) => `
