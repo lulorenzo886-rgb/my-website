@@ -392,6 +392,7 @@
             align-items: center;
             font-size: 11px;
             color: #a0aec0;
+            margin-top: 2px;
         }
 
         .card-tag {
@@ -401,6 +402,24 @@
             border-radius: 4px;
             font-size: 10px;
             font-weight: 600;
+        }
+
+        /* === 新增：点赞徽章与样式 === */
+        .card-like-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #a0aec0;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 2px 6px;
+            border-radius: 10px;
+            backdrop-filter: blur(4px);
+        }
+
+        .card-like-badge.liked {
+            color: #ff4757;
         }
 
         .loading-status {
@@ -518,6 +537,17 @@
             description: "An exciting browser action game designed for ultimate fun and challenge."
         }));
 
+        // 点赞数据本地读取与保存
+        function getLikesData() {
+            return JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
+        }
+
+        function getGameLikesInfo(title, baseLikes = 0) {
+            const likesStore = getLikesData();
+            const record = likesStore[title] || { count: baseLikes || Math.floor(Math.random() * 800) + 120, userLiked: false };
+            return record;
+        }
+
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -626,6 +656,8 @@
                         gameTags.push(shuffledExtra[1]);
                     }
 
+                    const baseLikes = Math.floor(Math.random() * 800) + 100;
+
                     return {
                         id: item.id || `game-${Math.random()}`,
                         title: item.title || item.name || "Untitled Game",
@@ -633,7 +665,8 @@
                         tags: gameTags,
                         img: item.thumb || 'https://via.placeholder.com/300',
                         gameUrl: item.url || '#',
-                        description: item.description || ''
+                        description: item.description || '',
+                        baseLikes: baseLikes
                     };
                 });
 
@@ -743,7 +776,10 @@
                 return;
             }
 
-            grid.innerHTML = filtered.map((game, idx) => `
+            grid.innerHTML = filtered.map((game) => {
+                const likeInfo = getGameLikesInfo(game.title, game.baseLikes);
+
+                return `
                 <div onclick="goToGame(gamesData[${gamesData.indexOf(game)}])" class="game-card ${game.featured ? 'featured' : ''}">
                     <div class="card-cover" style="background-image: url('${game.img}');"></div>
                     <div class="card-overlay">
@@ -752,11 +788,21 @@
                             <div style="display: flex; gap: 4px; flex-wrap: wrap;">
                                 ${game.tags.map(t => `<span class="card-tag">${t}</span>`).join('')}
                             </div>
+                            <div class="card-like-badge ${likeInfo.userLiked ? 'liked' : ''}">
+                                ${likeInfo.userLiked ? '❤️' : '🤍'} ${likeInfo.count}
+                            </div>
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
+
+        // 当页面重新获取焦点或从详情页后退回来时，重新刷新渲染点赞数
+        window.addEventListener('pageshow', () => {
+            if (gamesData.length > 0) {
+                renderGames();
+            }
+        });
 
         window.addEventListener('scroll', () => {
             if (isLoading || !hasMoreData) return;
