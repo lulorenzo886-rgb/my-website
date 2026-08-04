@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuluTap - 发现好玩的游戏</title>
+    <title>LuluTap - 游戏中...</title>
     <style>
-        /* === 全局基础样式 === */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -21,7 +20,7 @@
             flex-direction: column;
         }
 
-        /* === 1. 顶部 Header === */
+        /* 顶部 Header */
         header {
             height: 60px;
             background: #161926;
@@ -30,426 +29,436 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 24px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
         }
 
         .logo {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
             color: #00f2fe;
             text-decoration: none;
             display: flex;
             align-items: center;
             gap: 8px;
-            letter-spacing: 0.5px;
         }
 
-        .logo:hover {
-            opacity: 0.9;
-        }
-
-        .mode-btn {
+        .back-btn {
             background: #222738;
             border: 1px solid #323950;
             color: #a0aec0;
-            padding: 6px 14px;
+            padding: 6px 16px;
             border-radius: 20px;
-            cursor: pointer;
+            text-decoration: none;
             font-size: 13px;
             transition: all 0.2s;
         }
 
-        .mode-btn:hover {
+        .back-btn:hover {
             color: #fff;
             border-color: #00f2fe;
         }
 
-        /* === 2. 多标签吸顶筛选栏 === */
-        .filter-wrapper {
-            position: sticky;
-            top: 60px;
-            z-index: 90;
-            background: rgba(15, 17, 26, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #222738;
-            padding: 12px 24px;
-        }
-
-        .filter-container {
-            max-width: 1500px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
-
-        .tags-scroll-group {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: none; /* 隐藏滚动条 */
-            padding-bottom: 2px;
-        }
-
-        .tags-scroll-group::-webkit-scrollbar {
-            display: none;
-        }
-
-        .tag-chip {
-            background: #161926;
-            border: 1px solid #262b3d;
-            color: #a0aec0;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            cursor: pointer;
-            user-select: none;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-
-        .tag-chip:hover {
-            border-color: #00f2fe;
-            color: #fff;
-        }
-
-        /* 多选选中高亮状态 */
-        .tag-chip.active {
-            background: rgba(0, 242, 254, 0.15);
-            border-color: #00f2fe;
-            color: #00f2fe;
-            font-weight: 600;
-        }
-
-        .tag-chip .close-icon {
-            font-size: 11px;
-            opacity: 0.7;
-        }
-
-        .tag-chip .close-icon:hover {
-            opacity: 1;
-        }
-
-        /* 一键清除全部按钮 */
-        .clear-all-btn {
-            background: #ff4757;
-            color: #fff;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            white-space: nowrap;
-            display: none; /* 动态控制显示 */
-            box-shadow: 0 0 10px rgba(255, 71, 87, 0.4);
-            transition: transform 0.2s;
-        }
-
-        .clear-all-btn:hover {
-            transform: scale(1.05);
-        }
-
-        /* === 3. Bento 极简网格布局 === */
-        .main-content {
+        /* 页面主要区域（左右两栏） */
+        .play-container {
             max-width: 1500px;
             width: 100%;
             margin: 20px auto;
             padding: 0 24px;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
             flex: 1;
         }
 
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
+        /* 左侧：游戏主画面及信息 */
+        .left-panel {
+            display: flex;
+            flex-direction: column;
             gap: 16px;
-            grid-auto-flow: dense;
         }
 
-        /* 游戏卡片基础样式 */
-        .game-card {
+        .screen-box {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #262b3d;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .game-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* 屏幕下方控制按键 */
+        .controls-bar {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .action-btn {
+            background: rgba(22, 25, 38, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-btn:hover {
+            background: #00f2fe;
+            color: #000;
+            font-weight: bold;
+        }
+
+        /* 游戏信息栏 */
+        .game-meta-box {
+            background: #161926;
+            border: 1px solid #262b3d;
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .meta-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .game-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .like-badge {
+            background: rgba(255, 71, 87, 0.15);
+            color: #ff4757;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .tags-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 13px;
+            color: #a0aec0;
+        }
+
+        .meta-tag {
+            background: rgba(0, 242, 254, 0.15);
+            color: #00f2fe;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        /* 右侧：操作指南与信息面板 */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .side-card {
+            background: #161926;
+            border: 1px solid #262b3d;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .card-h3 {
+            font-size: 14px;
+            font-weight: bold;
+            color: #00f2fe;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* WASD 按键提示示意 */
+        .keys-layout {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            margin: 10px 0;
+        }
+
+        .key-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .key-cap {
+            width: 36px;
+            height: 36px;
+            background: #222738;
+            border: 1px solid #323950;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 13px;
+            color: #fff;
+            box-shadow: 0 3px 0 #161926;
+        }
+
+        .info-desc {
+            font-size: 13px;
+            color: #a0aec0;
+            line-height: 1.6;
+        }
+
+        /* 底部：横向无缝推荐跑马灯 (方案A) */
+        .recommend-section {
+            max-width: 1500px;
+            width: 100%;
+            margin: 0 auto 30px auto;
+            padding: 0 24px;
+        }
+
+        .rec-header {
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .marquee-wrapper {
+            width: 100%;
+            overflow: hidden;
             position: relative;
             background: #161926;
             border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #222738;
-            text-decoration: none;
-            color: #fff;
-            aspect-ratio: 1 / 1;
+            border: 1px solid #262b3d;
+            padding: 16px 0;
+        }
+
+        .marquee-track {
             display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+            gap: 16px;
+            width: max-content;
+            animation: scrollMarquee 25s linear infinite;
         }
 
-        .game-card:hover {
-            transform: translateY(-5px);
-            border-color: #00f2fe;
-            box-shadow: 0 8px 25px rgba(0, 242, 254, 0.2);
-            z-index: 2;
+        .marquee-track:hover {
+            animation-play-state: paused; /* 鼠标悬停停止滚动 */
         }
 
-        /* Bento 放大卡片（2x2 大卡片 - 主推游戏） */
-        .game-card.featured {
-            grid-column: span 2;
-            grid-row: span 2;
-            aspect-ratio: 1 / 1;
+        .rec-card {
+            width: 140px;
+            height: 140px;
+            background: #222738;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            text-decoration: none;
+            flex-shrink: 0;
+            border: 1px solid #323950;
         }
 
-        .card-cover {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .rec-card img {
             width: 100%;
             height: 100%;
-            background-size: cover;
-            background-position: center;
-            transition: transform 0.3s;
+            object-fit: cover;
         }
 
-        .game-card:hover .card-cover {
-            transform: scale(1.05);
-        }
-
-        /* 卡片底部微发光遮罩 */
-        .card-overlay {
-            position: relative;
-            z-index: 1;
-            background: linear-gradient(0deg, rgba(15,17,26,0.95) 0%, rgba(15,17,26,0.4) 70%, rgba(15,17,26,0) 100%);
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .card-title {
-            font-size: 13px;
-            font-weight: bold;
+        .rec-card-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(15, 17, 26, 0.85);
+            color: #fff;
+            font-size: 11px;
+            padding: 6px;
+            text-align: center;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .featured .card-title {
-            font-size: 18px;
+        @keyframes scrollMarquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
         }
 
-        .card-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 11px;
-            color: #a0aec0;
-        }
-
-        .card-tag {
-            background: rgba(0, 242, 254, 0.15);
-            color: #00f2fe;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 10px;
-        }
-
-        .card-likes {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            color: #ff4757;
-            font-weight: bold;
-        }
-
-        /* 触底加载提示 */
-        .load-more-container {
-            text-align: center;
-            margin: 40px 0;
-        }
-
-        .load-more-btn {
-            background: #222738;
-            border: 1px solid #323950;
-            color: #00f2fe;
-            padding: 10px 28px;
-            border-radius: 20px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .load-more-btn:hover {
-            background: #00f2fe;
-            color: #000;
-        }
-
-        /* === 4. 响应式移动端适配 === */
+        /* 响应式调整 */
         @media (max-width: 1024px) {
-            .bento-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .bento-grid {
-                grid-template-columns: repeat(2, 1fr); /* 移动端标准双列大图 */
-                gap: 12px;
-            }
-
-            .game-card.featured {
-                grid-column: span 2; /* 移动端大卡片通栏展示 */
-                grid-row: span 1;
-                aspect-ratio: 16 / 9;
-            }
-
-            .filter-wrapper {
-                padding: 10px 12px;
-            }
-
-            .main-content {
-                padding: 0 12px;
+            .play-container {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- 1. 顶部 Header -->
+    <!-- Header -->
     <header>
         <a href="index.html" class="logo">🕹️ LuluTap</a>
-        <button class="mode-btn" id="mode-btn">💻 PC Mode</button>
+        <a href="index.html" class="back-btn">🏠 返回首页</a>
     </header>
 
-    <!-- 2. 多标签吸顶筛选栏 -->
-    <div class="filter-wrapper">
-        <div class="filter-container">
-            <div class="tags-scroll-group" id="tags-group">
-                <!-- 标签列表由 JS 动态渲染 -->
+    <!-- 游戏主容器 -->
+    <div class="play-container">
+        
+        <!-- 左侧：游戏窗口与元信息 -->
+        <div class="left-panel">
+            <div class="screen-box" id="screen-box">
+                <!-- 真实游戏窗口 -->
+                <iframe class="game-iframe" id="game-frame" allowfullscreen src="about:blank"></iframe>
+                
+                <!-- 控制功能按钮 -->
+                <div class="controls-bar">
+                    <button class="action-btn" onclick="reloadGame()">🔄 重载</button>
+                    <button class="action-btn" onclick="toggleFullscreen()">⛶ 全屏</button>
+                </div>
             </div>
-            <button class="clear-all-btn" id="clear-all-btn" onclick="clearAllFilters()">✕ 清除全部</button>
+
+            <!-- 标题和标签 -->
+            <div class="game-meta-box">
+                <div class="meta-header">
+                    <h1 class="game-title" id="game-title">加载中...</h1>
+                    <span class="like-badge" id="game-likes">👍 2.8k</span>
+                </div>
+                <div class="tags-row">
+                    <span>🏷️ 分类与标签：</span>
+                    <span id="game-tags">
+                        <span class="meta-tag">HTML5</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧：按键与说明 -->
+        <div class="right-panel">
+            <div class="side-card">
+                <div class="card-h3">🎮 CONTROLS</div>
+                <div class="keys-layout">
+                    <div class="key-cap">W</div>
+                    <div class="key-row">
+                        <div class="key-cap">A</div>
+                        <div class="key-cap">S</div>
+                        <div class="key-cap">D</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-card">
+                <div class="card-h3">📖 GAME INFO</div>
+                <p class="info-desc" id="game-desc">
+                    使用键盘方向键或 WASD 进行移动操作，按下全屏按钮可以获得极佳的沉浸式游戏体验。
+                </p>
+            </div>
         </div>
     </div>
 
-    <!-- 3. Bento 主页游戏网格 -->
-    <main class="main-content">
-        <div class="bento-grid" id="game-grid">
-            <!-- 游戏卡片由 JS 动态渲染 -->
+    <!-- 底部：10个同类推荐跑马灯 (方案A) -->
+    <section class="recommend-section">
+        <div class="rec-header">🔥 SIMILAR GAMES (热门推荐)</div>
+        <div class="marquee-wrapper">
+            <div class="marquee-track" id="marquee-track">
+                <!-- 跑马灯卡片将由 JS 自动渲染和复制 -->
+            </div>
         </div>
-
-        <div class="load-more-container">
-            <button class="load-more-btn" onclick="loadMoreGames()">🔄 触底加载更多游戏</button>
-        </div>
-    </main>
+    </section>
 
     <script>
-        // === 所有分类标签数据 ===
-        const allCategories = ["🔥 全部", "🏎️ 赛车", "🎯 动作", "🧩 益智", "3D", "⚡ 射击", "👭 双人", "💄 换装", "⚽ 体育"];
-        
-        // 存储当前用户勾选的所有标签（已选集合）
-        let selectedTags = [];
+        // 1. 获取 URL 里的游戏参数 (兼容直接传入 url 或 id)
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameUrl = urlParams.get('url');
+        const gameTitle = urlParams.get('title') || '精彩 HTML5 游戏';
 
-        // === 模拟游戏数据库 ===
-        const mockGames = [
-            { id: 101, title: "Extreme Racing 3D", category: "🏎️ 赛车", tags: ["🏎️ 赛车", "3D"], likes: "1.2k", img: "https://picsum.photos/400/400?random=1", featured: true },
-            { id: 102, title: "Cyber Strike", category: "🎯 动作", tags: ["🎯 动作", "⚡ 射击"], likes: "2.8k", img: "https://picsum.photos/300/300?random=2", featured: false },
-            { id: 103, title: "Puzzle Master 3D", category: "🧩 益智", tags: ["🧩 益智", "3D"], likes: "950", img: "https://picsum.photos/300/300?random=3", featured: false },
-            { id: 104, title: "Drift King", category: "🏎️ 赛车", tags: ["🏎️ 赛车"], likes: "3.1k", img: "https://picsum.photos/300/300?random=4", featured: false },
-            { id: 105, title: "Fashion Queen", category: "💄 换装", tags: ["💄 换装", "👭 双人"], likes: "1.8k", img: "https://picsum.photos/300/300?random=5", featured: false },
-            { id: 106, title: "Football Star", category: "⚽ 体育", tags: ["⚽ 体育", "3D"], likes: "890", img: "https://picsum.photos/300/300?random=6", featured: false },
-            { id: 107, title: "Space Shooter", category: "⚡ 射击", tags: ["⚡ 射击", "🎯 动作"], likes: "1.5k", img: "https://picsum.photos/300/300?random=7", featured: false },
-            { id: 108, title: "Dual Tanks", category: "👭 双人", tags: ["👭 双人", "🎯 动作"], likes: "2.2k", img: "https://picsum.photos/300/300?random=8", featured: false },
-            { id: 109, title: "Highway Moto 3D", category: "🏎️ 赛车", tags: ["🏎️ 赛车", "3D"], likes: "1.7k", img: "https://picsum.photos/300/300?random=9", featured: false },
-            { id: 110, title: "Brain Out 3D", category: "🧩 益智", tags: ["🧩 益智", "3D"], likes: "670", img: "https://picsum.photos/300/300?random=10", featured: false }
-        ];
+        const frame = document.getElementById('game-frame');
+        const titleEl = document.getElementById('game-title');
 
-        // --- 1. 渲染多选标签栏 ---
-        function renderTags() {
-            const container = document.getElementById('tags-group');
-            const clearBtn = document.getElementById('clear-all-btn');
-
-            container.innerHTML = allCategories.map(cat => {
-                const isAll = cat === "🔥 全部";
-                const isSelected = isAll ? selectedTags.length === 0 : selectedTags.includes(cat);
-                
-                return `
-                    <div class="tag-chip ${isSelected ? 'active' : ''}" onclick="toggleTag('${cat}')">
-                        <span>${cat}</span>
-                        ${!isAll && isSelected ? '<span class="close-icon">✕</span>' : ''}
-                    </div>
-                `;
-            }).join('');
-
-            // 选中 2 个或以上标签时，显示一键重置按钮
-            if (selectedTags.length >= 2) {
-                clearBtn.style.display = 'block';
-            } else {
-                clearBtn.style.display = 'none';
-            }
+        if (gameUrl) {
+            frame.src = decodeURIComponent(gameUrl);
+            titleEl.textContent = decodeURIComponent(gameTitle);
+        } else {
+            // 如果是没有传入 url 的测试防错
+            titleEl.textContent = "示例游戏 (未检测到链接)";
+            frame.src = "https://gamemonetize.com/feed.php"; 
         }
 
-        // --- 2. 标签点击多选逻辑 ---
-        function toggleTag(cat) {
-            if (cat === "🔥 全部") {
-                selectedTags = []; // 点“全部”直接清空多选
+        // 2. 重新加载游戏
+        function reloadGame() {
+            frame.src = frame.src;
+        }
+
+        // 3. 全屏播放
+        function toggleFullscreen() {
+            const screenBox = document.getElementById('screen-box');
+            if (!document.fullscreenElement) {
+                if (screenBox.requestFullscreen) {
+                    screenBox.requestFullscreen();
+                } else if (screenBox.webkitRequestFullscreen) {
+                    screenBox.webkitRequestFullscreen();
+                }
             } else {
-                if (selectedTags.includes(cat)) {
-                    // 已选中则取消
-                    selectedTags = selectedTags.filter(t => t !== cat);
-                } else {
-                    // 未选中则加入多选列表
-                    selectedTags.push(cat);
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
                 }
             }
-            renderTags();
-            renderGames();
         }
 
-        // --- 3. 一键清除重置 ---
-        function clearAllFilters() {
-            selectedTags = [];
-            renderTags();
-            renderGames();
-        }
-
-        // --- 4. 渲染 Bento 游戏网格 ---
-        function renderGames() {
-            const grid = document.getElementById('game-grid');
+        // 4. 渲染方案 A 横向无缝流动跑马灯卡片
+        async function loadRecommendations() {
+            const track = document.getElementById('marquee-track');
             
-            // 依据已选标签筛选（AND 交集运算：必须同时满足所有选中的标签）
-            const filtered = mockGames.filter(game => {
-                if (selectedTags.length === 0) return true;
-                return selectedTags.every(tag => game.tags.includes(tag));
-            });
+            try {
+                // 实时拉取 10 个 API 游戏做推荐
+                const res = await fetch('https://gamemonetize.com/feed.php?format=0&page=1');
+                const data = await res.json();
+                const list = data.slice(0, 10);
 
-            if (filtered.length === 0) {
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #a0aec0;">未找到匹配的游戏，试试重置筛选条件吧~</div>`;
-                return;
-            }
+                const cardsHTML = list.map(item => `
+                    <a href="game.html?url=${encodeURIComponent(item.url)}&title=${encodeURIComponent(item.title)}" class="rec-card">
+                        <img src="${item.thumb}" alt="${item.title}">
+                        <div class="rec-card-title">${item.title}</div>
+                    </a>
+                `).join('');
 
-            grid.innerHTML = filtered.map(game => `
-                <a href="play.html?id=${game.id}" class="game-card ${game.featured ? 'featured' : ''}">
-                    <div class="card-cover" style="background-image: url('${game.img}');"></div>
-                    <div class="card-overlay">
-                        <div class="card-title">${game.title}</div>
-                        <div class="card-meta">
-                            <span class="card-tag">${game.category}</span>
-                            <span class="card-likes">👍 ${game.likes}</span>
+                // 复制一份实现无缝首尾相连循环
+                track.innerHTML = cardsHTML + cardsHTML;
+            } catch(e) {
+                // 网络失败时的兜底静态推荐卡片
+                let fallback = '';
+                for(let i=1; i<=10; i++) {
+                    fallback += `
+                        <div class="rec-card">
+                            <img src="https://picsum.photos/200/200?random=${i}">
+                            <div class="rec-card-title">推荐游戏 ${i}</div>
                         </div>
-                    </div>
-                </a>
-            `).join('');
+                    `;
+                }
+                track.innerHTML = fallback + fallback;
+            }
         }
 
-        function loadMoreGames() {
-            alert("正在加载更多游戏...");
-        }
-
-        // 页面初始化
-        renderTags();
-        renderGames();
+        loadRecommendations();
     </script>
 </body>
 </html>
