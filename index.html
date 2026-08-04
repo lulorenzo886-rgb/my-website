@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LuluTap - Play Instant Free HTML5 Games</title>
 
-    <!-- ✨ 炫酷 Favicon 网页标签页图标 ✨ -->
+    <!-- Favicon 图标 -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23111522'/><stop offset='100%' stop-color='%231a1c29'/></linearGradient></defs><circle cx='50' cy='50' r='48' fill='url(%23g)' stroke='%2300f2fe' stroke-width='3'/><circle cx='50' cy='50' r='38' fill='none' stroke='%23ff2a85' stroke-width='2' stroke-dasharray='4 2'/><text x='50%' y='68%' font-size='50' text-anchor='middle'>👆</text></svg>">
 
     <style>
@@ -37,20 +37,16 @@
             overflow-x: hidden;
         }
 
-        /* 🌟 切西瓜/点击特效 Canvas 样式 🌟 */
         #fx-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            pointer-events: none; /* 穿透鼠标事件，不影响下方按钮点击 */
+            pointer-events: none;
             z-index: 9999;
         }
 
-        /* =========================================================
-           1. 顶部 Header / 完整 LuluTap 炫酷 Logo 区域
-           ========================================================= */
         header.hero-brand-header { 
             text-align: center; 
             padding: 40px 20px 10px 20px; 
@@ -71,15 +67,13 @@
             border: 1.5px solid rgba(0, 242, 254, 0.3);
             box-shadow: 0 0 35px rgba(255, 42, 133, 0.2), inset 0 0 20px rgba(0, 242, 254, 0.15);
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
-            animation: slideUpFade 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .lulutap-logo-wrapper:hover {
             border-color: var(--primary-cyan);
-            box-shadow: 0 0 50px rgba(0, 242, 254, 0.4), inset 0 0 25px rgba(255, 42, 133, 0.3);
+            box-shadow: 0 0 50px rgba(0, 242, 254, 0.4);
             transform: translateY(-3px) scale(1.02);
         }
 
@@ -102,14 +96,11 @@
 
         .glow-pulse-ring {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             border-radius: 50%;
             border: 2px solid var(--primary-cyan);
-            box-shadow: 0 0 15px var(--primary-cyan), inset 0 0 10px var(--accent-pink);
             animation: neonRingPulse 2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
             z-index: 1;
         }
@@ -117,553 +108,199 @@
         .brand-title-text {
             font-size: 2.8rem;
             font-weight: 900;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
             line-height: 1;
-            margin: 0;
-            font-family: 'Montserrat', 'Segoe UI', sans-serif;
         }
 
         .brand-title-text .lulu-part {
             background: linear-gradient(135deg, #ff2a85 0%, #a742ff 50%, #00f2fe 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 12px rgba(255, 42, 133, 0.4));
         }
 
         .brand-title-text .tap-part {
             background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 12px rgba(0, 242, 254, 0.5));
         }
 
         p.subtitle { 
             color: var(--text-muted); 
             font-size: 1.2rem; 
-            font-weight: 500;
             margin-top: 18px;
-            letter-spacing: 0.5px;
-            line-height: 1.5;
             max-width: 750px;
-            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
         }
 
-        /* =========================================================
-           2. 分类控制栏
-           ========================================================= */
         .category-control-bar { 
             display: flex; 
             justify-content: center; 
             gap: 12px; 
             flex-wrap: wrap; 
-            margin-top: 32px;    
-            margin-bottom: 20px; 
-            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s backwards;
+            margin: 32px 0 20px 0; 
         }
 
         .btn-home { 
             background: linear-gradient(135deg, var(--accent-pink), var(--primary-purple)); 
-            color: #ffffff; 
-            border: none; 
-            padding: 10px 22px; 
-            border-radius: 100px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            font-size: 14px; 
-            box-shadow: 0 4px 15px var(--pink-glow);
-        }
-        .btn-home:hover { 
-            transform: translateY(-2px) scale(1.03); 
-            box-shadow: 0 6px 20px var(--accent-glow);
+            color: #fff; border: none; padding: 10px 22px; 
+            border-radius: 100px; font-weight: bold; cursor: pointer; 
+            transition: all 0.3s; font-size: 14px; 
         }
 
         .btn-folder { 
-            background-color: #1A1C29; 
-            color: var(--text-muted); 
+            background-color: #1A1C29; color: var(--text-muted); 
             border: 1px solid rgba(255, 255, 255, 0.08); 
-            padding: 10px 20px; 
-            border-radius: 100px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: all 0.3s; 
-            font-size: 14px; 
-            display: flex; 
-            align-items: center; 
-            gap: 6px; 
+            padding: 10px 20px; border-radius: 100px; font-weight: 600; 
+            cursor: pointer; transition: all 0.3s; font-size: 14px; 
         }
         .btn-folder:hover, .btn-folder.active { 
-            background-color: #23263A; 
-            color: var(--primary-cyan); 
+            background-color: #23263A; color: var(--primary-cyan); 
             border-color: var(--primary-cyan); 
-            box-shadow: 0 0 15px var(--accent-glow);
         }
-
-        .selected-tags-bar { 
-            max-width: 800px; 
-            margin: 0 auto 20px auto; 
-            display: none; 
-            text-align: center; 
-            font-size: 13px; 
-            color: var(--text-muted); 
-            background: rgba(26, 28, 41, 0.8); 
-            padding: 10px 18px; 
-            border-radius: 100px; 
-            border: 1px dashed var(--primary-purple); 
-            backdrop-filter: blur(10px);
-        }
-        .selected-tags-bar.active { display: block; animation: fadeIn 0.3s ease; }
-        .selected-tags-wrapper { display: inline-flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; margin-left: 8px; }
-        
-        .selected-chip { 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 6px; 
-            background: linear-gradient(135deg, var(--accent-pink), var(--primary-purple)); 
-            color: #ffffff; 
-            padding: 5px 14px; 
-            border-radius: 100px; 
-            font-size: 13px; 
-            font-weight: bold; 
-            box-shadow: 0 2px 10px var(--pink-glow);
-        }
-        .btn-close-chip { 
-            cursor: pointer; 
-            font-size: 12px; 
-            font-weight: bold; 
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center; 
-            border-radius: 50%; 
-            width: 16px; 
-            height: 16px; 
-            background: rgba(0, 0, 0, 0.3); 
-            transition: all 0.2s;
-        }
-        .btn-close-chip:hover { background: #ff4757; transform: scale(1.15); }
 
         .sub-category-panel { 
-            max-width: 800px; 
-            margin: 0 auto 30px auto; 
-            display: none; 
-            background: rgba(26, 28, 41, 0.9); 
-            border: 1px solid var(--primary-purple); 
-            border-radius: 18px; 
-            padding: 18px; 
-            text-align: center; 
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px var(--purple-glow); 
-            backdrop-filter: blur(12px);
+            max-width: 800px; margin: 0 auto 30px auto; display: none; 
+            background: rgba(26, 28, 41, 0.9); border: 1px solid var(--primary-purple); 
+            border-radius: 18px; padding: 18px; text-align: center; 
         }
-        .sub-category-panel.open { display: block; animation: slideDown 0.25s ease-out; }
+        .sub-category-panel.open { display: block; }
         .sub-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
         
         .sub-btn { 
-            background-color: #121420; 
-            color: var(--text-muted); 
+            background-color: #121420; color: var(--text-muted); 
             border: 1px solid rgba(255, 255, 255, 0.08); 
-            padding: 6px 16px; 
-            border-radius: 100px; 
-            cursor: pointer; 
-            transition: all 0.2s; 
-            font-size: 13px; 
-            user-select: none; 
+            padding: 6px 16px; border-radius: 100px; cursor: pointer; font-size: 13px; 
         }
-        .sub-btn:hover { border-color: var(--primary-cyan); color: #fff; box-shadow: 0 0 10px var(--accent-glow); }
         .sub-btn.selected { 
             background: linear-gradient(135deg, var(--primary-cyan), #00b4d8); 
-            color: #07090e; 
-            border-color: transparent; 
-            font-weight: bold; 
-            box-shadow: 0 0 12px var(--accent-glow);
+            color: #07090e; font-weight: bold; 
         }
 
-        /* =========================================================
-           3. 无缝跑马灯 & 动态网格区域
-           ========================================================= */
         .marquee-wrapper {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-            margin: 20px 0 40px 0;
-            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            position: relative; width: 100%; overflow: hidden; margin: 20px 0 40px 0;
+            mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
         }
 
         .marquee-track {
-            display: flex;
-            gap: 22px;
-            width: max-content;
-            animation: infiniteScroll 35s linear infinite;
+            display: flex; gap: 22px; width: max-content;
+            animation: infiniteScroll 45s linear infinite;
         }
-
-        .marquee-track:hover {
-            animation-play-state: paused;
-        }
+        .marquee-track:hover { animation-play-state: paused; }
 
         .grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
-            gap: 22px; 
-            max-width: 1200px; 
-            margin: 10px auto 50px auto;
-            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s backwards;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+            gap: 22px; max-width: 1200px; margin: 10px auto 50px auto;
         }
 
         .card { 
-            background-color: var(--card-bg); 
-            border-radius: 16px; 
-            overflow: hidden; 
-            border: 1px solid rgba(255, 255, 255, 0.06); 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            text-decoration: none; 
-            color: inherit; 
-            display: flex; 
-            flex-direction: column; 
-            width: 220px;
-            flex-shrink: 0;
+            background-color: var(--card-bg); border-radius: 16px; overflow: hidden; 
+            border: 1px solid rgba(255, 255, 255, 0.06); transition: all 0.3s; 
+            text-decoration: none; color: inherit; display: flex; flex-direction: column; 
+            width: 220px; height: 320px; flex-shrink: 0;
         }
-        .grid .card {
-            width: 100%;
-        }
-        .card:hover { 
-            transform: translateY(-6px); 
-            border-color: var(--primary-cyan); 
-            box-shadow: 0 10px 25px -5px var(--accent-glow);
-        }
-        .card img { width: 100%; height: 175px; object-fit: cover; background-color: #181d2d; }
-        .card-info { padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .card-title { font-size: 15px; font-weight: bold; margin-bottom: 6px; color: #fff; }
-        .card-desc { font-size: 12px; color: #8A8F9E; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
-        .card-cat { font-size: 11px; color: var(--primary-cyan); text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px; }
+        .grid .card { width: 100%; }
+        .card:hover { transform: translateY(-6px); border-color: var(--primary-cyan); }
+        .card .card-img-wrapper { width: 100%; height: 175px; background: #121522; }
+        .card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .card-info { padding: 14px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-title { font-size: 15px; font-weight: bold; margin-bottom: 6px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-desc { font-size: 12px; color: #8A8F9E; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-cat { font-size: 11px; color: var(--primary-cyan); text-transform: uppercase; font-weight: bold; margin-top: 8px; }
 
-        /* Keyframe 动画 */
-        @keyframes infiniteScroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
+        @keyframes infiniteScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @keyframes tapBounce { 0%, 100% { transform: rotate(-15deg) scale(1); } 50% { transform: rotate(-15deg) scale(0.88); } }
+        @keyframes neonRingPulse { 0% { width: 18px; height: 18px; opacity: 1; } 100% { width: 65px; height: 65px; opacity: 0; } }
 
-        @keyframes tapBounce {
-            0%, 100% { transform: rotate(-15deg) scale(1) translateY(0); }
-            50% { transform: rotate(-15deg) scale(0.88) translateY(3px); }
-        }
-
-        @keyframes neonRingPulse {
-            0% {
-                width: 18px;
-                height: 18px;
-                opacity: 1;
-                border-color: var(--primary-cyan);
-                box-shadow: 0 0 10px var(--primary-cyan);
-            }
-            50% {
-                width: 48px;
-                height: 48px;
-                opacity: 0.8;
-                border-color: var(--accent-pink);
-                box-shadow: 0 0 20px var(--accent-pink);
-            }
-            100% {
-                width: 65px;
-                height: 65px;
-                opacity: 0;
-                border-color: var(--primary-cyan);
-            }
-        }
-
-        @keyframes slideUpFade {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .footer-link {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-        .footer-link:hover {
-            color: var(--primary-cyan);
-            text-shadow: 0 0 8px var(--accent-glow);
-        }
+        .loading-text { text-align: center; font-size: 18px; color: var(--primary-cyan); margin: 50px 0; grid-column: 1/-1; }
     </style>
 </head>
 <body>
 
-    <!-- 🌟 全屏视觉特效 Canvas (切西瓜刀光 + 点击粒子) 🌟 -->
     <canvas id="fx-canvas"></canvas>
 
     <header class="hero-brand-header">
-        <div class="lulutap-logo-wrapper" onclick="goHome(event)">
+        <div class="lulutap-logo-wrapper" onclick="goHome()">
             <div class="tap-circle-container">
                 <span class="tap-hand-icon">👆</span>
                 <div class="glow-pulse-ring"></div>
             </div>
-            <h1 class="brand-title-text">
-                <span class="lulu-part">Lulu</span><span class="tap-part">Tap</span>
-            </h1>
+            <h1 class="brand-title-text"><span class="lulu-part">Lulu</span><span class="tap-part">Tap</span></h1>
         </div>
-        <p class="subtitle">Welcome to LuluTap! Tap into instant fun with the best free online games—no downloads required! 🚀</p>
+        <p class="subtitle">Tap into instant fun with hundreds of free HTML5 games! 🚀</p>
     </header>
 
     <div class="category-control-bar">
-        <button class="btn-home" onclick="goHome(event)">🔥 Show All Games</button>
-        <button class="btn-folder" onclick="openFolder('players', event)">👥 Players ▾</button>
+        <button class="btn-home" onclick="goHome()">🔥 All Games</button>
         <button class="btn-folder" onclick="openFolder('genres', event)">⚡ Genres ▾</button>
-        <button class="btn-folder" onclick="openFolder('styles', event)">🎨 Styles ▾</button>
-        <button class="btn-folder" onclick="openFolder('tags', event)">🎯 Tags ▾</button>
-    </div>
-
-    <div class="selected-tags-bar" id="selected-tags-bar">
-        Selected Filters: <div class="selected-tags-wrapper" id="selected-tags-list"></div>
     </div>
 
     <div class="sub-category-panel" id="panel">
-        <div class="sub-group" id="sub-players" style="display:none;">
-            <button class="sub-btn" data-cat="2player" onclick="toggleTag('2player', this)">2 Player</button>
-            <button class="sub-btn" data-cat="singleplayer" onclick="toggleTag('singleplayer', this)">Single Player</button>
-            <button class="sub-btn" data-cat="multiplayer" onclick="toggleTag('multiplayer', this)">Multiplayer</button>
-            <button class="sub-btn" data-cat="boys" onclick="toggleTag('boys', this)">Boys</button>
-            <button class="sub-btn" data-cat="girls" onclick="toggleTag('girls', this)">Girls</button>
-            <button class="sub-btn" data-cat="kids" onclick="toggleTag('kids', this)">Kids</button>
-        </div>
-
-        <div class="sub-group" id="sub-genres" style="display:none;">
-            <button class="sub-btn" data-cat="action" onclick="toggleTag('action', this)">Action</button>
-            <button class="sub-btn" data-cat="racing" onclick="toggleTag('racing', this)">Racing</button>
-            <button class="sub-btn" data-cat="driving" onclick="toggleTag('driving', this)">Driving</button>
-            <button class="sub-btn" data-cat="shooting" onclick="toggleTag('shooting', this)">Shooting</button>
-            <button class="sub-btn" data-cat="puzzle" onclick="toggleTag('puzzle', this)">Puzzle</button>
-            <button class="sub-btn" data-cat="arcade" onclick="toggleTag('arcade', this)">Arcade</button>
-            <button class="sub-btn" data-cat="casual" onclick="toggleTag('casual', this)">Casual</button>
-            <button class="sub-btn" data-cat="sports" onclick="toggleTag('sports', this)">Sports</button>
-            <button class="sub-btn" data-cat="adventure" onclick="toggleTag('adventure', this)">Adventure</button>
-            <button class="sub-btn" data-cat="simulation" onclick="toggleTag('simulation', this)">Simulation</button>
-        </div>
-
-        <div class="sub-group" id="sub-styles" style="display:none;">
-            <button class="sub-btn" data-cat="3d" onclick="toggleTag('3d', this)">3D</button>
-            <button class="sub-btn" data-cat="2d" onclick="toggleTag('2d', this)">2D</button>
-            <button class="sub-btn" data-cat="pixel" onclick="toggleTag('pixel', this)">Pixel</button>
-            <button class="sub-btn" data-cat="io" onclick="toggleTag('io', this)">.IO Games</button>
-        </div>
-
-        <div class="sub-group" id="sub-tags" style="display:none;">
-            <button class="sub-btn" data-cat="car" onclick="toggleTag('car', this)">Car</button>
-            <button class="sub-btn" data-cat="bike" onclick="toggleTag('bike', this)">Bike</button>
-            <button class="sub-btn" data-cat="dressup" onclick="toggleTag('dressup', this)">Dress Up</button>
-            <button class="sub-btn" data-cat="cooking" onclick="toggleTag('cooking', this)">Cooking</button>
-            <button class="sub-btn" data-cat="runner" onclick="toggleTag('runner', this)">Runner</button>
-            <button class="sub-btn" data-cat="clicker" onclick="toggleTag('clicker', this)">Clicker</button>
-            <button class="sub-btn" data-cat="zombie" onclick="toggleTag('zombie', this)">Zombie</button>
+        <div class="sub-group" id="sub-genres">
+            <button class="sub-btn" onclick="filterCategory('Action', this)">Action</button>
+            <button class="sub-btn" onclick="filterCategory('Racing', this)">Racing</button>
+            <button class="sub-btn" onclick="filterCategory('Driving', this)">Driving</button>
+            <button class="sub-btn" onclick="filterCategory('Shooting', this)">Shooting</button>
+            <button class="sub-btn" onclick="filterCategory('Puzzle', this)">Puzzle</button>
+            <button class="sub-btn" onclick="filterCategory('Arcade', this)">Arcade</button>
+            <button class="sub-btn" onclick="filterCategory('Casual', this)">Casual</button>
+            <button class="sub-btn" onclick="filterCategory('Sports', this)">Sports</button>
+            <button class="sub-btn" onclick="filterCategory('3D', this)">3D</button>
         </div>
     </div>
 
-    <!-- 🌟 无缝无限轮播展示区 🌟 -->
     <div class="marquee-wrapper" id="marquee-section">
         <div class="marquee-track" id="marquee-track"></div>
     </div>
 
-    <!-- 标准网格展示区 -->
-    <div class="grid" id="game-grid"></div>
-
-    <footer style="margin-top: 60px; padding: 30px 20px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.08); font-size: 14px;">
-        <p style="margin-bottom: 12px; color: var(--text-muted);">&copy; 2026 LuluTap. All rights reserved.</p>
-        <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-            <a href="privacy.html" class="footer-link">Privacy Policy</a>
-            <a href="terms.html" class="footer-link">Terms of Service</a>
-            <a href="dmca.html" class="footer-link">DMCA / Copyright</a>
-            <a href="contact.html" class="footer-link">Contact Us</a>
-        </div>
-    </footer>
+    <div class="grid" id="game-grid">
+        <div class="loading-text">🎮 Loading Games...</div>
+    </div>
 
     <script>
-        // =========================================================
-        // 🌟 1. 切西瓜刀光拖尾 + 点击爆炸粒子特效 🌟
-        // =========================================================
-        (function initNinjaFx() {
-            const canvas = document.getElementById('fx-canvas');
-            const ctx = canvas.getContext('2d');
-
-            function resizeCanvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
-
-            const points = [];
-            const particles = [];
-            const colors = ['#00f2fe', '#ff2a85', '#6C5CE7', '#ffffff'];
-
-            // 监听鼠标/触摸移动（切西瓜刀光）
-            function addPoint(x, y) {
-                points.push({
-                    x: x,
-                    y: y,
-                    time: Date.now(),
-                    width: 8
-                });
-            }
-
-            window.addEventListener('mousemove', (e) => {
-                addPoint(e.clientX, e.clientY);
-            });
-
-            window.addEventListener('touchmove', (e) => {
-                if (e.touches.length > 0) {
-                    addPoint(e.touches[0].clientX, e.touches[0].clientY);
-                }
-            }, { passive: true });
-
-            // 监听鼠标/触摸点击（粒子爆发）
-            function createParticles(x, y) {
-                const particleCount = 18;
-                for (let i = 0; i < particleCount; i++) {
-                    const angle = Math.random() * Math.PI * 2;
-                    const speed = Math.random() * 6 + 2;
-                    particles.push({
-                        x: x,
-                        y: y,
-                        vx: Math.cos(angle) * speed,
-                        vy: Math.sin(angle) * speed,
-                        size: Math.random() * 4 + 2,
-                        color: colors[Math.floor(Math.random() * colors.length)],
-                        alpha: 1,
-                        decay: Math.random() * 0.03 + 0.02
-                    });
-                }
-            }
-
-            window.addEventListener('click', (e) => {
-                createParticles(e.clientX, e.clientY);
-            });
-
-            // 动画主循环
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                const now = Date.now();
-                const maxAge = 180; // 刀光残留毫秒数
-
-                // 清理过期刀光点
-                while (points.length > 0 && now - points[0].time > maxAge) {
-                    points.shift();
-                }
-
-                // 绘制切西瓜刀光拖尾
-                if (points.length > 1) {
-                    for (let i = 1; i < points.length; i++) {
-                        const pt1 = points[i - 1];
-                        const pt2 = points[i];
-                        const age = now - pt2.time;
-                        const progress = 1 - (age / maxAge);
-
-                        if (progress <= 0) continue;
-
-                        ctx.beginPath();
-                        ctx.moveTo(pt1.x, pt1.y);
-                        ctx.lineTo(pt2.x, pt2.y);
-
-                        ctx.strokeStyle = '#00f2fe';
-                        ctx.lineWidth = (i / points.length) * 10 * progress;
-                        ctx.lineCap = 'round';
-                        ctx.shadowBlur = 15;
-                        ctx.shadowColor = '#ff2a85';
-
-                        ctx.stroke();
-                    }
-                    ctx.shadowBlur = 0; // 重置阴影
-                }
-
-                // 绘制与更新点击爆炸粒子
-                for (let i = particles.length - 1; i >= 0; i--) {
-                    const p = particles[i];
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.vx *= 0.95; // 阻尼衰减
-                    p.vy *= 0.95;
-                    p.alpha -= p.decay;
-
-                    if (p.alpha <= 0) {
-                        particles.splice(i, 1);
-                        continue;
-                    }
-
-                    ctx.save();
-                    ctx.globalAlpha = p.alpha;
-                    ctx.fillStyle = p.color;
-                    ctx.shadowBlur = 10;
-                    ctx.shadowColor = p.color;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.restore();
-                }
-
-                requestAnimationFrame(animate);
-            }
-
-            animate();
-        })();
-
-        // =========================================================
-        // 🌟 2. 游戏数据与逻辑处理 🌟
-        // =========================================================
         let allGames = [];
-        let activeFolderName = null;
-        let selectedTags = new Map();
 
-        fetch('static/games.json?t=' + new Date().getTime())
+        // ✨ 从 GameMonetize Feed 接口自动拉取游戏列表 ✨
+        // 使用 proxy 解决跨域 (CORS) 拦截
+        const feedUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://gamemonetize.com/feed.php?format=0&page=1');
+
+        fetch(feedUrl)
             .then(res => res.json())
-            .then(games => {
-                allGames = games;
+            .then(data => {
+                // 标准化数据格式
+                allGames = data.map(item => ({
+                    id: item.id,
+                    title: item.title,
+                    category: item.category,
+                    description: item.description,
+                    // 使用防盗链代理图片
+                    cover: 'https://images.weserv.nl/?url=' + encodeURIComponent(item.thumb),
+                    url: item.url
+                }));
+
                 renderGames(allGames);
-                renderMarquee(allGames);
+                renderMarquee(allGames.slice(0, 10)); // 拿前10个放入跑马灯
             })
             .catch(err => {
-                console.error('Error loading games:', err);
-                document.getElementById('game-grid').innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#ff5555;">Failed to load games. Please check static/games.json file.</p>';
+                console.error('Feed error:', err);
+                document.getElementById('game-grid').innerHTML = '<p class="loading-text" style="color:#ff2a85;">Failed to load games. Please refresh.</p>';
             });
 
         function createCardElement(game) {
-            const gameId = game.id || game.slug;
-            const coverImg = game.cover || game.image || 'https://via.placeholder.com/512';
-            
-            let categories = [];
-            if (Array.isArray(game.category)) {
-                categories = game.category;
-            } else if (typeof game.category === 'string') {
-                categories = [game.category];
-            }
-            const catText = categories.join(' • ').toUpperCase();
-
             const a = document.createElement('a');
             a.className = 'card';
-            a.href = `game.html?id=${gameId}`;
+            // 点击直接跳转游戏大屏
+            a.href = game.url;
+            a.target = '_blank';
             a.innerHTML = `
-                <img src="${coverImg}" alt="${game.title}" onerror="this.src='https://via.placeholder.com/512?text=Game+Cover'">
+                <div class="card-img-wrapper">
+                    <img src="${game.cover}" alt="${game.title}" loading="lazy">
+                </div>
                 <div class="card-info">
                     <div>
                         <div class="card-title">${game.title}</div>
                         <div class="card-desc">${game.description || ''}</div>
                     </div>
-                    <div class="card-cat">${catText}</div>
+                    <div class="card-cat">${game.category || 'Game'}</div>
                 </div>
             `;
             return a;
@@ -671,142 +308,36 @@
 
         function renderMarquee(list) {
             const track = document.getElementById('marquee-track');
-            const wrapper = document.getElementById('marquee-section');
             track.innerHTML = '';
-
-            if (!list || list.length === 0) {
-                wrapper.style.display = 'none';
-                return;
-            }
-            wrapper.style.display = 'block';
-
-            // 双倍拼接实现无缝滚动
-            const displayList = list.concat(list);
-            displayList.forEach(game => {
-                track.appendChild(createCardElement(game));
-            });
-        }
-
-        function openFolder(folderName, e) {
-            const panel = document.getElementById('panel');
-            document.querySelectorAll('.btn-folder').forEach(btn => btn.classList.remove('active'));
-
-            if (activeFolderName === folderName && panel.classList.contains('open')) {
-                panel.classList.remove('open');
-                activeFolderName = null;
-                return;
-            }
-
-            if (e && e.currentTarget) {
-                e.currentTarget.classList.add('active');
-            }
-
-            document.querySelectorAll('.sub-group').forEach(g => g.style.display = 'none');
-            document.getElementById('sub-' + folderName).style.display = 'flex';
-            
-            panel.classList.add('open');
-            activeFolderName = folderName;
-        }
-
-        function goHome(e) {
-            document.querySelectorAll('.btn-folder').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.sub-btn').forEach(btn => btn.classList.remove('selected'));
-            
-            selectedTags.clear();
-            updateSelectedTagsUI();
-
-            document.getElementById('panel').classList.remove('open');
-            activeFolderName = null;
-            
-            renderGames(allGames);
-            renderMarquee(allGames);
-        }
-
-        function toggleTag(cat, btnElement) {
-            const catLower = cat.toLowerCase();
-            const displayName = btnElement.textContent.trim();
-
-            if (selectedTags.has(catLower)) {
-                selectedTags.delete(catLower);
-                btnElement.classList.remove('selected');
-            } else {
-                selectedTags.set(catLower, displayName);
-                btnElement.classList.add('selected');
-            }
-
-            updateSelectedTagsUI();
-            applyMultiFilter();
-        }
-
-        function removeTag(catLower) {
-            selectedTags.delete(catLower);
-            
-            document.querySelectorAll(`.sub-btn[data-cat="${catLower}"]`).forEach(btn => {
-                btn.classList.remove('selected');
-            });
-
-            updateSelectedTagsUI();
-            applyMultiFilter();
-        }
-
-        function updateSelectedTagsUI() {
-            const bar = document.getElementById('selected-tags-bar');
-            const listContainer = document.getElementById('selected-tags-list');
-
-            if (selectedTags.size === 0) {
-                bar.classList.remove('active');
-                listContainer.innerHTML = '';
-            } else {
-                bar.classList.add('active');
-                let html = '';
-                selectedTags.forEach((displayName, keyLower) => {
-                    html += `
-                        <span class="selected-chip">
-                            ${displayName}
-                            <span class="btn-close-chip" onclick="removeTag('${keyLower}')">✕</span>
-                        </span>
-                    `;
-                });
-                listContainer.innerHTML = html;
-            }
-        }
-
-        function applyMultiFilter() {
-            if (selectedTags.size === 0) {
-                renderGames(allGames);
-                renderMarquee(allGames);
-                return;
-            }
-
-            const requiredKeys = Array.from(selectedTags.keys());
-
-            const filtered = allGames.filter(game => {
-                let gameCategories = [];
-                if (Array.isArray(game.category)) {
-                    gameCategories = game.category.map(c => c.toLowerCase());
-                } else if (typeof game.category === 'string') {
-                    gameCategories = [game.category.toLowerCase()];
-                }
-
-                return requiredKeys.every(tagKey => gameCategories.includes(tagKey));
-            });
-
-            renderGames(filtered);
-            renderMarquee(filtered);
+            list.concat(list).forEach(game => track.appendChild(createCardElement(game)));
         }
 
         function renderGames(list) {
             const grid = document.getElementById('game-grid');
             grid.innerHTML = '';
-            
-            if (!list || list.length === 0) {
-                grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#8A8F9E;padding:40px 0;">No games match all selected tags. Try removing some filters by clicking ✕!</p>';
+            if (list.length === 0) {
+                grid.innerHTML = '<p class="loading-text">No games found.</p>';
                 return;
             }
+            list.forEach(game => grid.appendChild(createCardElement(game)));
+        }
 
-            list.forEach(game => {
-                grid.appendChild(createCardElement(game));
-            });
+        function filterCategory(cat, btn) {
+            document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            const filtered = allGames.filter(g => g.category.toLowerCase().includes(cat.toLowerCase()));
+            renderGames(filtered);
+        }
+
+        function openFolder(name, e) {
+            const panel = document.getElementById('panel');
+            panel.classList.toggle('open');
+        }
+
+        function goHome() {
+            document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('selected'));
+            document.getElementById('panel').classList.remove('open');
+            renderGames(allGames);
         }
     </script>
 </body>
