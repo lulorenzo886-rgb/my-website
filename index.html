@@ -472,29 +472,29 @@
 </head>
 <body>
 
-    <!-- 1. Header -->
+    <!-- 1. Header (加入了优化四：无障碍 aria-label) -->
     <header>
-        <a href="index.html" class="logo">🕹️ LuluTap</a>
-        <button class="mode-btn" id="mode-btn" onclick="toggleDeviceMode()">💻 PC Mode</button>
+        <a href="index.html" class="logo" aria-label="LuluTap Home Page">🕹️ LuluTap</a>
+        <button class="mode-btn" id="mode-btn" onclick="toggleDeviceMode()" aria-label="Switch Device View Mode">💻 PC Mode</button>
     </header>
 
-    <!-- 2. Sticky Filter Bar with Tags Dropdown -->
+    <!-- 2. Sticky Filter Bar with Tags Dropdown (加入了优化四：无障碍 aria-label / role / aria-expanded) -->
     <div class="filter-wrapper">
         <div class="filter-container">
             <div>
-                <button class="tags-dropdown-btn" id="tags-btn" onclick="toggleTagsDropdown(event)">
+                <button class="tags-dropdown-btn" id="tags-btn" onclick="toggleTagsDropdown(event)" aria-expanded="false" aria-label="Toggle Tags Filter Menu">
                     <span>🏷️ Tags</span>
                     <span id="dropdown-arrow">▾</span>
                 </button>
-                <div class="tags-dropdown-panel" id="tags-panel"></div>
+                <div class="tags-dropdown-panel" id="tags-panel" role="region" aria-label="Tag Filter Panel"></div>
             </div>
             
-            <button class="clear-all-btn" id="clear-all-btn" onclick="clearAllFilters()">✕ Clear All</button>
+            <button class="clear-all-btn" id="clear-all-btn" onclick="clearAllFilters()" aria-label="Clear All Selected Filters">✕ Clear All</button>
         </div>
     </div>
 
     <!-- 3. Top 10 Trending Games Infinite Ticker Carousel -->
-    <section class="ticker-section">
+    <section class="ticker-section" aria-label="Trending Games Carousel">
         <div class="ticker-header">🔥 Top 10 Trending Games</div>
         <div class="ticker-container">
             <div class="ticker-track" id="ticker-track"></div>
@@ -503,7 +503,7 @@
 
     <!-- 4. Main Bento Game Grid -->
     <main class="main-content">
-        <div class="bento-grid" id="game-grid">
+        <div class="bento-grid" id="game-grid" role="region" aria-label="Game Grid">
             <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #a0aec0;">
                 <div class="spinner" style="margin: 0 auto 12px auto; width: 24px; height: 24px;"></div>
                 Loading games list...
@@ -517,7 +517,6 @@
     </main>
 
     <script>
-        // 预设核心分类标签，保障数据加载前也有完整标签列表
         let allCategories = ["🔥 All", "Action", "Arcade", "Puzzle", "Racing", "Shooting", "Casual", "Strategy", "Sports"];
         let selectedTags = [];
         let gamesData = []; 
@@ -570,15 +569,18 @@
         function toggleTagsDropdown(e) {
             e.stopPropagation();
             const panel = document.getElementById('tags-panel');
+            const btn = document.getElementById('tags-btn');
             const arrow = document.getElementById('dropdown-arrow');
             const isOpen = panel.classList.contains('show');
 
             if (isOpen) {
                 panel.classList.remove('show');
                 arrow.innerText = '▾';
+                btn.setAttribute('aria-expanded', 'false');
             } else {
                 panel.classList.add('show');
                 arrow.innerText = '▴';
+                btn.setAttribute('aria-expanded', 'true');
             }
         }
 
@@ -588,6 +590,7 @@
             if (panel && !panel.contains(e.target) && !btn.contains(e.target)) {
                 panel.classList.remove('show');
                 document.getElementById('dropdown-arrow').innerText = '▾';
+                btn.setAttribute('aria-expanded', 'false');
             }
         });
 
@@ -634,7 +637,9 @@
                 
                 if (rawList.length === 0) {
                     hasMoreData = false;
+                    status.style.display = 'flex';
                     status.innerHTML = "✨ You've reached the end!";
+                    if (observer) observer.disconnect();
                     return;
                 }
 
@@ -706,7 +711,7 @@
             const listToRender = [...top10List, ...top10List];
 
             track.innerHTML = listToRender.map((game, index) => `
-                <div class="ticker-card" onclick="goToGame(gamesData[${index % top10List.length}])">
+                <div class="ticker-card" role="button" aria-label="${game.title}" onclick="goToGame(gamesData[${index % top10List.length}])">
                     <div class="ticker-card-cover" style="background-image: url('${game.img}');"></div>
                     <div class="ticker-card-overlay">
                         <div class="ticker-card-title">${game.title}</div>
@@ -725,7 +730,7 @@
                 const isSelected = isAll ? selectedTags.length === 0 : selectedTags.includes(cat);
                 
                 return `
-                    <div class="tag-chip ${isSelected ? 'active' : ''}" onclick="toggleTag('${cat}')">
+                    <div class="tag-chip ${isSelected ? 'active' : ''}" role="button" aria-label="Filter tag ${cat}" onclick="toggleTag('${cat}')">
                         <span>${cat}</span>
                         ${!isAll && isSelected ? '<span class="close-icon">✕</span>' : ''}
                     </div>
@@ -778,7 +783,7 @@
                 const likeInfo = getGameLikesInfo(game.title, game.baseLikes);
 
                 return `
-                <div onclick="goToGame(gamesData[${gamesData.indexOf(game)}])" class="game-card ${game.featured ? 'featured' : ''}">
+                <div onclick="goToGame(gamesData[${gamesData.indexOf(game)}])" class="game-card ${game.featured ? 'featured' : ''}" role="button" aria-label="${game.title}">
                     <div class="card-cover" style="background-image: url('${game.img}');"></div>
                     <div class="card-overlay">
                         <div class="card-title">${game.title}</div>
@@ -801,17 +806,30 @@
             }
         });
 
-        window.addEventListener('scroll', () => {
-            if (isLoading || !hasMoreData) return;
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
-                currentPage++;
-                initGameData(currentPage);
-            }
-        });
+        /* === 优化点二：使用 IntersectionObserver 代替 scroll 事件监听，提高性能并防止频繁触发 === */
+        let observer = null;
+        function setupIntersectionObserver() {
+            const statusTarget = document.getElementById('loading-status');
+            
+            observer = new IntersectionObserver((entries) => {
+                const target = entries[0];
+                if (target.isIntersecting && !isLoading && hasMoreData) {
+                    currentPage++;
+                    initGameData(currentPage);
+                }
+            }, {
+                root: null,
+                rootMargin: '300px', // 提前 300px 预加载，体验更流畅
+                threshold: 0
+            });
+
+            observer.observe(statusTarget);
+        }
 
         // 初始化运行
         renderTags();
         initGameData();
+        setupIntersectionObserver();
     </script>
 </body>
 </html>
