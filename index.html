@@ -330,7 +330,11 @@
 
     <!-- 3. Bento 主页游戏网格 -->
     <main class="main-content">
-        <div class="bento-grid" id="game-grid"></div>
+        <div class="bento-grid" id="game-grid">
+            <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #a0aec0;">
+                ⏳ 正在读取游戏列表中...
+            </div>
+        </div>
 
         <div class="load-more-container">
             <button class="load-more-btn" onclick="loadMoreGames()">🔄 触底加载更多游戏</button>
@@ -340,20 +344,50 @@
     <script>
         const allCategories = ["🔥 全部", "🏎️ 赛车", "🎯 动作", "🧩 益智", "3D", "⚡ 射击", "👭 双人", "💄 换装", "⚽ 体育"];
         let selectedTags = [];
+        let gamesData = []; // 接收真实 JSON 数据的全局数组
 
-        // 模拟游戏数据（可替换为读取 static/games.json）
-        const mockGames = [
-            { id: 101, title: "Extreme Racing 3D", category: "🏎️ 赛车", tags: ["🏎️ 赛车", "3D"], likes: "1.2k", img: "https://picsum.photos/400/400?random=1", featured: true },
-            { id: 102, title: "Cyber Strike", category: "🎯 动作", tags: ["🎯 动作", "⚡ 射击"], likes: "2.8k", img: "https://picsum.photos/300/300?random=2", featured: false },
-            { id: 103, title: "Puzzle Master 3D", category: "🧩 益智", tags: ["🧩 益智", "3D"], likes: "950", img: "https://picsum.photos/300/300?random=3", featured: false },
-            { id: 104, title: "Drift King", category: "🏎️ 赛车", tags: ["🏎️ 赛车"], likes: "3.1k", img: "https://picsum.photos/300/300?random=4", featured: false },
-            { id: 105, title: "Fashion Queen", category: "💄 换装", tags: ["💄 换装", "👭 双人"], likes: "1.8k", img: "https://picsum.photos/300/300?random=5", featured: false },
-            { id: 106, title: "Football Star", category: "⚽ 体育", tags: ["⚽ 体育", "3D"], likes: "890", img: "https://picsum.photos/300/300?random=6", featured: false },
-            { id: 107, title: "Space Shooter", category: "⚡ 射击", tags: ["⚡ 射击", "🎯 动作"], likes: "1.5k", img: "https://picsum.photos/300/300?random=7", featured: false },
-            { id: 108, title: "Dual Tanks", category: "👭 双人", tags: ["👭 双人", "🎯 动作"], likes: "2.2k", img: "https://picsum.photos/300/300?random=8", featured: false },
-            { id: 109, title: "Highway Moto 3D", category: "🏎️ 赛车", tags: ["🏎️ 赛车", "3D"], likes: "1.7k", img: "https://picsum.photos/300/300?random=9", featured: false },
-            { id: 110, title: "Brain Out 3D", category: "🧩 益智", tags: ["🧩 益智", "3D"], likes: "670", img: "https://picsum.photos/300/300?random=10", featured: false }
-        ];
+        // 优先读取本地 static/games.json，失败时自动使用备用测试数据
+        async function initGameData() {
+            try {
+                const response = await fetch('static/games.json');
+                if (!response.ok) throw new Error("HTTP error " + response.status);
+                const data = await response.json();
+                
+                // 自动适配 games.json 数据字段（兼容数组或 { games: [...] } 格式）
+                const rawList = Array.isArray(data) ? data : (data.games || []);
+                
+                gamesData = rawList.map((item, idx) => ({
+                    id: item.id || idx + 1,
+                    title: item.title || item.name || "未命名游戏",
+                    category: item.category || "🔥 全部",
+                    tags: item.tags || [item.category || "🔥 全部"],
+                    likes: item.likes || item.rating || "1.0k",
+                    img: item.thumb || item.img || item.image || item.cover || "https://dummyimage.com/300x300/161926/00f2fe&text=LuluTap",
+                    featured: item.featured !== undefined ? item.featured : (idx === 0)
+                }));
+            } catch (err) {
+                console.warn("未能读取 static/games.json，自动启用备用静态数据方案:", err);
+                
+                // 备用兜底数据（带 SVG 离线占位图，确保任何网络环境都能正常看到卡片）
+                const fallbackImg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'><rect width='100%' height='100%' fill='%23161926'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%2300f2fe' font-size='20' font-family='sans-serif'>🎮 LuluTap Game</text></svg>";
+                
+                gamesData = [
+                    { id: 101, title: "Extreme Racing 3D", category: "🏎️ 赛车", tags: ["🏎️ 赛车", "3D"], likes: "1.2k", img: fallbackImg, featured: true },
+                    { id: 102, title: "Cyber Strike", category: "🎯 动作", tags: ["🎯 动作", "⚡ 射击"], likes: "2.8k", img: fallbackImg, featured: false },
+                    { id: 103, title: "Puzzle Master 3D", category: "🧩 益智", tags: ["🧩 益智", "3D"], likes: "950", img: fallbackImg, featured: false },
+                    { id: 104, title: "Drift King", category: "🏎️ 赛车", tags: ["🏎️ 赛车"], likes: "3.1k", img: fallbackImg, featured: false },
+                    { id: 105, title: "Fashion Queen", category: "💄 换装", tags: ["💄 换装", "👭 双人"], likes: "1.8k", img: fallbackImg, featured: false },
+                    { id: 106, title: "Football Star", category: "⚽ 体育", tags: ["⚽ 体育", "3D"], likes: "890", img: fallbackImg, featured: false },
+                    { id: 107, title: "Space Shooter", category: "⚡ 射击", tags: ["⚡ 射击", "🎯 动作"], likes: "1.5k", img: fallbackImg, featured: false },
+                    { id: 108, title: "Dual Tanks", category: "👭 双人", tags: ["👭 双人", "🎯 动作"], likes: "2.2k", img: fallbackImg, featured: false },
+                    { id: 109, title: "Highway Moto 3D", category: "🏎️ 赛车", tags: ["🏎️ 赛车", "3D"], likes: "1.7k", img: fallbackImg, featured: false },
+                    { id: 110, title: "Brain Out 3D", category: "🧩 益智", tags: ["🧩 益智", "3D"], likes: "670", img: fallbackImg, featured: false }
+                ];
+            }
+
+            renderTags();
+            renderGames();
+        }
 
         // 渲染标签栏
         function renderTags() {
@@ -397,11 +431,11 @@
             renderGames();
         }
 
-        // 渲染游戏网格（链接指向你的 game.html）
+        // 渲染游戏网格
         function renderGames() {
             const grid = document.getElementById('game-grid');
             
-            const filtered = mockGames.filter(game => {
+            const filtered = gamesData.filter(game => {
                 if (selectedTags.length === 0) return true;
                 return selectedTags.every(tag => game.tags.includes(tag));
             });
@@ -429,8 +463,8 @@
             alert("正在加载更多游戏...");
         }
 
-        renderTags();
-        renderGames();
+        // 页面初始化调用
+        initGameData();
     </script>
 </body>
 </html>
