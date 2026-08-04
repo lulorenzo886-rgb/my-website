@@ -358,6 +358,7 @@
         .info-body.collapsed { display: none; }
         .side-card.collapsed .toggle-arrow { transform: rotate(-90deg); }
 
+        /* 🎪 跑马灯滚动 CSS 完全修复版 */
         .recommend-section {
             max-width: 1500px;
             width: 100%;
@@ -379,21 +380,23 @@
             background: #161926;
             border-radius: 12px;
             border: 1px solid #262b3d;
-            padding: 16px 0;
+            padding: 16px;
         }
 
         .marquee-track {
             display: flex;
             gap: 16px;
             width: max-content;
-            animation: scrollMarquee 25s linear infinite;
+            animation: scrollMarquee 30s linear infinite;
         }
 
-        .marquee-track:hover { animation-play-state: paused; }
+        .marquee-wrapper:hover .marquee-track {
+            animation-play-state: paused;
+        }
 
         .rec-card {
-            width: 140px;
-            height: 140px;
+            width: 130px;
+            height: 130px;
             background: #222738;
             border-radius: 10px;
             overflow: hidden;
@@ -407,7 +410,7 @@
 
         .rec-card:hover {
             border-color: #00f2fe;
-            transform: scale(1.03);
+            transform: translateY(-4px);
         }
 
         .rec-card img {
@@ -421,19 +424,24 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background: rgba(15, 17, 26, 0.85);
+            background: rgba(15, 17, 26, 0.88);
             color: #fff;
             font-size: 11px;
-            padding: 6px;
+            padding: 6px 4px;
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
+        /* 核心循环无缝平移动画 */
         @keyframes scrollMarquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-50% - 8px));
+            }
         }
 
         @media (max-width: 1024px) {
@@ -772,26 +780,23 @@
             window.location.href = `${currentPage}?${query}`;
         }
 
-        // 🚀 精准提取 10 个与当前标签完全一致的游戏并无缝滚动
+        // 🚀 精准提取 10 个与当前标签完全一致的游戏并无缝无卡顿滚动
         async function loadSimilarGamesMarquee() {
             const track = document.getElementById('marquee-track');
             const primaryTag = (currentTags[0] || 'Arcade').toLowerCase();
 
             try {
-                // 请求数据源
                 const res = await fetch(`https://gamemonetize.com/feed.php?format=0&category=${encodeURIComponent(primaryTag)}&page=1`);
                 let games = [];
                 if (res.ok) {
                     games = await res.json();
                 }
 
-                // 如果按类别请求返回空，尝试请求大列表
                 if (!Array.isArray(games) || games.length === 0) {
                     const fallbackRes = await fetch('https://gamemonetize.com/feed.php?format=0&page=1');
                     if (fallbackRes.ok) games = await fallbackRes.json();
                 }
 
-                // 算法打分：优先匹配具有相同标签/分类的游戏，并剔除当前正在玩的游戏
                 const filteredGames = games.filter(g => g.title !== gameTitle).map(item => {
                     const itemTags = (item.category + ',' + (item.tags || '')).toLowerCase().split(',').map(t => t.trim());
                     let score = 0;
@@ -804,10 +809,8 @@
                     return { ...item, score };
                 });
 
-                // 按匹配度降序排列
                 filteredGames.sort((a, b) => b.score - a.score);
 
-                // 取前 10 个同标签游戏
                 const top10 = filteredGames.slice(0, 10);
                 window.similarGamesCache = top10;
 
@@ -819,7 +822,7 @@
                 `).join('');
 
                 const cardsHTML = renderCards(top10);
-                // 复制一份实现无缝首尾相接滚动
+                // 渲染双份，支持 CSS keyframes 实现无缝衔接滚动
                 track.innerHTML = cardsHTML + cardsHTML;
             } catch (e) {
                 console.warn('Failed to fetch API similar games:', e);
