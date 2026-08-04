@@ -364,11 +364,13 @@
             text-decoration: none;
             flex-shrink: 0;
             border: 1px solid #323950;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, transform 0.2s;
+            cursor: pointer;
         }
 
         .rec-card:hover {
             border-color: #00f2fe;
+            transform: scale(1.03);
         }
 
         .rec-card img {
@@ -416,6 +418,9 @@
                 padding: 6px 10px;
                 font-size: 11px;
             }
+            .recommend-section {
+                padding: 0 12px;
+            }
         }
     </style>
 </head>
@@ -423,8 +428,8 @@
 
     <!-- Header -->
     <header>
-        <a href="index.html" class="logo">🕹️ LuluTap</a>
-        <a href="index.html" class="back-btn">🏠 Home</a>
+        <a href="index.html" class="logo" aria-label="LuluTap Homepage">🕹️ LuluTap</a>
+        <a href="index.html" class="back-btn" aria-label="Return to Homepage">🏠 Home</a>
     </header>
 
     <!-- Main Game Container -->
@@ -433,38 +438,34 @@
         <!-- Left Panel -->
         <div class="left-panel">
             <div class="screen-box" id="screen-box">
-                <!-- 补全 allow 权限与 sandbox 安全策略属性 -->
                 <iframe 
                     class="game-iframe" 
                     id="game-frame" 
                     allowfullscreen 
                     allow="autoplay; gamepad; keyboard-map; accelerated-2d; pointer-lock"
                     sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-                    src="about:blank">
+                    src="about:blank"
+                    title="Game Window">
                 </iframe>
                 <div class="controls-bar">
-                    <button class="action-btn" onclick="reloadGame()">🔄 Reload</button>
-                    <button class="action-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+                    <button class="action-btn" onclick="reloadGame()" aria-label="Reload Game">🔄 Reload</button>
+                    <button class="action-btn" id="fullscreen-btn" onclick="toggleFullscreen()" aria-label="Toggle Fullscreen">⛶ Fullscreen</button>
                 </div>
             </div>
 
             <!-- Title & Tags -->
             <div class="game-meta-box">
                 <div class="meta-header">
-                    <h1 class="game-title" id="game-title">Real Car Parking Game</h1>
+                    <h1 class="game-title" id="game-title">Loading Game...</h1>
                     
-                    <button class="like-btn" id="like-btn" onclick="toggleLike()">
+                    <button class="like-btn" id="like-btn" onclick="toggleLike()" aria-label="Like this game">
                         <span id="like-icon">🤍</span> <span id="like-count">0</span>
                     </button>
                 </div>
                 
                 <div class="tags-row">
                     <span>🏷️ Categories & Tags:</span>
-                    <div id="game-tags" style="display: flex; gap: 6px; flex-wrap: wrap;">
-                        <span class="meta-tag">Puzzle</span>
-                        <span class="meta-tag">Casual</span>
-                        <span class="meta-tag">Find Object</span>
-                    </div>
+                    <div id="game-tags" style="display: flex; gap: 6px; flex-wrap: wrap;"></div>
                 </div>
             </div>
         </div>
@@ -511,7 +512,7 @@
             </div>
 
             <div class="side-card" id="game-info-card">
-                <div class="card-h3 collapsible-header" onclick="toggleGameInfo()">
+                <div class="card-h3 collapsible-header" id="info-header" onclick="toggleGameInfo()" role="button" aria-expanded="true" aria-label="Toggle Game Description">
                     <span>📖 GAME INFO</span>
                     <span class="toggle-arrow" id="info-arrow">▾</span>
                 </div>
@@ -523,7 +524,7 @@
     </div>
 
     <!-- Recommended Games Marquee -->
-    <section class="recommend-section">
+    <section class="recommend-section" aria-label="Similar Games Recommendations">
         <div class="rec-header">🎯 SIMILAR GAMES</div>
         <div class="marquee-wrapper">
             <div class="marquee-track" id="marquee-track"></div>
@@ -536,6 +537,7 @@
         const gameTitle = urlParams.get('title') || 'Real Car Parking Game';
         const tagsParam = urlParams.get('cat') || urlParams.get('tags') || 'Puzzle,Casual,Find Object';
         const descParam = urlParams.get('desc');
+        const imgParam = urlParams.get('img') || '';
 
         const frame = document.getElementById('game-frame');
         const titleEl = document.getElementById('game-title');
@@ -596,30 +598,31 @@
             updateLikeUI();
         }
 
-        // 监听其他页面修改 localStorage 时的实时更新
         window.addEventListener('storage', (e) => {
             if (e.key === 'lulutap_likes') {
                 updateLikeUI();
             }
         });
 
-        // 初始化读取 UI
         updateLikeUI();
 
         function toggleGameInfo() {
             const card = document.getElementById('game-info-card');
             const body = document.getElementById('game-info-body');
             const arrow = document.getElementById('info-arrow');
+            const header = document.getElementById('info-header');
 
             const isCollapsed = body.classList.contains('collapsed');
             if (isCollapsed) {
                 body.classList.remove('collapsed');
                 card.classList.remove('collapsed');
                 arrow.textContent = '▾';
+                header.setAttribute('aria-expanded', 'true');
             } else {
                 body.classList.add('collapsed');
                 card.classList.add('collapsed');
                 arrow.textContent = '▸';
+                header.setAttribute('aria-expanded', 'false');
             }
         }
 
@@ -629,7 +632,7 @@
 
         function toggleFullscreen() {
             const screenBox = document.getElementById('screen-box');
-            if (!document.fullscreenElement) {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
                 if (screenBox.requestFullscreen) {
                     screenBox.requestFullscreen();
                 } else if (screenBox.webkitRequestFullscreen) {
@@ -638,18 +641,52 @@
             } else {
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
                 }
             }
+        }
+
+        // 监听全屏状态变化，自动转换按钮提示语
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+
+        function handleFullscreenChange() {
+            const fsBtn = document.getElementById('fullscreen-btn');
+            if (document.fullscreenElement || document.webkitFullscreenElement) {
+                fsBtn.innerHTML = '🗗 Exit Fullscreen';
+            } else {
+                fsBtn.innerHTML = '⛶ Fullscreen';
+            }
+        }
+
+        // 写入浏览历史闭环逻辑
+        function navigateToGame(game) {
+            let history = JSON.parse(localStorage.getItem('lulutap_recent') || '[]');
+            history = history.filter(item => item.title !== game.title);
+            history.unshift(game);
+            if (history.length > 20) history.pop();
+            localStorage.setItem('lulutap_recent', JSON.stringify(history));
+
+            const query = new URLSearchParams({
+                url: game.gameUrl || game.url,
+                title: game.title,
+                img: game.img || game.thumb || '',
+                cat: game.category || 'Arcade',
+                desc: game.description || ''
+            }).toString();
+
+            window.location.href = `game.html?${query}`;
         }
 
         async function loadSimilarGamesMarquee() {
             const track = document.getElementById('marquee-track');
             try {
                 const res = await fetch('https://gamemonetize.com/feed.php?format=0&page=1');
+                if (!res.ok) throw new Error('API Error');
                 const games = await res.json();
 
                 const rankedGames = games.map(item => {
-                    // 修复问题 1：分割标签后使用 .filter(Boolean) 过滤空字符串，防止包含空串导致比对异常
                     const itemTags = (item.tags || item.category || '')
                         .toLowerCase()
                         .split(',')
@@ -659,7 +696,7 @@
                     let score = 0;
                     currentTags.forEach(tag => {
                         const lowTag = tag.toLowerCase();
-                        if (lowTag && itemTags.some(t => t.includes(lowTag) || lowTag.includes(t))) {
+                        if (lowTag && itemTags.some(t => t === lowTag || t.includes(lowTag))) {
                             score += 1;
                         }
                     });
@@ -669,28 +706,35 @@
                 rankedGames.sort((a, b) => b.score - a.score);
                 const top10 = rankedGames.slice(0, 10);
 
-                const cardsHTML = top10.map(item => `
-                    <a href="game.html?url=${encodeURIComponent(item.url)}&title=${encodeURIComponent(item.title)}&cat=${encodeURIComponent(item.category || '')}&desc=${encodeURIComponent(item.description || '')}" class="rec-card">
+                window.similarGamesCache = top10;
+
+                const cardsHTML = top10.map((item, idx) => `
+                    <div class="rec-card" onclick="navigateToGame(window.similarGamesCache[${idx}])" role="button" aria-label="${item.title}">
                         <img src="${item.thumb}" alt="${item.title}">
                         <div class="rec-card-title">${item.title}</div>
-                    </a>
+                    </div>
                 `).join('');
 
                 track.innerHTML = cardsHTML + cardsHTML;
             } catch(e) {
-                // 修复问题 2：兜底逻辑补充 <a> 标签跳转与完整参数传递
-                let fallback = '';
-                for(let i = 1; i <= 10; i++) {
-                    const title = `Similar Game ${i}`;
-                    const url = 'https://html5.gamedistribution.com/rvvASAhfx001/';
-                    fallback += `
-                        <a href="game.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&cat=Casual" class="rec-card">
-                            <img src="https://picsum.photos/200/200?random=${i}" alt="${title}">
-                            <div class="rec-card-title">${title}</div>
-                        </a>
-                    `;
-                }
-                track.innerHTML = fallback + fallback;
+                const fallbackData = Array.from({ length: 10 }).map((_, i) => ({
+                    title: `Similar Game ${i + 1}`,
+                    gameUrl: 'https://html5.gamedistribution.com/rvvASAhfx001/',
+                    img: `https://picsum.photos/200/200?random=${i + 10}`,
+                    category: 'Casual',
+                    description: 'Fun casual game to play anytime!'
+                }));
+
+                window.similarGamesCache = fallbackData;
+
+                const fallbackHTML = fallbackData.map((item, idx) => `
+                    <div class="rec-card" onclick="navigateToGame(window.similarGamesCache[${idx}])" role="button" aria-label="${item.title}">
+                        <img src="${item.img}" alt="${item.title}">
+                        <div class="rec-card-title">${item.title}</div>
+                    </div>
+                `).join('');
+
+                track.innerHTML = fallbackHTML + fallbackHTML;
             }
         }
 
