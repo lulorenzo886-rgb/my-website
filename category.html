@@ -11,7 +11,8 @@
         
         header { height: 64px; background: #161926; border-bottom: 1px solid #262b3d; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: sticky; top: 0; z-index: 100; }
         .logo { font-size: 24px; font-weight: 900; color: #00f2fe; text-decoration: none; }
-        
+        .lang-selector { background: #0f111a; border: 1px solid #2a3148; color: #fff; padding: 6px 12px; border-radius: 16px; font-size: 12px; outline: none; cursor: pointer; }
+
         .container { max-width: 1500px; width: 100%; margin: 0 auto; padding: 24px; flex: 1; }
         .breadcrumb { font-size: 13px; color: #a0aec0; margin-bottom: 16px; }
         .breadcrumb a { color: #00f2fe; text-decoration: none; }
@@ -27,25 +28,40 @@
         .card-overlay { position: relative; z-index: 1; background: linear-gradient(0deg, rgba(15,17,26,0.95) 0%, rgba(15,17,26,0) 100%); padding: 10px; }
         .card-title { font-size: 13px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .loading-trigger { text-align: center; padding: 40px; color: #a0aec0; font-size: 14px; }
+        .fav-heart-btn { position: absolute; top: 8px; right: 8px; z-index: 2; background: rgba(15, 17, 26, 0.7); border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: #a0aec0; cursor: pointer; font-size: 14px; backdrop-filter: blur(4px); }
+        .fav-heart-btn.active { color: #ff0844; }
 
         footer { background: #161926; border-top: 1px solid #262b3d; padding: 32px 24px; text-align: center; margin-top: auto; }
         .footer-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 16px; }
         .footer-link { color: #a0aec0; text-decoration: none; font-size: 13px; }
-        .footer-link:hover { color: #00f2fe; }
         .footer-copyright { font-size: 12px; color: #718096; }
+
+        #google_translate_element { display: none; }
+        .goog-te-banner-frame { display: none !important; }
+        body { top: 0px !important; }
     </style>
 </head>
 <body>
     <header>
         <a href="index.html" class="logo">LuluTap</a>
+        <select class="lang-selector" id="lang-select" onchange="changeLanguage(this.value)">
+            <option value="en">🇺🇸 English</option>
+            <option value="zh-CN">🇨🇳 简体中文</option>
+            <option value="es">🇪🇸 Español</option>
+            <option value="hi">🇮🇳 हिन्दी</option>
+            <option value="fr">🇫🇷 Français</option>
+            <option value="ar">🇸🇦 العربية</option>
+            <option value="pt">🇧🇷 Português</option>
+            <option value="ru">🇷🇺 Русский</option>
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="ja">🇯🇵 日本語</option>
+        </select>
     </header>
 
-    <div class="container">
-        <div class="breadcrumb">
-            <a href="index.html">← Back to Home</a> / <span id="bread-cat">Category</span>
-        </div>
+    <div id="google_translate_element"></div>
 
+    <div class="container">
+        <div class="breadcrumb"><a href="index.html">← Back to Home</a> / <span id="bread-cat">Category</span></div>
         <div class="toolbar">
             <h1 class="category-title" id="cat-heading">Category Games</h1>
             <select class="sort-select" id="sort-select" onchange="changeSort(this.value)">
@@ -54,9 +70,7 @@
                 <option value="az">🔤 A - Z</option>
             </select>
         </div>
-
         <div class="bento-grid" id="grid"></div>
-        <div class="loading-trigger" id="loading-trigger">Loading games...</div>
     </div>
 
     <footer>
@@ -69,16 +83,51 @@
         <div class="footer-copyright">© 2026 LuluTap. All rights reserved.</div>
     </footer>
 
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'en', autoDisplay: false }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const currentCategory = urlParams.get('type') || 'Action';
-        
         let rawCategoryGames = [];
-        let sortedGames = [];
-        let displayCount = 20;
 
         document.getElementById('bread-cat').innerText = currentCategory;
         document.getElementById('cat-heading').innerText = `${currentCategory} Games`;
+
+        function initLanguage() {
+            const savedLang = localStorage.getItem('lulutap_lang') || 'en';
+            document.getElementById('lang-select').value = savedLang;
+            if (savedLang !== 'en') { setTimeout(() => { doGoogleTranslate(savedLang); }, 1000); }
+        }
+
+        function changeLanguage(langCode) {
+            localStorage.setItem('lulutap_lang', langCode);
+            doGoogleTranslate(langCode);
+        }
+
+        function doGoogleTranslate(langCode) {
+            const selectEl = document.querySelector('.goog-te-combo');
+            if (selectEl) { selectEl.value = langCode; selectEl.dispatchEvent(new Event('change')); }
+        }
+
+        function isFavorite(gameId) {
+            let favs = JSON.parse(localStorage.getItem('lulutap_favorites') || '[]');
+            return favs.some(f => f.id === gameId);
+        }
+
+        function toggleFavorite(e, game) {
+            e.stopPropagation();
+            let favs = JSON.parse(localStorage.getItem('lulutap_favorites') || '[]');
+            const index = favs.findIndex(f => f.id === game.id);
+            if (index > -1) favs.splice(index, 1);
+            else favs.unshift(game);
+            localStorage.setItem('lulutap_favorites', JSON.stringify(favs));
+            renderGrid();
+        }
 
         function saveAndGo(game) {
             let recent = JSON.parse(localStorage.getItem('lulutap_recent') || '[]');
@@ -100,64 +149,33 @@
                 const raw = await res.json();
                 rawCategoryGames = raw.map((item, i) => ({
                     id: item.id ? String(item.id) : `cat-${i}`,
-                    title: item.title || "Untitled Game",
-                    category: item.category || currentCategory,
-                    img: item.thumb || '',
-                    gameUrl: item.url || '',
-                    description: item.description || '',
-                    instructions: item.instructions || ''
+                    title: item.title || "Untitled Game", category: item.category || currentCategory,
+                    img: item.thumb || '', gameUrl: item.url || '', description: item.description || ''
                 })).filter(g => g.category.toLowerCase().includes(currentCategory.toLowerCase()));
             } catch (e) {
-                rawCategoryGames = Array.from({length: 30}).map((_, i) => ({
-                    id: `mock-cat-${i}`, title: `${currentCategory} Game ${i+1}`, category: currentCategory,
-                    img: `https://picsum.photos/seed/${i+100}/300/300`, gameUrl: "https://html5.gamedistribution.com/rvvAS30838184/",
-                    description: "Fun game.", instructions: "Use WASD or Space."
+                rawCategoryGames = Array.from({length: 20}).map((_, i) => ({
+                    id: `mock-${i}`, title: `${currentCategory} ${i+1}`, category: currentCategory,
+                    img: `https://picsum.photos/seed/${i+10}/300/300`, gameUrl: "https://html5.gamedistribution.com/rvvAS30838184/"
                 }));
             }
-
-            changeSort('popular');
-            setupInfiniteScroll();
-        }
-
-        function changeSort(type) {
-            sortedGames = [...rawCategoryGames];
-            if (type === 'az') {
-                sortedGames.sort((a, b) => a.title.localeCompare(b.title));
-            } else if (type === 'newest') {
-                sortedGames.reverse();
-            }
-            displayCount = 20;
             renderGrid();
+            initLanguage();
         }
 
         function renderGrid() {
             const grid = document.getElementById('grid');
-            const toRender = sortedGames.slice(0, displayCount);
-            
-            grid.innerHTML = toRender.map(g => `
-                <div class="game-card" onclick='saveAndGo(${JSON.stringify(g).replace(/'/g, "&apos;")})'>
-                    <div class="card-cover" style="background-image: url('${g.img}');"></div>
-                    <div class="card-overlay"><div class="card-title">${g.title}</div></div>
-                </div>
-            `).join('');
-
-            const trigger = document.getElementById('loading-trigger');
-            if (displayCount >= sortedGames.length) {
-                trigger.innerText = "No more games in this category.";
-            } else {
-                trigger.innerText = "Scroll down for more...";
-            }
-        }
-
-        function setupInfiniteScroll() {
-            window.addEventListener('scroll', () => {
-                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
-                    if (displayCount < sortedGames.length) {
-                        displayCount += 15;
-                        renderGrid();
-                    }
-                }
-            });
+            grid.innerHTML = rawCategoryGames.map(g => {
+                const isFav = isFavorite(g.id);
+                return `
+                    <div class="game-card" onclick='saveAndGo(${JSON.stringify(g).replace(/'/g, "&apos;")})'>
+                        <button class="fav-heart-btn ${isFav ? 'active' : ''}" onclick='toggleFavorite(event, ${JSON.stringify(g).replace(/'/g, "&apos;")})'>
+                            ${isFav ? '❤️' : '🤍'}
+                        </button>
+                        <div class="card-cover" style="background-image: url('${g.img}');"></div>
+                        <div class="card-overlay"><div class="card-title">${g.title}</div></div>
+                    </div>
+                `;
+            }).join('');
         }
 
         loadCategoryData();
