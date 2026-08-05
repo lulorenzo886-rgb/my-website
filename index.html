@@ -29,7 +29,6 @@
         .search-input:focus { border-color: #00f2fe; }
         .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #718096; font-size: 14px; }
 
-        /* Surprise Me Button */
         .random-btn { background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); border: none; color: #fff; padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: transform 0.2s; flex-shrink: 0; }
         .random-btn:hover { transform: scale(1.05); }
 
@@ -54,9 +53,9 @@
         .category-title::before { content: ''; width: 4px; height: 18px; background: #00f2fe; border-radius: 2px; }
         .see-all-btn { color: #00f2fe; text-decoration: none; font-size: 13px; font-weight: 600; }
 
-        /* 循环无限滚动动画核心 CSS */
+        /* 循环无限滚动动画 */
         .row-scroll-container { width: 100%; overflow: hidden; position: relative; }
-        .row-scroll-track { display: flex; gap: 16px; width: max-content; animation: infiniteScroll 30s linear infinite; }
+        .row-scroll-track { display: flex; gap: 16px; width: max-content; animation: infiniteScroll 35s linear infinite; }
         .row-scroll-container:hover .row-scroll-track { animation-play-state: paused; }
 
         @keyframes infiniteScroll {
@@ -67,7 +66,7 @@
         /* Cards & Favorite Heart */
         .game-card { width: 180px; height: 180px; flex-shrink: 0; position: relative; background: #161926; border-radius: 12px; overflow: hidden; border: 1px solid #222738; text-decoration: none; color: #fff; display: flex; flex-direction: column; justify-content: flex-end; transition: transform 0.25s, border-color 0.25s; cursor: pointer; }
         .game-card:hover { transform: translateY(-4px); border-color: #00f2fe; box-shadow: 0 6px 20px rgba(0, 242, 254, 0.2); }
-        .card-cover { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; transition: transform 0.3s; }
+        .card-cover { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
         .game-card:hover .card-cover { transform: scale(1.05); }
         .card-overlay { position: relative; z-index: 1; background: linear-gradient(0deg, rgba(15,17,26,0.95) 0%, rgba(15,17,26,0) 100%); padding: 10px; }
         .card-title { font-size: 13px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -76,7 +75,7 @@
         .fav-heart-btn.active { color: #ff0844; }
         .fav-heart-btn:hover { transform: scale(1.15); }
 
-        .loading-box { text-align: center; padding: 60px; color: #a0aec0; }
+        .loading-box { text-align: center; padding: 60px; color: #a0aec0; font-size: 16px; }
 
         /* Footer */
         footer { background: #161926; border-top: 1px solid #262b3d; padding: 32px 24px; text-align: center; margin-top: auto; }
@@ -138,7 +137,7 @@
     </nav>
 
     <main class="main-content" id="main-content">
-        <div class="loading-box">Loading games catalog...</div>
+        <div class="loading-box">🎮 Fetching GameMonetize Games Catalog...</div>
     </main>
 
     <footer>
@@ -228,7 +227,7 @@
             const game = gameMap[gameId];
             if (!game) return;
             let favs = JSON.parse(localStorage.getItem('lulutap_favorites') || '[]');
-            const index = favs.findIndex(f => f.id === game.id);
+            const index = favs.findIndex(f => String(f.id) === String(game.id));
             if (index > -1) {
                 favs.splice(index, 1);
             } else {
@@ -240,7 +239,7 @@
 
         function isFavorite(gameId) {
             let favs = JSON.parse(localStorage.getItem('lulutap_favorites') || '[]');
-            return favs.some(f => f.id === gameId);
+            return favs.some(f => String(f.id) === String(gameId));
         }
 
         function playRandomGame() {
@@ -254,7 +253,7 @@
             const game = gameMap[gameId];
             if (!game) return;
             let recent = JSON.parse(localStorage.getItem('lulutap_recent') || '[]');
-            recent = recent.filter(g => g.id !== game.id);
+            recent = recent.filter(g => String(g.id) !== String(game.id));
             recent.unshift(game);
             if (recent.length > 10) recent.pop();
             localStorage.setItem('lulutap_recent', JSON.stringify(recent));
@@ -298,7 +297,7 @@
                     <button class="fav-heart-btn ${isFav ? 'active' : ''}" onclick="toggleFavoriteById(event, '${g.id}')">
                         ${isFav ? '❤️' : '🤍'}
                     </button>
-                    <div class="card-cover" style="background-image: url('${g.img}');"></div>
+                    <img class="card-cover" src="${g.img}" alt="${safeTitle}" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/300x300/161926/00f2fe?text=LuluTap+Game';" />
                     <div class="card-overlay"><div class="card-title">${safeTitle}</div></div>
                 </div>
             `;
@@ -323,52 +322,56 @@
             `;
         }
 
-        function generateMockGames() {
-            return Array.from({length: 60}).map((_, i) => ({
-                id: `mock-${i}`, 
-                title: `Game ${i+1}`, 
-                category: FIXED_TAGS[i % FIXED_TAGS.length],
-                img: `https://picsum.photos/seed/${i+100}/300/300`, 
-                gameUrl: "https://html5.gamedistribution.com/rvvAS30838184/",
-                description: "Fun online game.", 
-                instructions: "Use WASD or Spacebar."
-            }));
-        }
-
-        async function fetchGamesWithFallback() {
-            const targetUrl = 'https://gamemonetize.com/feed.php?format=0&page=1';
+        // 强力网络请求：优先直连 GameMonetize 节点，解决 API 跨域与空数据问题
+        async function fetchGameMonetizeFeed() {
+            const gmUrl = 'https://gamemonetize.com/feed.php?format=0&num=80';
             
-            // 尝试 1: corsproxy.io
+            // 方式 A: 全球高速代理 1
             try {
-                const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(targetUrl)}`);
+                const res = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(gmUrl)}`);
                 if (res.ok) {
-                    const raw = await res.json();
-                    if (Array.isArray(raw) && raw.length > 0) return raw;
+                    const data = await res.json();
+                    if (Array.isArray(data) && data.length > 0) return data;
                 }
-            } catch (e) { console.warn("Proxy 1 failed:", e); }
+            } catch (e) { console.warn("Proxy A failed:", e); }
 
-            // 尝试 2: api.allorigins.win
+            // 方式 B: 全球高速代理 2
             try {
-                const res = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`);
+                const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(gmUrl)}`);
                 if (res.ok) {
-                    const raw = await res.json();
-                    if (Array.isArray(raw) && raw.length > 0) return raw;
+                    const data = await res.json();
+                    if (Array.isArray(data) && data.length > 0) return data;
                 }
-            } catch (e) { console.warn("Proxy 2 failed:", e); }
+            } catch (e) { console.warn("Proxy B failed:", e); }
 
-            // 兜底返回模拟数据
-            return generateMockGames();
+            // 方式 C: 备用 API 方式 3
+            try {
+                const res = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(gmUrl)}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data) && data.length > 0) return data;
+                }
+            } catch (e) { console.warn("Proxy C failed:", e); }
+
+            return [];
         }
 
         async function initData() {
-            const rawData = await fetchGamesWithFallback();
+            const rawData = await fetchGameMonetizeFeed();
             
+            if (!rawData || rawData.length === 0) {
+                document.getElementById('main-content').innerHTML = `
+                    <div class="loading-box">❌ Failed to load games from GameMonetize API. Please refresh the page.</div>
+                `;
+                return;
+            }
+
             allGames = rawData.map((item, i) => ({
-                id: item.id ? String(item.id) : `g-${i}`,
-                title: item.title || `Game ${i+1}`,
+                id: item.id ? String(item.id) : `gm-${i}`,
+                title: item.title || "GameMonetize Title",
                 category: item.category || "Puzzle",
-                img: item.thumb || `https://picsum.photos/seed/${i+200}/300/300`, 
-                gameUrl: item.url || "https://html5.gamedistribution.com/rvvAS30838184/",
+                img: item.thumb || item.image || '', 
+                gameUrl: item.url || '',
                 description: item.description || '', 
                 instructions: item.instructions || ''
             }));
