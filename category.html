@@ -1,244 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Category Games - LuluTap</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #0f111a; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
-        
-        header { height: 64px; background: #161926; border-bottom: 1px solid #262b3d; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 24px; font-weight: 900; color: #00f2fe; text-decoration: none; }
-        .lang-selector { background: #0f111a; border: 1px solid #2a3148; color: #fff; padding: 6px 12px; border-radius: 16px; font-size: 12px; outline: none; cursor: pointer; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Category - LuluTap</title>
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3CradialGradient id='bg' cx='50%25' cy='50%25' r='50%25'%3E%3Cstop offset='0%25' stop-color='%23141E30'/%3E%3Cstop offset='100%25' stop-color='%23070B12'/%3E%3C/radialGradient%3E%3ClinearGradient id='ring' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300FF87'/%3E%3Cstop offset='100%25' stop-color='%2360EFFF'/%3E%3C/linearGradient%3E%3CradialGradient id='btn' cx='40%25' cy='40%25' r='60%25'%3E%3Cstop offset='0%25' stop-color='%2300FF87'/%3E%3Cstop offset='100%25' stop-color='%23005C31'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='100' fill='url(%23bg)'/%3E%3Ccircle cx='256' cy='256' r='180' fill='none' stroke='url(%23ring)' stroke-width='24'/%3E%3Ccircle cx='256' cy='256' r='95' fill='url(%23btn)'/%3E%3Cpath d='M230 200 V290 H300' fill='none' stroke='%23FFFFFF' stroke-width='28' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 
-        .container { max-width: 1500px; width: 100%; margin: 0 auto; padding: 24px; flex: 1; }
-        .breadcrumb { font-size: 13px; color: #a0aec0; margin-bottom: 16px; }
-        .breadcrumb a { color: #00f2fe; text-decoration: none; }
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background-color: #0d1117; color: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+    a { text-decoration: none; color: inherit; }
 
-        .toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-        .category-title { font-size: 24px; font-weight: 800; }
-        .sort-select { background: #161926; border: 1px solid #262b3d; color: #fff; padding: 8px 16px; border-radius: 8px; font-size: 13px; outline: none; cursor: pointer; }
+    header { background: #161b22; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #21262d; position: sticky; top: 0; z-index: 1000; }
+    .logo { font-size: 28px; font-weight: 900; background: linear-gradient(45deg, #00FF87, #60EFFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .search-container { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; width: 100%; max-width: 420px; }
+    .quick-tags { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+    .tag-pill { background: #21262d; color: #00FF87; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; border: 1px solid #30363d; }
+    .search-input { width: 100%; padding: 10px 16px; background: #0d1117; border: 2px solid #30363d; border-radius: 20px; color: #fff; font-size: 14px; outline: none; }
 
-        .bento-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
-        .game-card { height: 180px; position: relative; background: #161926; border-radius: 12px; overflow: hidden; border: 1px solid #222738; text-decoration: none; color: #fff; display: flex; flex-direction: column; justify-content: flex-end; transition: transform 0.2s, border-color 0.2s; cursor: pointer; }
-        .game-card:hover { transform: translateY(-4px); border-color: #00f2fe; }
-        .card-cover { position: absolute; top:0; left:0; width:100%; height:100%; background-size: cover; background-position: center; }
-        .card-overlay { position: relative; z-index: 1; background: linear-gradient(0deg, rgba(15,17,26,0.95) 0%, rgba(15,17,26,0) 100%); padding: 10px; }
-        .card-title { font-size: 13px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    main { flex: 1; max-width: 1400px; margin: 0 auto; padding: 20px; width: 100%; }
+    .cat-title { font-size: 24px; font-weight: 800; margin-bottom: 20px; color: #00FF87; }
+    
+    .bento-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); grid-auto-rows: 130px; grid-auto-flow: dense; gap: 12px; }
+    .bento-item { position: relative; border-radius: 16px; overflow: hidden; background: #161b22; border: 1px solid #21262d; transition: 0.2s; cursor: pointer; }
+    .bento-item:hover { transform: scale(1.03); border-color: #00FF87; z-index: 2; }
+    
+    .bento-item.size-1x1 { grid-column: span 1; grid-row: span 1; }
+    .bento-item.size-2x2 { grid-column: span 2; grid-row: span 2; }
+    .bento-item.size-2x1 { grid-column: span 2; grid-row: span 1; }
+    .bento-item.size-1x2 { grid-column: span 1; grid-row: span 2; }
 
-        .fav-heart-btn { position: absolute; top: 8px; right: 8px; z-index: 2; background: rgba(15, 17, 26, 0.7); border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: #a0aec0; cursor: pointer; font-size: 14px; backdrop-filter: blur(4px); }
-        .fav-heart-btn.active { color: #ff0844; }
+    /* Category Card Mixed in Grid */
+    .bento-item.cat-card-item { background: linear-gradient(135deg, #1f2937, #111827); border: 2px solid #00FF87; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; text-align: center; }
 
-        footer { background: #161926; border-top: 1px solid #262b3d; padding: 32px 24px; text-align: center; margin-top: auto; }
-        .footer-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 16px; }
-        .footer-link { color: #a0aec0; text-decoration: none; font-size: 13px; }
-        .footer-copyright { font-size: 12px; color: #718096; }
+    .bento-img { width: 100%; height: 100%; object-fit: cover; }
+    .bento-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 8px; background: linear-gradient(transparent, rgba(0,0,0,0.85)); font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        #google_translate_element { display: none; }
-        .goog-te-banner-frame { display: none !important; }
-        body { top: 0px !important; }
-    </style>
+    /* 5s Loading Spinner */
+    .loader-container { text-align: center; padding: 30px; display: none; }
+    .spinner { width: 40px; height: 40px; border: 4px solid #21262d; border-top: 4px solid #00FF87; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    footer { background: #161b22; padding: 24px; text-align: center; border-top: 1px solid #21262d; color: #8b949e; font-size: 13px; margin-top: 40px; }
+  </style>
 </head>
 <body>
-    <header>
-        <a href="index.html" class="logo">LuluTap</a>
-        <select class="lang-selector" id="lang-select" onchange="changeLanguage(this.value)">
-            <option value="en">🇺🇸 English</option>
-            <option value="zh-CN">🇨🇳 简体中文</option>
-            <option value="es">🇪🇸 Español</option>
-            <option value="hi">🇮🇳 हिन्दी</option>
-            <option value="fr">🇫🇷 Français</option>
-            <option value="ar">🇸🇦 العربية</option>
-            <option value="pt">🇧🇷 Português</option>
-            <option value="ru">🇷🇺 Русский</option>
-            <option value="de">🇩🇪 Deutsch</option>
-            <option value="ja">🇯🇵 日本語</option>
-        </select>
-    </header>
-
-    <div id="google_translate_element"></div>
-
-    <div class="container">
-        <div class="breadcrumb"><a href="index.html">← Back to Home</a> / <span id="bread-cat">Category</span></div>
-        <div class="toolbar">
-            <h1 class="category-title" id="cat-heading">Category Games</h1>
-            <select class="sort-select" id="sort-select" onchange="changeSort(this.value)">
-                <option value="popular">🔥 Most Popular</option>
-                <option value="newest">🆕 Newest</option>
-                <option value="az">🔤 A - Z</option>
-            </select>
-        </div>
-        <div class="bento-grid" id="grid">
-            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #a0aec0;">Loading games...</div>
-        </div>
+  <header>
+    <a href="index.html" class="logo">LuluTap</a>
+    <div class="search-container">
+      <div class="quick-tags" id="quickTags"></div>
+      <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search games or tags...">
     </div>
+  </header>
 
-    <footer>
-        <div class="footer-links">
-            <a href="privacy.html" class="footer-link">Privacy Policy</a>
-            <a href="terms.html" class="footer-link">Terms of Service</a>
-            <a href="dmca.html" class="footer-link">DMCA Policy</a>
-            <a href="contact.html" class="footer-link">Contact Us</a>
-        </div>
-        <div class="footer-copyright">© 2026 LuluTap. All rights reserved.</div>
-    </footer>
+  <main>
+    <div class="cat-title" id="catTitle">Games</div>
+    <div class="bento-grid" id="bentoGrid"></div>
+    <div class="loader-container" id="loader">
+      <div class="spinner"></div>
+      <div>Loading more games...</div>
+    </div>
+  </main>
 
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({ pageLanguage: 'en', autoDisplay: false }, 'google_translate_element');
+  <footer>
+    <div>© 2026 LuluTap. All rights reserved.</div>
+  </footer>
+
+  <script>
+    const CATEGORIES = ['Action', '2 Player', '3D', 'Racing', 'Girls', 'Arcade', 'Puzzle', 'Shooting', 'Sports', 'Casual'];
+    let currentPage = 1;
+    let isLoading = false;
+    let currentCategory = '';
+
+    function getCategoryFromHash() {
+      const hash = decodeURIComponent(location.hash.substring(1)).trim();
+      return hash || 'Action';
+    }
+
+    function renderQuickTags() {
+      const selected = [...CATEGORIES].sort(() => 0.5 - Math.random()).slice(0, 5);
+      document.getElementById('quickTags').innerHTML = selected.map(cat => 
+        `<a href="category.html#${encodeURIComponent(cat)}" class="tag-pill">🔥 ${cat}</a>`
+      ).join('');
+    }
+
+    async function loadCategoryGames(page) {
+      if (isLoading) return;
+      isLoading = true;
+      document.getElementById('loader').style.display = 'block';
+
+      try {
+        // Fetch specific page from GameMonetize API
+        const response = await fetch(`https://gamemonetize.com/feed.php?format=0&page=${page}`);
+        const games = await response.json();
+
+        // 5-second simulated timeline wait
+        await new Promise(resolve => setTimeout(resolve, 5000));
+
+        appendBentoItems(games);
+        currentPage++;
+      } catch (err) {
+        console.error("API Fetch Error:", err);
+      } finally {
+        isLoading = false;
+        document.getElementById('loader').style.display = 'none';
+      }
+    }
+
+    function appendBentoItems(games) {
+      const grid = document.getElementById('bentoGrid');
+      const sizes = ['size-1x1', 'size-1x1', 'size-2x2', 'size-2x1', 'size-1x2'];
+
+      games.forEach((game, index) => {
+        const sizeClass = sizes[Math.floor(Math.random() * sizes.length)];
+        const card = document.createElement('a');
+        card.className = `bento-item ${sizeClass}`;
+        card.href = `game.html?id=${encodeURIComponent(game.id)}`;
+        card.onclick = () => localStorage.setItem(`game_${game.id}`, JSON.stringify(game));
+
+        card.innerHTML = `
+          <img class="bento-img" src="${game.thumb}" alt="${game.title}" loading="lazy">
+          <div class="bento-overlay">${game.title}</div>
+        `;
+        grid.appendChild(card);
+
+        // Randomly insert category big cards every ~10 items
+        if ((index + 1) % 10 === 0) {
+          const randomCat = CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
+          const catCard = document.createElement('a');
+          catCard.className = `bento-item size-2x1 cat-card-item`;
+          catCard.href = `category.html#${encodeURIComponent(randomCat)}`;
+          catCard.innerHTML = `<span>🟢 ${randomCat} Games</span>`;
+          grid.appendChild(catCard);
         }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+      });
+    }
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const rawType = urlParams.get('type') || 'Action';
-        const currentCategory = decodeURIComponent(rawType).trim();
-        
-        let rawCategoryGames = [];
+    // Scroll Bottom Trigger (API 5-second fetch timeline)
+    window.addEventListener('scroll', () => {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+        loadCategoryGames(currentPage);
+      }
+    });
 
-        const CATEGORY_API_URLS = {
-            ".IO": "https://gamemonetize.com/feed.php?format=0&category=1&page=1",
-            "2 Player": "https://gamemonetize.com/feed.php?format=0&category=2&page=1",
-            "3D": "https://gamemonetize.com/feed.php?format=0&category=3&page=1",
-            "Action": "https://gamemonetize.com/feed.php?format=0&page=1",
-            "Adventure": "https://gamemonetize.com/feed.php?format=0&category=4&page=1",
-            "Arcade": "https://gamemonetize.com/feed.php?format=0&category=5&page=1",
-            "Baby Hazel": "https://gamemonetize.com/feed.php?format=0&category=19&page=1",
-            "Bejeweled": "https://gamemonetize.com/feed.php?format=0&category=6&page=1",
-            "Boys": "https://gamemonetize.com/feed.php?format=0&category=7&page=1",
-            "Clicker": "https://gamemonetize.com/feed.php?format=0&category=8&page=1",
-            "Cooking": "https://gamemonetize.com/feed.php?format=0&category=9&page=1",
-            "Girls": "https://gamemonetize.com/feed.php?format=0&category=10&page=1",
-            "Hypercasual": "https://gamemonetize.com/feed.php?format=0&category=11&page=1",
-            "Multiplayer": "https://gamemonetize.com/feed.php?format=0&category=12&page=1",
-            "Puzzle": "https://gamemonetize.com/feed.php?format=0&category=13&page=1",
-            "Racing": "https://gamemonetize.com/feed.php?format=0&category=14&page=1",
-            "Shooting": "https://gamemonetize.com/feed.php?format=0&category=15&page=1",
-            "Soccer": "https://gamemonetize.com/feed.php?format=0&category=16&page=1",
-            "Sports": "https://gamemonetize.com/feed.php?format=0&category=17&page=1",
-            "Stickman": "https://gamemonetize.com/feed.php?format=0&category=18&page=1"
-        };
+    window.addEventListener('hashchange', () => {
+      location.reload();
+    });
 
-        document.getElementById('bread-cat').innerText = currentCategory;
-        document.getElementById('cat-heading').innerText = currentCategory + " Games";
-
-        function initLanguage() {
-            const savedLang = localStorage.getItem('lulutap_lang') || 'en';
-            document.getElementById('lang-select').value = savedLang;
-            if (savedLang !== 'en') { setTimeout(function() { doGoogleTranslate(savedLang); }, 1000); }
-        }
-
-        function changeLanguage(langCode) {
-            localStorage.setItem('lulutap_lang', langCode);
-            doGoogleTranslate(langCode);
-        }
-
-        function doGoogleTranslate(langCode) {
-            const selectEl = document.querySelector('.goog-te-combo');
-            if (selectEl) { selectEl.value = langCode; selectEl.dispatchEvent(new Event('change')); }
-        }
-
-        function isFavorite(gameId) {
-            let favs = JSON.parse(localStorage.getItem('lulutap_favorites') || '[]');
-            return favs.some(function(f) { return f.id === gameId; });
-        }
-
-        function toggleFavorite(e, gameId) {
-            e.stopPropagation();
-            let favs = JSON.parse(localStorage.getItem('lulutap_favorites') || '[]');
-            const index = favs.findIndex(function(f) { return f.id === gameId; });
-            const game = rawCategoryGames.find(function(g) { return g.id === gameId; });
-            
-            if (index > -1) {
-                favs.splice(index, 1);
-            } else if (game) {
-                favs.unshift(game);
-            }
-            localStorage.setItem('lulutap_favorites', JSON.stringify(favs));
-            renderGrid();
-        }
-
-        function saveAndGo(gameId) {
-            const game = rawCategoryGames.find(function(g) { return g.id === gameId; });
-            if (!game) return;
-
-            let recent = JSON.parse(localStorage.getItem('lulutap_recent') || '[]');
-            recent = recent.filter(function(g) { return g.id !== game.id; });
-            recent.unshift(game);
-            if (recent.length > 10) recent.pop();
-            localStorage.setItem('lulutap_recent', JSON.stringify(recent));
-
-            const params = new URLSearchParams({
-                id: game.id, title: game.title, url: game.gameUrl, img: game.img,
-                cat: game.category, desc: game.description || '', inst: game.instructions || ''
-            });
-            window.location.href = "game.html?" + params.toString();
-        }
-
-        function changeSort(type) {
-            if (type === 'az') {
-                rawCategoryGames.sort(function(a, b) { return a.title.localeCompare(b.title); });
-            } else if (type === 'newest') {
-                rawCategoryGames.reverse();
-            }
-            renderGrid();
-        }
-
-        async function loadCategoryData() {
-            try {
-                const targetUrl = CATEGORY_API_URLS[currentCategory] || 'https://gamemonetize.com/feed.php?format=0&page=1';
-                const res = await fetch(targetUrl);
-                const raw = await res.json();
-                
-                if (Array.isArray(raw) && raw.length > 0) {
-                    rawCategoryGames = raw.map(function(item, i) {
-                        return {
-                            id: item.id ? String(item.id) : ('cat-' + i),
-                            title: item.title || "Untitled Game", 
-                            category: currentCategory,
-                            img: item.thumb || '', 
-                            gameUrl: item.url || '', 
-                            description: item.description || '',
-                            instructions: item.instructions || ''
-                        };
-                    });
-                }
-            } catch (e) {
-                console.error("Fetch error:", e);
-            }
-            
-            renderGrid();
-            initLanguage();
-        }
-
-        function renderGrid() {
-            const grid = document.getElementById('grid');
-            if (rawCategoryGames.length === 0) {
-                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #a0aec0;">No games found in this category.</div>';
-                return;
-            }
-
-            let html = '';
-            for (let i = 0; i < rawCategoryGames.length; i++) {
-                const g = rawCategoryGames[i];
-                const isFav = isFavorite(g.id);
-                const safeTitle = g.title.replace(/"/g, '&quot;');
-                
-                html += '<div class="game-card" onclick="saveAndGo(\'' + g.id + '\')">' +
-                    '<button class="fav-heart-btn ' + (isFav ? 'active' : '') + '" onclick="toggleFavorite(event, \'' + g.id + '\')">' +
-                        (isFav ? '❤️' : '🤍') +
-                    '</button>' +
-                    '<div class="card-cover" style="background-image: url(\'' + g.img + '\');"></div>' +
-                    '<div class="card-overlay"><div class="card-title">' + safeTitle + '</div></div>' +
-                '</div>';
-            }
-            grid.innerHTML = html;
-        }
-
-        loadCategoryData();
-    </script>
+    // Init
+    currentCategory = getCategoryFromHash();
+    document.getElementById('catTitle').innerText = `🏷️ ${currentCategory} Games`;
+    renderQuickTags();
+    loadCategoryGames(1);
+  </script>
 </body>
 </html>
