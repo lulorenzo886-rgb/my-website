@@ -53,10 +53,15 @@
         .category-title::before { content: ''; width: 4px; height: 18px; background: #00f2fe; border-radius: 2px; }
         .see-all-btn { color: #00f2fe; text-decoration: none; font-size: 13px; font-weight: 600; }
 
-        /* 循环无限滚动动画 */
-        .row-scroll-container { width: 100%; overflow: hidden; position: relative; }
-        .row-scroll-track { display: flex; gap: 16px; width: max-content; animation: infiniteScroll 35s linear infinite; }
-        .row-scroll-container:hover .row-scroll-track { animation-play-state: paused; }
+        /* 滚动动画容器 */
+        .row-scroll-container { width: 100%; overflow-x: auto; scrollbar-width: none; position: relative; }
+        .row-scroll-container::-webkit-scrollbar { display: none; }
+        
+        .row-scroll-track { display: flex; gap: 16px; width: max-content; }
+        
+        /* 仅在卡片足够多时启用无缝动画 */
+        .row-scroll-track.animate { animation: infiniteScroll 40s linear infinite; }
+        .row-scroll-container:hover .row-scroll-track.animate { animation-play-state: paused; }
 
         @keyframes infiniteScroll {
             0% { transform: translateX(0); }
@@ -159,10 +164,23 @@
 
     <script>
         const FIXED_TAGS = [
-            ".IO", "2 Player", "3D", "Bejeweled", "Boys", "Clicker", 
-            "Cooking", "Girls", "Multiplayer", "Puzzle", "Shooting", 
-            "Racing", "Soccer", "Sports", "Stickman"
+            "Action", "3D", "Arcade", "Car", "Driving", 
+            "Puzzle", "Shooting", "Soccer", "Sports", "Girls", 
+            "Clicker", "Cooking", "Multiplayer", "2 Player", "Stickman"
         ];
+
+        // 智能模糊搜索关键词字典（避免 API 类别对不上）
+        const TAG_KEYWORDS = {
+            "Soccer": ["soccer", "football", "ball", "goal", "kick", "penalty"],
+            "Sports": ["sport", "basketball", "tennis", "golf", "dart", "bowling", "baseball", "pool", "billiard", "boxing"],
+            "Car": ["car", "drive", "driving", "parking", "vehicle", "auto", "truck"],
+            "Driving": ["drive", "driving", "rider", "bike", "moto", "racing", "speed"],
+            "Shooting": ["shoot", "gun", "sniper", "fps", "war", "battle", "army"],
+            "Girls": ["girl", "dress", "makeup", "fashion", "wedding", "doll", "cooking", "salon"],
+            "Cooking": ["cook", "kitchen", "chef", "food", "cake", "pizza", "burger", "baking"],
+            "2 Player": ["2 player", "two player", "multiplayer", "versus", "vs"],
+            "Stickman": ["stickman", "stick"]
+        };
 
         let allGames = [];
         let gameMap = {};
@@ -275,7 +293,7 @@
         function handleSearch(keyword) {
             const term = keyword.trim().toLowerCase();
             if(!term) { renderShelf(); return; }
-            const filtered = allGames.filter(g => g.title.toLowerCase().includes(term));
+            const filtered = allGames.filter(g => g.title.toLowerCase().includes(term) || g.category.toLowerCase().includes(term));
             const main = document.getElementById('main-content');
             main.innerHTML = `
                 <section class="category-section">
@@ -297,7 +315,7 @@
                     <button class="fav-heart-btn ${isFav ? 'active' : ''}" onclick="toggleFavoriteById(event, '${g.id}')">
                         ${isFav ? '❤️' : '🤍'}
                     </button>
-                    <img class="card-cover" src="${g.img}" alt="${safeTitle}" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/300x300/161926/00f2fe?text=LuluTap+Game';" />
+                    <img class="card-cover" src="${g.img}" alt="${safeTitle}" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/300x300/161926/00f2fe?text=Game';" />
                     <div class="card-overlay"><div class="card-title">${safeTitle}</div></div>
                 </div>
             `;
@@ -306,15 +324,22 @@
         function renderLoopRow(gamesList) {
             if (!gamesList || gamesList.length === 0) return '';
             
-            let displayList = [...gamesList];
-            while (displayList.length < 12) {
-                displayList = displayList.concat(gamesList);
+            // 如果只有极少数游戏（小于 5 个），直接横向排列，不复制不加无限动画
+            if (gamesList.length < 5) {
+                return `
+                    <div class="row-scroll-container">
+                        <div class="row-scroll-track">
+                            ${gamesList.map(g => renderCardHtml(g)).join('')}
+                        </div>
+                    </div>
+                `;
             }
-            
-            const rawCardsHtml = displayList.map(g => renderCardHtml(g)).join('');
+
+            // 游戏足够多时，复制一遍凑成循环跑马灯
+            const rawCardsHtml = gamesList.map(g => renderCardHtml(g)).join('');
             return `
                 <div class="row-scroll-container">
-                    <div class="row-scroll-track">
+                    <div class="row-scroll-track animate">
                         ${rawCardsHtml}
                         ${rawCardsHtml}
                     </div>
@@ -322,36 +347,25 @@
             `;
         }
 
-        // 强力网络请求：优先直连 GameMonetize 节点，解决 API 跨域与空数据问题
         async function fetchGameMonetizeFeed() {
-            const gmUrl = 'https://gamemonetize.com/feed.php?format=0&num=80';
+            // 一次性抓取 300 个游戏，确保每个分类都有足够多的真实游戏！
+            const gmUrl = 'https://gamemonetize.com/feed.php?format=0&num=300';
             
-            // 方式 A: 全球高速代理 1
             try {
                 const res = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(gmUrl)}`);
                 if (res.ok) {
                     const data = await res.json();
                     if (Array.isArray(data) && data.length > 0) return data;
                 }
-            } catch (e) { console.warn("Proxy A failed:", e); }
+            } catch (e) { console.warn("Proxy 1 failed:", e); }
 
-            // 方式 B: 全球高速代理 2
             try {
                 const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(gmUrl)}`);
                 if (res.ok) {
                     const data = await res.json();
                     if (Array.isArray(data) && data.length > 0) return data;
                 }
-            } catch (e) { console.warn("Proxy B failed:", e); }
-
-            // 方式 C: 备用 API 方式 3
-            try {
-                const res = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(gmUrl)}`);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (Array.isArray(data) && data.length > 0) return data;
-                }
-            } catch (e) { console.warn("Proxy C failed:", e); }
+            } catch (e) { console.warn("Proxy 2 failed:", e); }
 
             return [];
         }
@@ -366,26 +380,53 @@
                 return;
             }
 
-            allGames = rawData.map((item, i) => ({
-                id: item.id ? String(item.id) : `gm-${i}`,
-                title: item.title || "GameMonetize Title",
-                category: item.category || "Puzzle",
-                img: item.thumb || item.image || '', 
-                gameUrl: item.url || '',
-                description: item.description || '', 
-                instructions: item.instructions || ''
-            }));
+            // 去重解析
+            const seenIds = new Set();
+            allGames = [];
+
+            rawData.forEach((item, i) => {
+                const id = item.id ? String(item.id) : `gm-${i}`;
+                if (!seenIds.has(id)) {
+                    seenIds.add(id);
+                    allGames.push({
+                        id: id,
+                        title: item.title || "Game Title",
+                        category: item.category || "Puzzle",
+                        img: item.thumb || item.image || '', 
+                        gameUrl: item.url || '',
+                        description: item.description || '', 
+                        instructions: item.instructions || ''
+                    });
+                }
+            });
 
             gameMap = {};
             categorizedGames = {};
             FIXED_TAGS.forEach(tag => { categorizedGames[tag] = []; });
 
+            // **核心修正：智能精准分栏**
             allGames.forEach(g => {
                 gameMap[g.id] = g;
-                const catLower = g.category.toLowerCase();
+                const catText = (g.category + " " + g.title + " " + g.description).toLowerCase();
+
                 FIXED_TAGS.forEach(tag => {
-                    if (catLower.includes(tag.toLowerCase()) || tag.toLowerCase().includes(catLower)) {
-                        categorizedGames[tag].push(g);
+                    const tagLower = tag.toLowerCase();
+                    let isMatch = false;
+
+                    // 1. 直连分类名匹配
+                    if (g.category.toLowerCase().includes(tagLower)) {
+                        isMatch = true;
+                    } 
+                    // 2. 关键词模糊检索匹配
+                    else if (TAG_KEYWORDS[tag]) {
+                        isMatch = TAG_KEYWORDS[tag].some(kw => catText.includes(kw));
+                    }
+
+                    if (isMatch) {
+                        // 避免同一个分类加入重复游戏
+                        if (!categorizedGames[tag].some(existing => existing.id === g.id)) {
+                            categorizedGames[tag].push(g);
+                        }
                     }
                 });
             });
@@ -401,7 +442,10 @@
             tagsHtml += `<div class="tag-nav-item" onclick="scrollToCategory('Recently-Played', this)">🕒 Recently Played</div>`;
             tagsHtml += `<div class="tag-nav-item" onclick="scrollToCategory('Hot-Games', this)">🔥 Hot Games</div>`;
             FIXED_TAGS.forEach(cat => {
-                tagsHtml += `<div class="tag-nav-item" onclick="scrollToCategory('${cat}', this)">${cat}</div>`;
+                // 只显示有游戏的分类标签
+                if (categorizedGames[cat] && categorizedGames[cat].length > 0) {
+                    tagsHtml += `<div class="tag-nav-item" onclick="scrollToCategory('${cat}', this)">${cat}</div>`;
+                }
             });
             bar.innerHTML = tagsHtml;
         }
@@ -430,6 +474,7 @@
                 `;
             }
 
+            // 热门游戏取前 15 个不重复游戏
             html += `
                 <section class="category-section" id="cat-row-Hot-Games">
                     <div class="category-header"><div class="category-title">🔥 Hot Games</div></div>
@@ -437,21 +482,21 @@
                 </section>
             `;
 
+            // 分类展示：只有真正匹配到了游戏才渲染该分类，绝对不再拿固定游戏滥竽充数！
             FIXED_TAGS.forEach(cat => {
                 let games = categorizedGames[cat];
-                if (!games || games.length === 0) games = allGames.slice(0, 10);
-                else games = games.slice(0, 10);
-                
-                const safeCat = cat.replace(/[^a-zA-Z0-9]/g, '-');
-                html += `
-                    <section class="category-section" id="cat-row-${safeCat}">
-                        <div class="category-header">
-                            <div class="category-title">${cat}</div>
-                            <a href="category.html?type=${encodeURIComponent(cat)}" class="see-all-btn">See All ></a>
-                        </div>
-                        ${renderLoopRow(games)}
-                    </section>
-                `;
+                if (games && games.length > 0) {
+                    const safeCat = cat.replace(/[^a-zA-Z0-9]/g, '-');
+                    html += `
+                        <section class="category-section" id="cat-row-${safeCat}">
+                            <div class="category-header">
+                                <div class="category-title">${cat} (${games.length})</div>
+                                <a href="category.html?type=${encodeURIComponent(cat)}" class="see-all-btn">See All ></a>
+                            </div>
+                            ${renderLoopRow(games.slice(0, 15))}
+                        </section>
+                    `;
+                }
             });
 
             main.innerHTML = html;
