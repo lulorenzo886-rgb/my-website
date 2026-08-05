@@ -95,6 +95,30 @@
         const currentCategory = urlParams.get('type') || 'Action';
         let rawCategoryGames = [];
 
+        // 统一接口字典映射
+        const CATEGORY_API_URLS = {
+            ".IO": "https://gamemonetize.com/feed.php?format=0&category=1&page=1",
+            "2 Player": "https://gamemonetize.com/feed.php?format=0&category=2&page=1",
+            "3D": "https://gamemonetize.com/feed.php?format=0&category=3&page=1",
+            "Action": "https://gamemonetize.com/feed.php?format=0&page=1",
+            "Adventure": "https://gamemonetize.com/feed.php?format=0&category=4&page=1",
+            "Arcade": "https://gamemonetize.com/feed.php?format=0&category=5&page=1",
+            "Baby Hazel": "https://gamemonetize.com/feed.php?format=0&category=19&page=1",
+            "Bejeweled": "https://gamemonetize.com/feed.php?format=0&category=6&page=1",
+            "Boys": "https://gamemonetize.com/feed.php?format=0&category=7&page=1",
+            "Clicker": "https://gamemonetize.com/feed.php?format=0&category=8&page=1",
+            "Cooking": "https://gamemonetize.com/feed.php?format=0&category=9&page=1",
+            "Girls": "https://gamemonetize.com/feed.php?format=0&category=10&page=1",
+            "Hypercasual": "https://gamemonetize.com/feed.php?format=0&category=11&page=1",
+            "Multiplayer": "https://gamemonetize.com/feed.php?format=0&category=12&page=1",
+            "Puzzle": "https://gamemonetize.com/feed.php?format=0&category=13&page=1",
+            "Racing": "https://gamemonetize.com/feed.php?format=0&category=14&page=1",
+            "Shooting": "https://gamemonetize.com/feed.php?format=0&category=15&page=1",
+            "Soccer": "https://gamemonetize.com/feed.php?format=0&category=16&page=1",
+            "Sports": "https://gamemonetize.com/feed.php?format=0&category=17&page=1",
+            "Stickman": "https://gamemonetize.com/feed.php?format=0&category=18&page=1"
+        };
+
         document.getElementById('bread-cat').innerText = currentCategory;
         document.getElementById('cat-heading').innerText = `${currentCategory} Games`;
 
@@ -143,20 +167,32 @@
             window.location.href = `game.html?${params.toString()}`;
         }
 
+        function changeSort(type) {
+            if (type === 'az') {
+                rawCategoryGames.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (type === 'newest') {
+                rawCategoryGames.reverse();
+            }
+            renderGrid();
+        }
+
         async function loadCategoryData() {
             try {
-                const res = await fetch('https://gamemonetize.com/feed.php?format=0&page=1');
+                const targetUrl = CATEGORY_API_URLS[currentCategory] || 'https://gamemonetize.com/feed.php?format=0&page=1';
+                const res = await fetch(targetUrl);
                 const raw = await res.json();
+                
                 rawCategoryGames = raw.map((item, i) => ({
                     id: item.id ? String(item.id) : `cat-${i}`,
-                    title: item.title || "Untitled Game", category: item.category || currentCategory,
-                    img: item.thumb || '', gameUrl: item.url || '', description: item.description || ''
-                })).filter(g => g.category.toLowerCase().includes(currentCategory.toLowerCase()));
-            } catch (e) {
-                rawCategoryGames = Array.from({length: 20}).map((_, i) => ({
-                    id: `mock-${i}`, title: `${currentCategory} ${i+1}`, category: currentCategory,
-                    img: `https://picsum.photos/seed/${i+10}/300/300`, gameUrl: "https://html5.gamedistribution.com/rvvAS30838184/"
+                    title: item.title || "Untitled Game", 
+                    category: currentCategory,
+                    img: item.thumb || '', 
+                    gameUrl: item.url || '', 
+                    description: item.description || '',
+                    instructions: item.instructions || ''
                 }));
+            } catch (e) {
+                console.error(e);
             }
             renderGrid();
             initLanguage();
@@ -164,6 +200,10 @@
 
         function renderGrid() {
             const grid = document.getElementById('grid');
+            if (rawCategoryGames.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #a0aec0;">No games found in this category.</div>`;
+                return;
+            }
             grid.innerHTML = rawCategoryGames.map(g => {
                 const isFav = isFavorite(g.id);
                 return `
