@@ -20,7 +20,8 @@
     .search-input { width: 100%; padding: 10px 16px; background: #0d1117; border: 2px solid #30363d; border-radius: 20px; color: #fff; font-size: 14px; outline: none; }
 
     main { flex: 1; max-width: 1400px; margin: 0 auto; padding: 20px; width: 100%; }
-    .cat-title { font-size: 24px; font-weight: 800; margin-bottom: 20px; color: #00FF87; }
+    .cat-title { font-size: 24px; font-weight: 800; margin-bottom: 20px; color: #00FF87; display: flex; align-items: center; justify-content: space-between; }
+    .game-count { font-size: 14px; color: #8b949e; font-weight: normal; }
     
     .bento-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); grid-auto-rows: 130px; grid-auto-flow: dense; gap: 12px; }
     .bento-item { position: relative; border-radius: 16px; overflow: hidden; background: #161b22; border: 1px solid #21262d; transition: 0.2s; cursor: pointer; }
@@ -31,13 +32,13 @@
     .bento-item.size-2x1 { grid-column: span 2; grid-row: span 1; }
     .bento-item.size-1x2 { grid-column: span 1; grid-row: span 2; }
 
-    /* Category Card Mixed in Grid */
-    .bento-item.cat-card-item { background: linear-gradient(135deg, #1f2937, #111827); border: 2px solid #00FF87; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; text-align: center; }
+    /* Category Navigation Card Inside Grid */
+    .bento-item.cat-card-item { background: linear-gradient(135deg, #1f2937, #111827); border: 2px solid #00FF87; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; text-align: center; color: #00FF87; }
 
     .bento-img { width: 100%; height: 100%; object-fit: cover; }
     .bento-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 8px; background: linear-gradient(transparent, rgba(0,0,0,0.85)); font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    /* 5s Loading Spinner */
+    /* 5s Simulated Timeline Loader */
     .loader-container { text-align: center; padding: 30px; display: none; }
     .spinner { width: 40px; height: 40px; border: 4px solid #21262d; border-top: 4px solid #00FF87; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -50,12 +51,15 @@
     <a href="index.html" class="logo">LuluTap</a>
     <div class="search-container">
       <div class="quick-tags" id="quickTags"></div>
-      <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search games or tags...">
+      <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search games in this category...">
     </div>
   </header>
 
   <main>
-    <div class="cat-title" id="catTitle">Games</div>
+    <div class="cat-title">
+      <span id="catTitle">Games</span>
+      <span class="game-count" id="gameCount">Loaded: 0</span>
+    </div>
     <div class="bento-grid" id="bentoGrid"></div>
     <div class="loader-container" id="loader">
       <div class="spinner"></div>
@@ -72,6 +76,7 @@
     let currentPage = 1;
     let isLoading = false;
     let currentCategory = '';
+    let totalDisplayed = 0;
 
     function getCategoryFromHash() {
       const hash = decodeURIComponent(location.hash.substring(1)).trim();
@@ -91,14 +96,26 @@
       document.getElementById('loader').style.display = 'block';
 
       try {
-        // Fetch specific page from GameMonetize API
+        // 请求对应页码的 API 数据
         const response = await fetch(`https://gamemonetize.com/feed.php?format=0&page=${page}`);
-        const games = await response.json();
+        const allGames = await response.json();
 
-        // 5-second simulated timeline wait
+        // 核心修复：按当前 URL Hash 的分类进行精确筛选（不区分大小写）
+        const filteredGames = allGames.filter(game => {
+          if (!game.category) return false;
+          return game.category.toLowerCase().includes(currentCategory.toLowerCase());
+        });
+
+        // 模拟 5 秒时间线加载等待
         await new Promise(resolve => setTimeout(resolve, 5000));
 
-        appendBentoItems(games);
+        if (filteredGames.length > 0) {
+          appendBentoItems(filteredGames);
+        } else if (page === 1) {
+          // 如果第1页根据分类筛选为空，为了页面不白板，展示包含该关键词的游戏或全量前15条
+          appendBentoItems(allGames.slice(0, 15));
+        }
+
         currentPage++;
       } catch (err) {
         console.error("API Fetch Error:", err);
@@ -124,31 +141,45 @@
           <div class="bento-overlay">${game.title}</div>
         `;
         grid.appendChild(card);
+        totalDisplayed++;
 
-        // Randomly insert category big cards every ~10 items
-        if ((index + 1) % 10 === 0) {
-          const randomCat = CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
+        // 每渲染约 8 个游戏，穿插一个其他分类的快速卡片
+        if ((index + 1) % 8 === 0) {
+          const randomCat = CATEGORIES.filter(c => c.toLowerCase() !== currentCategory.toLowerCase())[Math.floor(Math.random() * (CATEGORIES.length - 1))];
           const catCard = document.createElement('a');
           catCard.className = `bento-item size-2x1 cat-card-item`;
           catCard.href = `category.html#${encodeURIComponent(randomCat)}`;
-          catCard.innerHTML = `<span>🟢 ${randomCat} Games</span>`;
+          catCard.innerHTML = `<span>🚀 Explore ${randomCat}</span>`;
           grid.appendChild(catCard);
         }
       });
+
+      document.getElementById('gameCount').innerText = `Games Loaded: ${totalDisplayed}`;
     }
 
-    // Scroll Bottom Trigger (API 5-second fetch timeline)
+    // 触底加载监听
     window.addEventListener('scroll', () => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
         loadCategoryGames(currentPage);
       }
     });
 
+    // 切换分类 Hash 时刷新页面重新请求
     window.addEventListener('hashchange', () => {
       location.reload();
     });
 
-    // Init
+    // 搜索框筛选
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase().trim();
+      const items = document.querySelectorAll('#bentoGrid .bento-item:not(.cat-card-item)');
+      items.forEach(item => {
+        const title = item.querySelector('.bento-overlay')?.innerText.toLowerCase() || '';
+        item.style.display = title.includes(query) ? '' : 'none';
+      });
+    });
+
+    // 初始化
     currentCategory = getCategoryFromHash();
     document.getElementById('catTitle').innerText = `🏷️ ${currentCategory} Games`;
     renderQuickTags();
