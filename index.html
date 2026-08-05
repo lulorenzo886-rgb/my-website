@@ -154,10 +154,34 @@
 
     <script>
         const FIXED_TAGS = [
-            ".IO", "2 Player", "3D", "Bejeweled", "Boys", "Clicker", 
-            "Cooking", "Girls", "Multiplayer", "Puzzle", "Shooting", 
-            "Racing", "Soccer", "Sports", "Stickman"
+            ".IO", "2 Player", "3D", "Action", "Adventure", "Arcade", "Baby Hazel", 
+            "Bejeweled", "Boys", "Clicker", "Cooking", "Girls", "Hypercasual", 
+            "Multiplayer", "Puzzle", "Racing", "Shooting", "Soccer", "Sports", "Stickman"
         ];
+
+        // 绑定每个分类专属的 GameMonetize Feed API
+        const CATEGORY_API_URLS = {
+            ".IO": "https://gamemonetize.com/feed.php?format=0&category=1&page=1",
+            "2 Player": "https://gamemonetize.com/feed.php?format=0&category=2&page=1",
+            "3D": "https://gamemonetize.com/feed.php?format=0&category=3&page=1",
+            "Action": "https://gamemonetize.com/feed.php?format=0&page=1",
+            "Adventure": "https://gamemonetize.com/feed.php?format=0&category=4&page=1",
+            "Arcade": "https://gamemonetize.com/feed.php?format=0&category=5&page=1",
+            "Baby Hazel": "https://gamemonetize.com/feed.php?format=0&category=19&page=1",
+            "Bejeweled": "https://gamemonetize.com/feed.php?format=0&category=6&page=1",
+            "Boys": "https://gamemonetize.com/feed.php?format=0&category=7&page=1",
+            "Clicker": "https://gamemonetize.com/feed.php?format=0&category=8&page=1",
+            "Cooking": "https://gamemonetize.com/feed.php?format=0&category=9&page=1",
+            "Girls": "https://gamemonetize.com/feed.php?format=0&category=10&page=1",
+            "Hypercasual": "https://gamemonetize.com/feed.php?format=0&category=11&page=1",
+            "Multiplayer": "https://gamemonetize.com/feed.php?format=0&category=12&page=1",
+            "Puzzle": "https://gamemonetize.com/feed.php?format=0&category=13&page=1",
+            "Racing": "https://gamemonetize.com/feed.php?format=0&category=14&page=1",
+            "Shooting": "https://gamemonetize.com/feed.php?format=0&category=15&page=1",
+            "Soccer": "https://gamemonetize.com/feed.php?format=0&category=16&page=1",
+            "Sports": "https://gamemonetize.com/feed.php?format=0&category=17&page=1",
+            "Stickman": "https://gamemonetize.com/feed.php?format=0&category=18&page=1"
+        };
 
         let allGames = [];
         let categorizedGames = {};
@@ -292,35 +316,33 @@
         }
 
         async function initData() {
-            try {
-                const res = await fetch('https://gamemonetize.com/feed.php?format=0&page=1');
-                const raw = await res.json();
-                allGames = raw.map((item, i) => ({
-                    id: item.id ? String(item.id) : `g-${i}`,
-                    title: item.title || "Untitled Game",
-                    category: item.category || "Puzzle",
-                    img: item.thumb || '', gameUrl: item.url || '',
-                    description: item.description || '', instructions: item.instructions || ''
-                }));
-            } catch (e) {
-                allGames = Array.from({length: 50}).map((_, i) => ({
-                    id: `mock-${i}`, title: `Game ${i+1}`, category: FIXED_TAGS[i % FIXED_TAGS.length],
-                    img: `https://picsum.photos/seed/${i+50}/300/300`, gameUrl: "https://html5.gamedistribution.com/rvvAS30838184/",
-                    description: "Fun online game.", instructions: "Use WASD or Spacebar."
-                }));
-            }
-
             categorizedGames = {};
             FIXED_TAGS.forEach(tag => { categorizedGames[tag] = []; });
+            allGames = [];
 
-            allGames.forEach(g => {
-                const catLower = g.category.toLowerCase();
-                FIXED_TAGS.forEach(tag => {
-                    if (catLower.includes(tag.toLowerCase()) || tag.toLowerCase().includes(catLower)) {
-                        categorizedGames[tag].push(g);
-                    }
-                });
+            // 并行异步并发调取所有分类专属 API 接口
+            const fetchPromises = FIXED_TAGS.map(async (tag) => {
+                const url = CATEGORY_API_URLS[tag];
+                try {
+                    const res = await fetch(url);
+                    const raw = await res.json();
+                    const games = raw.map((item, i) => ({
+                        id: item.id ? String(item.id) : `${tag}-${i}`,
+                        title: item.title || "Untitled Game",
+                        category: tag,
+                        img: item.thumb || '', 
+                        gameUrl: item.url || '',
+                        description: item.description || '', 
+                        instructions: item.instructions || ''
+                    }));
+                    categorizedGames[tag] = games;
+                    allGames.push(...games);
+                } catch (e) {
+                    console.error(`Error fetching category: ${tag}`, e);
+                }
             });
+
+            await Promise.all(fetchPromises);
 
             renderTagsNav();
             renderShelf();
@@ -375,8 +397,8 @@
             // Tag Rows
             FIXED_TAGS.forEach(cat => {
                 let games = categorizedGames[cat];
-                if (!games || games.length === 0) games = allGames.slice(0, 10);
-                else games = games.slice(0, 10);
+                if (!games || games.length === 0) return;
+                games = games.slice(0, 10);
                 
                 const safeCat = cat.replace(/[^a-zA-Z0-9]/g, '-');
                 html += `
