@@ -56,12 +56,12 @@
 
         /* 循环无限滚动动画核心 CSS */
         .row-scroll-container { width: 100%; overflow: hidden; position: relative; }
-        .row-scroll-track { display: flex; gap: 16px; width: max-content; animation: infiniteScroll 25s linear infinite; }
-        .row-scroll-container:hover .row-scroll-track { animation-play-state: paused; } /* 鼠标悬停时暂停 */
+        .row-scroll-track { display: flex; gap: 16px; width: max-content; animation: infiniteScroll 30s linear infinite; }
+        .row-scroll-container:hover .row-scroll-track { animation-play-state: paused; }
 
         @keyframes infiniteScroll {
             0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); } /* 平滑向左移动一半（即一组完整的卡片长度） */
+            100% { transform: translateX(-50%); }
         }
 
         /* Cards & Favorite Heart */
@@ -126,7 +126,6 @@
         </div>
     </header>
 
-    <!-- PWA Installation Bar -->
     <div class="pwa-banner" id="pwa-banner">
         <span>📲 Add <b>LuluTap</b> to Home Screen for instant play!</span>
         <button class="pwa-btn" id="pwa-install-btn">Install</button>
@@ -167,10 +166,10 @@
         ];
 
         let allGames = [];
+        let gameMap = {};
         let categorizedGames = {};
         let deferredPrompt = null;
 
-        // PWA Installation Hook
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -180,7 +179,7 @@
         document.getElementById('pwa-install-btn').addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
+                await deferredPrompt.userChoice;
                 deferredPrompt = null;
                 document.getElementById('pwa-banner').style.display = 'none';
             }
@@ -224,8 +223,10 @@
             }
         }
 
-        function toggleFavorite(e, game) {
+        function toggleFavoriteById(e, gameId) {
             e.stopPropagation();
+            const game = gameMap[gameId];
+            if (!game) return;
             let favs = JSON.parse(localStorage.getItem('lulutap_favorites') || '[]');
             const index = favs.findIndex(f => f.id === game.id);
             if (index > -1) {
@@ -245,11 +246,13 @@
         function playRandomGame() {
             if (allGames.length > 0) {
                 const random = allGames[Math.floor(Math.random() * allGames.length)];
-                saveAndGo(random);
+                saveAndGoById(random.id);
             }
         }
 
-        function saveAndGo(game) {
+        function saveAndGoById(gameId) {
+            const game = gameMap[gameId];
+            if (!game) return;
             let recent = JSON.parse(localStorage.getItem('lulutap_recent') || '[]');
             recent = recent.filter(g => g.id !== game.id);
             recent.unshift(game);
@@ -289,29 +292,27 @@
 
         function renderCardHtml(g) {
             const isFav = isFavorite(g.id);
+            const safeTitle = g.title.replace(/"/g, '&quot;');
             return `
-                <div class="game-card" onclick='saveAndGo(${JSON.stringify(g).replace(/'/g, "&apos;")})'>
-                    <button class="fav-heart-btn ${isFav ? 'active' : ''}" onclick='toggleFavorite(event, ${JSON.stringify(g).replace(/'/g, "&apos;")})'>
+                <div class="game-card" onclick="saveAndGoById('${g.id}')">
+                    <button class="fav-heart-btn ${isFav ? 'active' : ''}" onclick="toggleFavoriteById(event, '${g.id}')">
                         ${isFav ? '❤️' : '🤍'}
                     </button>
                     <div class="card-cover" style="background-image: url('${g.img}');"></div>
-                    <div class="card-overlay"><div class="card-title">${g.title}</div></div>
+                    <div class="card-overlay"><div class="card-title">${safeTitle}</div></div>
                 </div>
             `;
         }
 
-        // 渲染无缝循环滚动容器的辅助函数
         function renderLoopRow(gamesList) {
             if (!gamesList || gamesList.length === 0) return '';
             
-            // 如果数量较少，复制多次以确保能撑满屏幕并完美循环
             let displayList = [...gamesList];
             while (displayList.length < 12) {
                 displayList = displayList.concat(gamesList);
             }
             
             const rawCardsHtml = displayList.map(g => renderCardHtml(g)).join('');
-            // 复制一份放后面（实现 0% 到 -50% 的无缝对接）
             return `
                 <div class="row-scroll-container">
                     <div class="row-scroll-track">
@@ -322,32 +323,62 @@
             `;
         }
 
-        async function initData() {
-            try {
-                // 使用跨域代理解决被拦截问题
-                const targetUrl = 'https://gamemonetize.com/feed.php?format=0&page=1';
-                const res = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`);
-                const raw = await res.json();
-                allGames = raw.map((item, i) => ({
-                    id: item.id ? String(item.id) : `g-${i}`,
-                    title: item.title || "Untitled Game",
-                    category: item.category || "Puzzle",
-                    img: item.thumb || '', gameUrl: item.url || '',
-                    description: item.description || '', instructions: item.instructions || ''
-                }));
-            } catch (e) {
-                console.error("API error, fallback to mock:", e);
-                allGames = Array.from({length: 50}).map((_, i) => ({
-                    id: `mock-${i}`, title: `Game ${i+1}`, category: FIXED_TAGS[i % FIXED_TAGS.length],
-                    img: `https://picsum.photos/seed/${i+50}/300/300`, gameUrl: "https://html5.gamedistribution.com/rvvAS30838184/",
-                    description: "Fun online game.", instructions: "Use WASD or Spacebar."
-                }));
-            }
+        function generateMockGames() {
+            return Array.from({length: 60}).map((_, i) => ({
+                id: `mock-${i}`, 
+                title: `Game ${i+1}`, 
+                category: FIXED_TAGS[i % FIXED_TAGS.length],
+                img: `https://picsum.photos/seed/${i+100}/300/300`, 
+                gameUrl: "https://html5.gamedistribution.com/rvvAS30838184/",
+                description: "Fun online game.", 
+                instructions: "Use WASD or Spacebar."
+            }));
+        }
 
+        async function fetchGamesWithFallback() {
+            const targetUrl = 'https://gamemonetize.com/feed.php?format=0&page=1';
+            
+            // 尝试 1: corsproxy.io
+            try {
+                const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(targetUrl)}`);
+                if (res.ok) {
+                    const raw = await res.json();
+                    if (Array.isArray(raw) && raw.length > 0) return raw;
+                }
+            } catch (e) { console.warn("Proxy 1 failed:", e); }
+
+            // 尝试 2: api.allorigins.win
+            try {
+                const res = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`);
+                if (res.ok) {
+                    const raw = await res.json();
+                    if (Array.isArray(raw) && raw.length > 0) return raw;
+                }
+            } catch (e) { console.warn("Proxy 2 failed:", e); }
+
+            // 兜底返回模拟数据
+            return generateMockGames();
+        }
+
+        async function initData() {
+            const rawData = await fetchGamesWithFallback();
+            
+            allGames = rawData.map((item, i) => ({
+                id: item.id ? String(item.id) : `g-${i}`,
+                title: item.title || `Game ${i+1}`,
+                category: item.category || "Puzzle",
+                img: item.thumb || `https://picsum.photos/seed/${i+200}/300/300`, 
+                gameUrl: item.url || "https://html5.gamedistribution.com/rvvAS30838184/",
+                description: item.description || '', 
+                instructions: item.instructions || ''
+            }));
+
+            gameMap = {};
             categorizedGames = {};
             FIXED_TAGS.forEach(tag => { categorizedGames[tag] = []; });
 
             allGames.forEach(g => {
+                gameMap[g.id] = g;
                 const catLower = g.category.toLowerCase();
                 FIXED_TAGS.forEach(tag => {
                     if (catLower.includes(tag.toLowerCase()) || tag.toLowerCase().includes(catLower)) {
@@ -376,7 +407,6 @@
             const main = document.getElementById('main-content');
             let html = '';
 
-            // Favorites Row
             const favs = JSON.parse(localStorage.getItem('lulutap_favorites') || '[]');
             if (favs.length > 0) {
                 html += `
@@ -387,7 +417,6 @@
                 `;
             }
 
-            // Recent Played Row
             const recent = JSON.parse(localStorage.getItem('lulutap_recent') || '[]');
             if (recent.length > 0) {
                 html += `
@@ -398,7 +427,6 @@
                 `;
             }
 
-            // Hot Games
             html += `
                 <section class="category-section" id="cat-row-Hot-Games">
                     <div class="category-header"><div class="category-title">🔥 Hot Games</div></div>
@@ -406,7 +434,6 @@
                 </section>
             `;
 
-            // Tag Rows
             FIXED_TAGS.forEach(cat => {
                 let games = categorizedGames[cat];
                 if (!games || games.length === 0) games = allGames.slice(0, 10);
