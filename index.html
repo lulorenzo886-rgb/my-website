@@ -3,900 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuluTap - Discover Fun Games</title>
+    <title>LuluTap - Play Free Online Games</title>
+    <!-- Built-in SVG Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
     <style>
-        /* === Global Base Styles === */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { background-color: #0f111a; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
 
-        body {
-            background-color: #0f111a;
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+        /* Header */
+        header { height: 64px; background: #161926; border-bottom: 1px solid #262b3d; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: sticky; top: 0; z-index: 100; gap: 16px; }
+        .logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; gap: 8px; }
+        .logo-icon { width: 36px; height: 36px; }
+        .logo-text { font-weight: 900; font-size: 26px; background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .search-box { position: relative; max-width: 320px; width: 100%; }
+        .search-input { width: 100%; background: #0f111a; border: 1px solid #2a3148; border-radius: 20px; padding: 8px 16px 8px 36px; color: #fff; font-size: 13px; outline: none; transition: border-color 0.2s; }
+        .search-input:focus { border-color: #00f2fe; }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #718096; font-size: 14px; }
 
-        /* === 1. Top Header === */
-        header {
-            height: 64px;
-            background: #161926;
-            border-bottom: 1px solid #262b3d;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+        /* Sticky Tags Nav */
+        .tags-nav-wrapper { position: sticky; top: 64px; z-index: 90; background: rgba(15, 17, 26, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid #222738; padding: 10px 24px; }
+        .tags-scroll-container { max-width: 1500px; margin: 0 auto; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+        .tags-scroll-container::-webkit-scrollbar { display: none; }
+        .tag-nav-item { background: #161926; border: 1px solid #262b3d; color: #a0aec0; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; user-select: none; transition: all 0.2s; flex-shrink: 0; }
+        .tag-nav-item.active, .tag-nav-item:hover { border-color: #00f2fe; color: #fff; background: rgba(0, 242, 254, 0.1); }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            transition: opacity 0.2s ease;
-        }
+        /* Main Shelf */
+        .main-content { max-width: 1500px; width: 100%; margin: 0 auto; padding: 20px 24px 40px 24px; flex: 1; }
+        .category-section { margin-bottom: 32px; scroll-margin-top: 130px; }
+        .category-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .category-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .category-title::before { content: ''; width: 4px; height: 18px; background: #00f2fe; border-radius: 2px; }
+        .see-all-btn { color: #00f2fe; text-decoration: none; font-size: 13px; font-weight: 600; transition: opacity 0.2s; }
+        .see-all-btn:hover { opacity: 0.8; }
 
-        .logo:hover {
-            opacity: 0.9;
-        }
+        /* Track & Cards */
+        .row-scroll-track { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: thin; scrollbar-color: #262b3d #0f111a; }
+        .game-card { width: 180px; height: 180px; flex-shrink: 0; position: relative; background: #161926; border-radius: 12px; overflow: hidden; border: 1px solid #222738; text-decoration: none; color: #fff; display: flex; flex-direction: column; justify-content: flex-end; transition: transform 0.25s, border-color 0.25s; cursor: pointer; }
+        .game-card:hover { transform: translateY(-4px); border-color: #00f2fe; box-shadow: 0 6px 20px rgba(0, 242, 254, 0.2); }
+        .card-cover { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; transition: transform 0.3s; }
+        .game-card:hover .card-cover { transform: scale(1.05); }
+        .card-overlay { position: relative; z-index: 1; background: linear-gradient(0deg, rgba(15,17,26,0.95) 0%, rgba(15,17,26,0) 100%); padding: 10px; }
+        .card-title { font-size: 13px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .logo svg {
-            display: block;
-            max-height: 48px;
-            width: auto;
-        }
+        .loading-box { text-align: center; padding: 60px; color: #a0aec0; }
 
-        .mode-btn {
-            background: #222738;
-            border: 1px solid #323950;
-            color: #a0aec0;
-            padding: 6px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        /* Footer */
+        footer { background: #161926; border-top: 1px solid #262b3d; padding: 32px 24px; text-align: center; margin-top: auto; }
+        .footer-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 16px; }
+        .footer-link { color: #a0aec0; text-decoration: none; font-size: 13px; transition: color 0.2s; }
+        .footer-link:hover { color: #00f2fe; }
+        .footer-copyright { font-size: 12px; color: #718096; }
 
-        .mode-btn:hover {
-            color: #fff;
-            border-color: #00f2fe;
-            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
-        }
-
-        /* === 2. Sticky Multi-Tag Dropdown Bar === */
-        .filter-wrapper {
-            position: sticky;
-            top: 64px;
-            z-index: 90;
-            background: rgba(15, 17, 26, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #222738;
-            padding: 12px 24px;
-        }
-
-        .filter-container {
-            max-width: 1500px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-        }
-
-        .tags-dropdown-btn {
-            background: #161926;
-            border: 1px solid #262b3d;
-            color: #00f2fe;
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
-
-        .tags-dropdown-btn:hover {
-            border-color: #00f2fe;
-            box-shadow: 0 0 12px rgba(0, 242, 254, 0.25);
-        }
-
-        .tags-dropdown-panel {
-            position: absolute;
-            top: 48px;
-            left: 0;
-            background: #161926;
-            border: 1px solid #2a3146;
-            border-radius: 12px;
-            padding: 16px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
-            display: none;
-            flex-wrap: wrap;
-            gap: 8px;
-            max-width: 600px;
-            width: 90vw;
-            z-index: 95;
-            max-height: 320px;
-            overflow-y: auto;
-        }
-
-        .tags-dropdown-panel.show {
-            display: flex;
-            animation: fadeInDown 0.2s ease-out;
-        }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .tag-chip {
-            background: #222738;
-            border: 1px solid #323950;
-            color: #a0aec0;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            cursor: pointer;
-            user-select: none;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-
-        .tag-chip:hover, .tag-chip:focus {
-            border-color: #00f2fe;
-            color: #fff;
-            outline: none;
-        }
-
-        .tag-chip.active {
-            background: rgba(0, 242, 254, 0.15);
-            border-color: #00f2fe;
-            color: #00f2fe;
-            font-weight: 600;
-        }
-
-        .tag-chip .close-icon {
-            font-size: 11px;
-            opacity: 0.7;
-        }
-
-        .clear-all-btn {
-            background: rgba(255, 71, 87, 0.15);
-            color: #ff4757;
-            border: 1px solid #ff4757;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            display: none;
-            transition: all 0.2s;
-        }
-
-        .clear-all-btn:hover {
-            background: #ff4757;
-            color: #fff;
-            box-shadow: 0 0 10px rgba(255, 71, 87, 0.4);
-        }
-
-        /* === 3. Top 10 Infinite Ticker Carousel === */
-        .ticker-section {
-            max-width: 1500px;
-            width: 100%;
-            margin: 20px auto 10px auto;
-            padding: 0 24px;
-        }
-
-        .ticker-header {
-            font-size: 14px;
-            font-weight: bold;
-            color: #ff4757;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .ticker-container {
-            width: 100%;
-            overflow: hidden;
-            background: #161926;
-            border: 1px solid #222738;
-            border-radius: 12px;
-            padding: 12px 0;
-            position: relative;
-        }
-
-        .ticker-track {
-            display: flex;
-            gap: 16px;
-            width: max-content;
-            animation: marqueeScroll 25s linear infinite;
-        }
-
-        .ticker-container:hover .ticker-track,
-        .ticker-container:focus-within .ticker-track {
-            animation-play-state: paused;
-        }
-
-        @keyframes marqueeScroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        .ticker-card {
-            width: 200px;
-            height: 110px;
-            flex-shrink: 0;
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #2b3248;
-            text-decoration: none;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            transition: transform 0.2s, border-color 0.2s;
-            cursor: pointer;
-        }
-
-        .ticker-card:hover, .ticker-card:focus {
-            transform: scale(1.03);
-            border-color: #00f2fe;
-            z-index: 2;
-            outline: none;
-        }
-
-        .ticker-card-cover {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .ticker-card-overlay {
-            position: relative;
-            z-index: 1;
-            background: linear-gradient(0deg, rgba(15,17,26,0.95) 0%, rgba(15,17,26,0.2) 80%);
-            padding: 8px;
-        }
-
-        .ticker-card-title {
-            font-size: 12px;
-            font-weight: bold;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* === 4. Bento Grid Layout === */
-        .main-content {
-            max-width: 1500px;
-            width: 100%;
-            margin: 10px auto 20px auto;
-            padding: 0 24px;
-            flex: 1;
-            transition: max-width 0.3s ease;
-        }
-
-        body.mobile-mode .main-content,
-        body.mobile-mode .ticker-section {
-            max-width: 480px;
-        }
-
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 16px;
-            grid-auto-flow: dense;
-        }
-
-        body.mobile-mode .bento-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .game-card {
-            position: relative;
-            background: #161926;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #222738;
-            text-decoration: none;
-            color: #fff;
-            aspect-ratio: 1 / 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
-            cursor: pointer;
-        }
-
-        .game-card:hover, .game-card:focus {
-            transform: translateY(-5px);
-            border-color: #00f2fe;
-            box-shadow: 0 8px 25px rgba(0, 242, 254, 0.25);
-            z-index: 2;
-            outline: none;
-        }
-
-        .game-card.featured {
-            grid-column: span 2;
-            grid-row: span 2;
-            aspect-ratio: 1 / 1;
-            border: 1px solid rgba(0, 242, 254, 0.5);
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
-        }
-
-        body.mobile-mode .game-card.featured {
-            grid-column: span 2;
-            grid-row: span 1;
-            aspect-ratio: 16 / 9;
-        }
-
-        .card-cover {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            transition: transform 0.3s;
-        }
-
-        .game-card:hover .card-cover,
-        .game-card:focus .card-cover {
-            transform: scale(1.05);
-        }
-
-        .card-overlay {
-            position: relative;
-            z-index: 1;
-            background: linear-gradient(0deg, rgba(15,17,26,0.95) 0%, rgba(15,17,26,0.4) 70%, rgba(15,17,26,0) 100%);
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .card-title {
-            font-size: 13px;
-            font-weight: bold;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .featured .card-title {
-            font-size: 18px;
-        }
-
-        .card-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 11px;
-            color: #a0aec0;
-            margin-top: 2px;
-        }
-
-        .card-tag {
-            background: rgba(0, 242, 254, 0.15);
-            color: #00f2fe;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: 600;
-        }
-
-        .card-like-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            font-size: 11px;
-            font-weight: 600;
-            color: #a0aec0;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 2px 6px;
-            border-radius: 10px;
-            backdrop-filter: blur(4px);
-        }
-
-        .card-like-badge.liked {
-            color: #ff4757;
-        }
-
-        .loading-status {
-            text-align: center;
-            padding: 30px 0;
-            color: #a0aec0;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .spinner {
-            width: 16px;
-            height: 16px;
-            border: 2px solid #323950;
-            border-top: 2px solid #00f2fe;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 1024px) {
-            .bento-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .bento-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
-
-            .game-card.featured {
-                grid-column: span 2;
-                grid-row: span 1;
-                aspect-ratio: 16 / 9;
-            }
-
-            .filter-wrapper, .ticker-section, .main-content {
-                padding: 0 12px;
-            }
-
-            .logo svg {
-                max-height: 40px;
-            }
-        }
+        @media (max-width: 768px) { .game-card { width: 140px; height: 140px; } }
     </style>
 </head>
 <body>
-
-    <!-- 1. Top Header with SVG Logo -->
     <header>
-        <a href="index.html" class="logo" aria-label="LuluTap Homepage">
-            <svg width="220" height="60" viewBox="0 0 220 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="lulutap-main" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#00F2FE" />
-                        <stop offset="100%" stop-color="#9B51E0" />
-                    </linearGradient>
-                    <linearGradient id="cat-warm" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#FF9472" />
-                        <stop offset="100%" stop-color="#F2709C" />
-                    </linearGradient>
-                    <filter id="glow-effect" x="-20%" y="-20%" width="140%" height="140%">
-                        <feGaussianBlur stdDeviation="2.5" result="blur" />
-                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                    </filter>
-                </defs>
-                <g transform="translate(6, 4)">
-                    <circle cx="26" cy="26" r="24" stroke="url(#lulutap-main)" stroke-width="1.5" stroke-dasharray="6 3" opacity="0.4" />
-                    <path d="M10 38 C10 32, 14 30, 26 30 C38 30, 42 32, 42 38 L44 42 C44 44, 42 45, 40 45 L12 45 C10 45, 8 44, 8 42 Z" fill="#1E2332" stroke="url(#lulutap-main)" stroke-width="1.5" stroke-linejoin="round"/>
-                    <path d="M21 16 C21 12, 31 12, 31 16 C32 19, 31 23, 26 23 C21 23, 20 19, 21 16 Z" fill="#0F111A"/>
-                    <path d="M22 13 C23 10, 29 10, 30 13 C31 15, 29 16, 26 16 C23 16, 21 15, 22 13 Z" fill="url(#lulutap-main)"/>
-                    <path d="M19 16 C19 10, 33 10, 33 16" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" fill="none"/>
-                    <rect x="17" y="15" width="4" height="7" rx="2" fill="url(#lulutap-main)" filter="url(#glow-effect)"/>
-                    <rect x="31" y="15" width="4" height="7" rx="2" fill="url(#lulutap-main)" filter="url(#glow-effect)"/>
-                    <path d="M20 24 C23 23, 29 23, 32 24 L34 33 L18 33 Z" fill="#292D3E"/>
-                    <g transform="translate(13, 28)">
-                        <rect x="0" y="2" width="12" height="8" rx="3" fill="url(#lulutap-main)"/>
-                        <circle cx="3" cy="5" r="1" fill="#0F111A"/>
-                        <circle cx="9" cy="5" r="1" fill="#FFFFFF"/>
-                    </g>
-                    <g transform="translate(31, 27)">
-                        <path d="M3 7 C3 4, 7 3, 9 5 C11 7, 10 12, 8 13 C6 13, 3 11, 3 7 Z" fill="url(#cat-warm)"/>
-                        <path d="M4 4 L6 1 L7 4 Z" fill="url(#cat-warm)"/>
-                        <path d="M7 4 L9 1 L10 4 Z" fill="url(#cat-warm)"/>
-                        <path d="M9 11 C12 11, 13 8, 12 7" stroke="url(#cat-warm)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-                    </g>
-                    <path d="M30 27 Q33 26 34 28" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-                </g>
-                <text x="64" y="37" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="24" letter-spacing="0.8">
-                    <tspan fill="url(#lulutap-main)" filter="url(#glow-effect)">Lulu</tspan>
-                    <tspan fill="#FFFFFF">Tap</tspan>
-                </text>
-                <circle cx="205" cy="18" r="2" fill="url(#cat-warm)" />
-                <circle cx="211" cy="23" r="1" fill="#00F2FE" />
+        <a href="index.html" class="logo">
+            <svg class="logo-icon" viewBox="0 0 100 100" fill="none">
+                <rect width="100" height="100" rx="20" fill="#161926"/>
+                <path d="M30 40H70C75.5228 40 80 44.4772 80 50V60C80 65.5228 75.5228 70 70 70C64.4772 70 60 65.5228 60 60V55H40V60C40 65.5228 35.5228 70 30 70C24.4772 70 20 65.5228 20 60V50C20 44.4772 24.4772 40 30 40Z" fill="#00F2FE"/>
+                <circle cx="35" cy="50" r="4" fill="#0F111A"/>
+                <circle cx="65" cy="48" r="3" fill="#0F111A"/>
+                <circle cx="72" cy="54" r="3" fill="#0F111A"/>
             </svg>
+            <span class="logo-text">LuluTap</span>
         </a>
-        <button class="mode-btn" id="mode-btn" onclick="toggleDeviceMode()" aria-label="Switch Device View Mode">💻 PC Mode</button>
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-input" class="search-input" placeholder="Search games..." oninput="handleSearch(this.value)">
+        </div>
     </header>
 
-    <!-- 2. Sticky Multi-Tag Dropdown Bar -->
-    <div class="filter-wrapper">
-        <div class="filter-container">
-            <div>
-                <button class="tags-dropdown-btn" id="tags-btn" onclick="toggleTagsDropdown(event)" aria-expanded="false" aria-label="Toggle Tags Filter Menu">
-                    <span>🏷️ Tags</span>
-                    <span id="dropdown-arrow">▾</span>
-                </button>
-                <div class="tags-dropdown-panel" id="tags-panel" role="region" aria-label="Tag Filter Panel"></div>
-            </div>
-            
-            <button class="clear-all-btn" id="clear-all-btn" onclick="clearAllFilters()" aria-label="Clear All Selected Filters">✕ Clear All</button>
-        </div>
-    </div>
+    <nav class="tags-nav-wrapper">
+        <div class="tags-scroll-container" id="tags-bar"></div>
+    </nav>
 
-    <!-- 3. Top 10 Trending Games Infinite Ticker Carousel -->
-    <section class="ticker-section" aria-label="Trending Games Carousel">
-        <div class="ticker-header">🔥 Top 10 Trending Games</div>
-        <div class="ticker-container">
-            <div class="ticker-track" id="ticker-track"></div>
-        </div>
-    </section>
-
-    <!-- 4. Main Bento Game Grid -->
-    <main class="main-content">
-        <div class="bento-grid" id="game-grid" role="region" aria-label="Game Grid">
-            <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #a0aec0;">
-                <div class="spinner" style="margin: 0 auto 12px auto; width: 24px; height: 24px;"></div>
-                Loading games list...
-            </div>
-        </div>
-
-        <div class="loading-status" id="loading-status" style="display: none;">
-            <div class="spinner"></div>
-            <span>Auto-loading more games...</span>
-        </div>
+    <main class="main-content" id="main-content">
+        <div class="loading-box">Loading games catalog...</div>
     </main>
 
+    <footer>
+        <div class="footer-links">
+            <a href="privacy.html" class="footer-link">Privacy Policy</a>
+            <a href="terms.html" class="footer-link">Terms of Service</a>
+            <a href="dmca.html" class="footer-link">DMCA Policy</a>
+            <a href="contact.html" class="footer-link">Contact Us</a>
+        </div>
+        <div class="footer-copyright">© 2026 LuluTap. All rights reserved. Play free online browser games.</div>
+    </footer>
+
     <script>
-        let allCategories = ["🔥 All", "Action", "Arcade", "Puzzle", "Racing", "Shooting", "Casual", "Strategy", "Sports"];
-        let selectedTags = [];
-        let gamesData = []; 
-        let currentPage = 1;
-        let isLoading = false;
-        let hasMoreData = true;
-        let isMobileMode = false;
+        const FIXED_TAGS = [
+            ".IO", "2 Player", "3D", "Bejeweled", "Boys", "Clicker", 
+            "Cooking", "Girls", "Multiplayer", "Puzzle", "Shooting", 
+            "Racing", "Soccer", "Sports", "Stickman"
+        ];
 
-        const extraTagsPool = ["🔥 Hot", "⚡ Fast", "🎮 3D", "🏆 Top", "⭐ Popular", "🕹️ Classic", "🎯 Skill"];
+        let allGames = [];
+        let categorizedGames = {};
 
-        const mockFallbackGames = Array.from({ length: 18 }).map((_, i) => ({
-            id: `fallback-${i}`,
-            title: `Popular Game ${i + 1}`,
-            category: ["Action", "Arcade", "Puzzle", "Racing", "Shooting"][i % 5],
-            thumb: `https://picsum.photos/seed/${i + 100}/400/400`,
-            url: "https://html5.gamedistribution.com/rvvAS30838184/",
-            description: "An exciting browser action game designed for ultimate fun and challenge."
-        }));
+        function saveAndGo(game) {
+            let recent = JSON.parse(localStorage.getItem('lulutap_recent') || '[]');
+            recent = recent.filter(g => g.id !== game.id);
+            recent.unshift(game);
+            if (recent.length > 10) recent.pop();
+            localStorage.setItem('lulutap_recent', JSON.stringify(recent));
 
-        function getLikesData() {
-            return JSON.parse(localStorage.getItem('lulutap_likes') || '{}');
-        }
-
-        function getGameLikesInfo(title, baseLikes = 0) {
-            const likesStore = getLikesData();
-            const record = likesStore[title] || { count: baseLikes || Math.floor(Math.random() * 800) + 120, userLiked: false };
-            return record;
-        }
-
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        function toggleDeviceMode() {
-            isMobileMode = !isMobileMode;
-            const btn = document.getElementById('mode-btn');
-            if (isMobileMode) {
-                document.body.classList.add('mobile-mode');
-                btn.innerHTML = '📱 Mobile Mode';
-            } else {
-                document.body.classList.remove('mobile-mode');
-                btn.innerHTML = '💻 PC Mode';
-            }
-        }
-
-        function toggleTagsDropdown(e) {
-            e.stopPropagation();
-            const panel = document.getElementById('tags-panel');
-            const btn = document.getElementById('tags-btn');
-            const arrow = document.getElementById('dropdown-arrow');
-            const isOpen = panel.classList.contains('show');
-
-            if (isOpen) {
-                panel.classList.remove('show');
-                arrow.innerText = '▾';
-                btn.setAttribute('aria-expanded', 'false');
-            } else {
-                panel.classList.add('show');
-                arrow.innerText = '▴';
-                btn.setAttribute('aria-expanded', 'true');
-            }
-        }
-
-        document.addEventListener('click', (e) => {
-            const panel = document.getElementById('tags-panel');
-            const btn = document.getElementById('tags-btn');
-            if (panel && !panel.contains(e.target) && !btn.contains(e.target)) {
-                panel.classList.remove('show');
-                document.getElementById('dropdown-arrow').innerText = '▾';
-                btn.setAttribute('aria-expanded', 'false');
-            }
-        });
-
-        function goToGame(game) {
-            if (!game) return;
-            let history = JSON.parse(localStorage.getItem('lulutap_recent') || '[]');
-            history = history.filter(item => item.title !== game.title);
-            history.unshift(game);
-            if (history.length > 20) history.pop();
-            localStorage.setItem('lulutap_recent', JSON.stringify(history));
-
-            const query = new URLSearchParams({
-                url: game.gameUrl,
+            const params = new URLSearchParams({
+                id: game.id,
                 title: game.title,
-                img: game.img || '',
-                cat: game.category || 'Arcade',
-                desc: game.description || 'Enjoy playing ' + game.title + ' on LuluTap!'
-            }).toString();
-
-            window.location.href = `game.html?${query}`;
+                url: game.gameUrl,
+                img: game.img,
+                cat: game.category,
+                desc: game.description || '',
+                inst: game.instructions || '',
+                w: game.width || '',
+                h: game.height || ''
+            });
+            window.location.href = `game.html?${params.toString()}`;
         }
 
-        function handleKeyPress(e, callback) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                callback();
-            }
+        function scrollToCategory(catName, el) {
+            document.querySelectorAll('.tag-nav-item').forEach(i => i.classList.remove('active'));
+            if(el) el.classList.add('active');
+            const target = document.getElementById(`cat-row-${catName.replace(/[^a-zA-Z0-9]/g, '-')}`);
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
         }
 
-        async function initGameData(page = 1) {
-            if (isLoading) return;
-            isLoading = true;
+        function handleSearch(keyword) {
+            const term = keyword.trim().toLowerCase();
+            if(!term) { renderShelf(); return; }
+            const filtered = allGames.filter(g => g.title.toLowerCase().includes(term));
+            const main = document.getElementById('main-content');
+            main.innerHTML = `
+                <section class="category-section">
+                    <div class="category-header"><div class="category-title">Search Results (${filtered.length})</div></div>
+                    <div class="row-scroll-track" style="flex-wrap: wrap;">
+                        ${filtered.map(g => renderCardHtml(g)).join('')}
+                    </div>
+                </section>
+            `;
+        }
 
-            const grid = document.getElementById('game-grid');
-            const status = document.getElementById('loading-status');
+        function renderCardHtml(g) {
+            return `
+                <div class="game-card" onclick='saveAndGo(${JSON.stringify(g).replace(/'/g, "&apos;")})'>
+                    <div class="card-cover" style="background-image: url('${g.img}');"></div>
+                    <div class="card-overlay"><div class="card-title">${g.title}</div></div>
+                </div>
+            `;
+        }
 
-            if (page > 1) {
-                status.style.display = 'flex';
-            }
-
+        async function initData() {
             try {
-                let rawList = [];
-                try {
-                    const response = await fetch(`https://gamemonetize.com/feed.php?format=0&page=${page}`);
-                    if (!response.ok) throw new Error("HTTP error " + response.status);
-                    const data = await response.json();
-                    rawList = Array.isArray(data) ? data : [];
-                } catch (e) {
-                    console.warn("API Fetch Failed/CORS limit, fallbacking to simulated mock data.", e);
-                    rawList = mockFallbackGames;
-                }
-                
-                if (rawList.length === 0) {
-                    hasMoreData = false;
-                    status.style.display = 'flex';
-                    status.innerHTML = "✨ You've reached the end!";
-                    if (observer) observer.disconnect();
-                    return;
-                }
+                const res = await fetch('https://gamemonetize.com/feed.php?format=0&page=1');
+                const raw = await res.json();
+                allGames = raw.map((item, i) => ({
+                    id: item.id ? String(item.id) : `g-${i}`,
+                    title: item.title || "Untitled Game",
+                    category: item.category || "Puzzle",
+                    img: item.thumb || '',
+                    gameUrl: item.url || '',
+                    description: item.description || '',
+                    instructions: item.instructions || '',
+                    width: item.width || '',
+                    height: item.height || ''
+                }));
+            } catch (e) {
+                console.warn("API load error, fallback used.");
+                allGames = Array.from({length: 50}).map((_, i) => ({
+                    id: `mock-${i}`, title: `Game ${i+1}`, category: FIXED_TAGS[i % FIXED_TAGS.length],
+                    img: `https://picsum.photos/seed/${i+50}/300/300`, gameUrl: "https://html5.gamedistribution.com/rvvAS30838184/",
+                    description: "Fun online game.", instructions: "Use WASD or Spacebar to play."
+                }));
+            }
 
-                const shuffledList = shuffle([...rawList]);
+            // Categorize into the 15 Fixed Tags
+            categorizedGames = {};
+            FIXED_TAGS.forEach(tag => { categorizedGames[tag] = []; });
 
-                const formattedGames = shuffledList.map((item) => {
-                    const catName = item.category || "Other";
-                    
-                    if (!allCategories.includes(catName)) {
-                        allCategories.push(catName);
+            allGames.forEach(g => {
+                const catLower = g.category.toLowerCase();
+                FIXED_TAGS.forEach(tag => {
+                    if (catLower.includes(tag.toLowerCase()) || tag.toLowerCase().includes(catLower)) {
+                        categorizedGames[tag].push(g);
                     }
-
-                    const gameTags = [catName]; 
-                    const shuffledExtra = shuffle([...extraTagsPool]);
-                    gameTags.push(shuffledExtra[0]);
-                    if (Math.random() > 0.5) {
-                        gameTags.push(shuffledExtra[1]);
-                    }
-
-                    const baseLikes = Math.floor(Math.random() * 800) + 100;
-
-                    return {
-                        id: item.id || `game-${Math.random()}`,
-                        title: item.title || item.name || "Untitled Game",
-                        category: catName,
-                        tags: gameTags,
-                        img: item.thumb || 'https://via.placeholder.com/300',
-                        gameUrl: item.url || '#',
-                        description: item.description || '',
-                        baseLikes: baseLikes
-                    };
                 });
-
-                if (page === 1) {
-                    renderTop10Ticker(formattedGames.slice(0, 10));
-                    gamesData = formattedGames;
-                } else {
-                    gamesData = [...gamesData, ...formattedGames];
-                }
-
-                assignFeaturedCards();
-                renderTags();
-                renderGames();
-            } catch (err) {
-                console.error("Critical Execution Error:", err);
-            } finally {
-                isLoading = false;
-                status.style.display = 'none';
-            }
-        }
-
-        function assignFeaturedCards() {
-            let nextFeaturedIndex = 0;
-            
-            gamesData.forEach((game, idx) => {
-                if (idx === nextFeaturedIndex) {
-                    game.featured = true;
-                    nextFeaturedIndex += Math.floor(Math.random() * 3) + 7; 
-                } else {
-                    game.featured = false;
-                }
             });
+
+            renderTagsNav();
+            renderShelf();
         }
 
-        function renderTop10Ticker(top10List) {
-            const track = document.getElementById('ticker-track');
-            if (!top10List || top10List.length === 0) return;
-
-            const listToRender = [...top10List, ...top10List];
-
-            track.innerHTML = listToRender.map((game, index) => {
-                const originalIndex = index % top10List.length;
-                return `
-                <div class="ticker-card" tabindex="0" role="button" aria-label="${game.title}" onclick="goToGame(gamesData[${originalIndex}])" onkeydown="handleKeyPress(event, () => goToGame(gamesData[${originalIndex}]))">
-                    <div class="ticker-card-cover" style="background-image: url('${game.img}');"></div>
-                    <div class="ticker-card-overlay">
-                        <div class="ticker-card-title">${game.title}</div>
-                    </div>
-                </div>
-            `}).join('');
+        function renderTagsNav() {
+            const bar = document.getElementById('tags-bar');
+            let tagsHtml = `<div class="tag-nav-item" onclick="scrollToCategory('Recently-Played', this)">🕒 Recently Played</div>`;
+            tagsHtml += `<div class="tag-nav-item" onclick="scrollToCategory('Hot-Games', this)">🔥 Hot Games</div>`;
+            FIXED_TAGS.forEach(cat => {
+                tagsHtml += `<div class="tag-nav-item" onclick="scrollToCategory('${cat}', this)">${cat}</div>`;
+            });
+            bar.innerHTML = tagsHtml;
         }
 
-        function renderTags() {
-            const container = document.getElementById('tags-panel');
-            const clearBtn = document.getElementById('clear-all-btn');
-            const btnText = document.querySelector('.tags-dropdown-btn span');
+        function renderShelf() {
+            const main = document.getElementById('main-content');
+            let html = '';
 
-            container.innerHTML = allCategories.map(cat => {
-                const isAll = cat === "🔥 All";
-                const isSelected = isAll ? selectedTags.length === 0 : selectedTags.includes(cat);
-                
-                return `
-                    <div class="tag-chip ${isSelected ? 'active' : ''}" tabindex="0" role="button" aria-label="Filter tag ${cat}" onclick="toggleTag('${cat}')" onkeydown="handleKeyPress(event, () => toggleTag('${cat}'))">
-                        <span>${cat}</span>
-                        ${!isAll && isSelected ? '<span class="close-icon">✕</span>' : ''}
-                    </div>
+            // Recently Played
+            const recent = JSON.parse(localStorage.getItem('lulutap_recent') || '[]');
+            if (recent.length > 0) {
+                html += `
+                    <section class="category-section" id="cat-row-Recently-Played">
+                        <div class="category-header"><div class="category-title">🕒 Recently Played</div></div>
+                        <div class="row-scroll-track">${recent.map(g => renderCardHtml(g)).join('')}</div>
+                    </section>
                 `;
-            }).join('');
-
-            if (selectedTags.length > 0) {
-                btnText.innerText = `🏷️ Tags (${selectedTags.length})`;
-            } else {
-                btnText.innerText = `🏷️ Tags`;
             }
 
-            clearBtn.style.display = selectedTags.length >= 1 ? 'block' : 'none';
-        }
+            // Hot Games
+            html += `
+                <section class="category-section" id="cat-row-Hot-Games">
+                    <div class="category-header"><div class="category-title">🔥 Hot Games</div></div>
+                    <div class="row-scroll-track">${allGames.slice(0, 10).map(g => renderCardHtml(g)).join('')}</div>
+                </section>
+            `;
 
-        function toggleTag(cat) {
-            if (cat === "🔥 All") {
-                selectedTags = [];
-            } else {
-                if (selectedTags.includes(cat)) {
-                    selectedTags = selectedTags.filter(t => t !== cat);
+            // 15 Fixed Tags Shelves
+            FIXED_TAGS.forEach(cat => {
+                let games = categorizedGames[cat];
+                if (!games || games.length === 0) {
+                    games = allGames.slice(0, 10); // Fallback
                 } else {
-                    selectedTags.push(cat);
+                    games = games.slice(0, 10);
                 }
-            }
-            renderTags();
-            renderGames();
-        }
-
-        function clearAllFilters() {
-            selectedTags = [];
-            renderTags();
-            renderGames();
-        }
-
-        function renderGames() {
-            const grid = document.getElementById('game-grid');
-            
-            const filtered = gamesData.filter(game => {
-                if (selectedTags.length === 0) return true;
-                return selectedTags.every(tag => game.tags.includes(tag));
-            });
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #a0aec0;">No matching games found. Try resetting filters!</div>`;
-                return;
-            }
-
-            grid.innerHTML = filtered.map((game) => {
-                const realIndex = gamesData.indexOf(game);
-                const likeInfo = getGameLikesInfo(game.title, game.baseLikes);
-
-                return `
-                <div tabindex="0" onclick="goToGame(gamesData[${realIndex}])" onkeydown="handleKeyPress(event, () => goToGame(gamesData[${realIndex}]))" class="game-card ${game.featured ? 'featured' : ''}" role="button" aria-label="${game.title}">
-                    <div class="card-cover" style="background-image: url('${game.img}');"></div>
-                    <div class="card-overlay">
-                        <div class="card-title">${game.title}</div>
-                        <div class="card-meta">
-                            <div style="display: flex; gap: 4px; flex-wrap: wrap;">
-                                ${game.tags.map(t => `<span class="card-tag">${t}</span>`).join('')}
-                            </div>
-                            <div class="card-like-badge ${likeInfo.userLiked ? 'liked' : ''}">
-                                ${likeInfo.userLiked ? '❤️' : '🤍'} ${likeInfo.count}
-                            </div>
+                const safeCat = cat.replace(/[^a-zA-Z0-9]/g, '-');
+                html += `
+                    <section class="category-section" id="cat-row-${safeCat}">
+                        <div class="category-header">
+                            <div class="category-title">${cat}</div>
+                            <a href="category.html?type=${encodeURIComponent(cat)}" class="see-all-btn">See All ></a>
                         </div>
-                    </div>
-                </div>
-            `}).join('');
-        }
-
-        window.addEventListener('pageshow', () => {
-            if (gamesData.length > 0) {
-                renderGames();
-            }
-        });
-
-        /* === IntersectionObserver 预加载 === */
-        let observer = null;
-        function setupIntersectionObserver() {
-            const statusTarget = document.getElementById('loading-status');
-            
-            observer = new IntersectionObserver((entries) => {
-                const target = entries[0];
-                if (target.isIntersecting && !isLoading && hasMoreData) {
-                    currentPage++;
-                    initGameData(currentPage);
-                }
-            }, {
-                root: null,
-                rootMargin: '300px',
-                threshold: 0
+                        <div class="row-scroll-track">${games.map(g => renderCardHtml(g)).join('')}</div>
+                    </section>
+                `;
             });
 
-            observer.observe(statusTarget);
+            main.innerHTML = html;
         }
 
-        // 初始化
-        renderTags();
-        initGameData();
-        setupIntersectionObserver();
+        initData();
     </script>
 </body>
 </html>
